@@ -20,7 +20,7 @@ namespace TodoList
                 Console.Write("Введите ваш год рождения: ");
                 year = short.Parse(Console.ReadLine());
             }
-            while (year < 1900 || year > DateTime.Now.Year);
+            while (year < DateTime.Now.Year-150 || year > DateTime.Now.Year);
 
             do
             {
