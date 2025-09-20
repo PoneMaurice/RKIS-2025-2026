@@ -14,13 +14,14 @@ namespace TodoList
             int year;
             int month;
             int day;
+            int OldestPersonYear = 123;
 
             do
             {
                 Console.Write("Введите ваш год рождения: ");
                 year = short.Parse(Console.ReadLine());
             }
-            while (year < DateTime.Now.Year-150 || year > DateTime.Now.Year);
+            while (year < DateTime.Now.Year-OldestPersonYear || year > DateTime.Now.Year);
 
             do
             {
