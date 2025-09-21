@@ -53,10 +53,9 @@ namespace TodoList
             DateTime BirthDate = new DateTime(year, month, day); // Переводим полученые значения в класс DateTime
             var UserName = UserFirstName + " " + UserLastName; // Объединение для дальнейшего вывода 
             var text = $"\n{DateTime.Now}: добавлен пользователь {UserName}, день рождения {BirthDate.ToLongDateString()}\nвозраст - {DateTime.Now.Year - BirthDate.Year}";
-            string WriteTextStart01 = $"|Date|UserLastName|UserFirstName|BirthDate|"; // создание верха таблици по формату Markdown
-            string WriteTextStart02 = "|:-|:-|:-|:-|"; // определяем выранивание по формату Markdown
-            string WriteText = $"|{DateTime.Now}|{UserLastName}|{UserFirstName}|{BirthDate.ToShortDateString()}|"; // Вводимые значения
-            string FilePath = "./data.md"; // относительный путь к файлу. По умолчанию он находиться в папке bin
+            string WriteTextStart01 = $"Date;UserLastName;UserFirstName;BirthDate"; // создание верха таблици по формату Markdown
+            string WriteText = $"{DateTime.Now};{UserLastName};{UserFirstName};{BirthDate.ToShortDateString()}"; // Вводимые значения
+            string FilePath = "./data.csv"; // относительный путь к файлу. По умолчанию он находиться в папке bin
 
             bool StartText = true; // флаг наличия или отсутствия заголовка таблици
             FileStream? file = null; // инициализация класса файла
@@ -82,7 +81,6 @@ namespace TodoList
                     if (!StartText)
                     {
                         writer.WriteLine(WriteTextStart01);
-                        writer.WriteLine(WriteTextStart02);
                     }
                     writer.WriteLine(WriteText);
                     writer.Close();
