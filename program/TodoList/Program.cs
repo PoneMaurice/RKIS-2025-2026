@@ -41,7 +41,7 @@ namespace TodoList
             string WriteTextStart01 = $"|Date|UserLastName|UserFirstName|BirthDate|";
             string WriteTextStart02 = "|:-:|:-|:-|:-:|";
             string WriteText = $"|{DateTime.Now}|{UserLastName}|{UserFirstName}|{BirthDate}|";
-            string FilePath = "/home/edward/Ed/MARK/RKIS-2025-2026/program/TodoList/data.txt";
+            string FilePath = "/home/edward/Ed/MARK/RKIS-2025-2026/program/TodoList/data.md";
 
 
             bool StartText = true;
