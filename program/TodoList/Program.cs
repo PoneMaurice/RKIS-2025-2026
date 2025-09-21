@@ -15,7 +15,7 @@ namespace TodoList
         /*метод выводящий сообшение и
         создаюший цикл пока пользователь не введет допустимые значения */
         {
-            int result = -1;
+            int result = -1; // сродникоду об ошибке
             do
             {
                 Console.Write(text); // перветственное сообщение 
@@ -56,19 +56,18 @@ namespace TodoList
             string WriteTextStart01 = $"|Date|UserLastName|UserFirstName|BirthDate|"; // создание верха таблици по формату Markdown
             string WriteTextStart02 = "|:-|:-|:-|:-|"; // определяем выранивание по формату Markdown
             string WriteText = $"|{DateTime.Now}|{UserLastName}|{UserFirstName}|{BirthDate.ToShortDateString()}|"; // Вводимые значения
-            string FileName = ".../data.md";
-            string Catolog = Path.GetFullPath(FileName);
-            string FilePath = "../data.md"; // относительный путь к файлу 
-            Console.WriteLine(FilePath);
+            string FilePath = "./data.md"; // относительный путь к файлу. По умолчанию он находиться в папке bin
 
-            bool StartText = true;
-            FileStream? file = null;
+            bool StartText = true; // флаг наличия или отсутствия заголовка таблици
+            FileStream? file = null; // инициализация класса файла
             try
             {
 
                 file = new FileStream(FilePath, FileMode.OpenOrCreate);
+                // Проверка на наличие файла и если его нет создает новый 
 
                 using (StreamReader reader = new StreamReader(FilePath, Encoding.UTF8))
+                // Поиск заголовка таблици
                 {
                     string? line = reader.ReadLine();
                     if (line != WriteTextStart01)
@@ -78,6 +77,7 @@ namespace TodoList
                 }
 
                 using (StreamWriter writer = new StreamWriter(FilePath, true, Encoding.UTF8))
+                // добовление строк в таблицу 
                 {
                     if (!StartText)
                     {
@@ -87,7 +87,7 @@ namespace TodoList
                     writer.WriteLine(WriteText);
                     writer.Close();
                 }
-                Console.WriteLine(text);
+                Console.WriteLine(text); // оповещение о завершении операции 
             }
 
             catch (Exception ex)
@@ -96,7 +96,7 @@ namespace TodoList
             }
             finally
             {
-                file?.Close();
+                file?.Close(); // после всех операций мы его закрываем
             }
         }
     }
