@@ -39,8 +39,8 @@ namespace TodoList
             var UserName = UserFirstName + " " + UserLastName;
             var text = $"\n{DateTime.Now}: добавлен пользователь {UserName}, день рождения {BirthDate.ToLongDateString()}\nвозраст - {DateTime.Now.Year - BirthDate.Year}";
             string WriteTextStart01 = $"|Date|UserLastName|UserFirstName|BirthDate|";
-            string WriteTextStart02 = "|:-:|:-|:-|:-:|";
-            string WriteText = $"|{DateTime.Now}|{UserLastName}|{UserFirstName}|{BirthDate}|";
+            string WriteTextStart02 = "|:-|:-|:-|:-|";
+            string WriteText = $"|{DateTime.Now}|{UserLastName}|{UserFirstName}|{BirthDate.ToShortDateString()}|";
             string FilePath = "/home/edward/Ed/MARK/RKIS-2025-2026/program/TodoList/data.md";
 
 
