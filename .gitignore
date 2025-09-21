@@ -2,3 +2,6 @@
 *obj/
 *.vs
 program/Csh.sln
+.idea/
+.vscode/
+RKIS-2025-2026.sln
