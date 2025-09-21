@@ -8,4 +8,4 @@ obj/
 .editorconfig
 data.txt
 data.md
-.csv
+*.csv
