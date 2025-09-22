@@ -55,13 +55,33 @@ namespace TodoList
             var text = $"\n{DateTime.Now}: добавлен пользователь {UserName}, день рождения {BirthDate.ToLongDateString()}\nвозраст - {DateTime.Now.Year - BirthDate.Year}";
             string WriteTextStart01 = $"Date;UserLastName;UserFirstName;BirthDate"; // создание верха таблици по формату Markdown
             string WriteText = $"{DateTime.Now};{UserLastName};{UserFirstName};{BirthDate.ToShortDateString()}"; // Вводимые значения
-            string FilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data.csv"); // относительный путь к файлу. По умолчанию он находиться в папке bin
+            string dataPath = "/.config/RKIS-TodoList/";
+            string winDataPath = "\\RKIS-todoList\\";
+
+            string homePath = (Environment.OSVersion.Platform == PlatformID.Unix || 
+                   Environment.OSVersion.Platform == PlatformID.MacOSX)
+                   ? Environment.GetEnvironmentVariable("HOME")
+                   : Environment.ExpandEnvironmentVariables("CSIDL_MYDOCUMENTS");
+            string fullPath;
+            if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX)
+            {
+                fullPath = Path.Join(homePath, dataPath);
+            }
+            else
+            {
+                fullPath = Path.Join(homePath, winDataPath);
+            }
+            string FilePath = Path.Join(fullPath, "data.csv"); // относительный путь к файлу. По умолчанию он находиться в папке bin
 
             bool StartText = true; // флаг наличия или отсутствия заголовка таблици
             FileStream? file = null; // инициализация класса файла
+            DirectoryInfo? directory = new DirectoryInfo(fullPath);
+            if (!directory.Exists)
+            {
+                Directory.CreateDirectory(fullPath);
+            }
             try
             {
-
                 file = new FileStream(FilePath, FileMode.OpenOrCreate);
                 // Проверка на наличие файла и если его нет создает новый 
 
