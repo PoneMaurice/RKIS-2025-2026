@@ -16,10 +16,12 @@ namespace TodoList
         создаюший цикл пока пользователь не введет допустимые значения */
         {
             int result = -1; // сродникоду об ошибке
+            string num_str;
             do
             {
                 Console.Write(text); // перветственное сообщение 
-                result = int.Parse(Console.ReadLine());
+                num_str = Console.ReadLine() ?? "Null";
+                int.TryParse(num_str, out result);
             }
             while (result < min || result > max); //условия выхода
             return result;
