@@ -22,9 +22,23 @@ namespace TodoList
                 Console.Write(text); // перветственное сообщение 
                 num_str = Console.ReadLine() ?? "Null";
                 int.TryParse(num_str, out result);
+                if (num_str == "q" || num_str == "Q")
+                {
+                    Environment.Exit(0);
+                }
             }
             while (result < min || result > max); //условия выхода
             return result;
+        }
+        public static string survey(string text)
+        {
+            Console.Write(text);
+            string str = Console.ReadLine() ?? "Неизвестно";
+            if (str == "q" || str == "Q")
+            {
+                Environment.Exit(0);
+            }
+            return str;
         }
 
         public static void Main()
@@ -39,17 +53,15 @@ namespace TodoList
 ");
 
             }
-            Console.Write("Введите ваше имя: ");
-            var UserFirstName = Console.ReadLine();
-            Console.Write("Введите вашу фамилию: ");
-            var UserLastName = Console.ReadLine();
+            var UserFirstName = survey("Введите ваше имя: ");
+            var UserLastName = survey("Введите вашу фамилию: ");
 
             int OldestPersonYear = 123; //возраст самого старого человека на момент 2025 г.
             int NowYear = DateTime.Now.Year; // сегодняшнее время 
 
             int year = survey("Введите ваш год рождения: ", NowYear - OldestPersonYear, NowYear);
             int month = survey("Введите ваш месяц рождения: ", 1, 12);
-            int day = survey("Введите ваш день рождения: ", 1, 31); 
+            int day = survey("Введите ваш день рождения: ", 1, 31);
             // опрос с допуcтимыми значениями для выхода из опроса
 
             DateTime BirthDate = new DateTime(year, month, day); // Переводим полученые значения в класс DateTime
@@ -61,7 +73,7 @@ namespace TodoList
             string winDataPath = "\\RKIS-todoList\\"; // Расположение файла для Win32NT
 
             string homePath = (Environment.OSVersion.Platform == PlatformID.Unix || // Если платформа UNIX или MacOSX, то homePath = $HOME
-                   Environment.OSVersion.Platform == PlatformID.MacOSX)             
+                   Environment.OSVersion.Platform == PlatformID.MacOSX)
                    ? Environment.GetEnvironmentVariable("HOME")
                    : Environment.ExpandEnvironmentVariables("CSIDL_MYDOCUMENTS");   // Если платформа Win32NT, то homepath = \users\<username>\Documents 
             string fullPath;
