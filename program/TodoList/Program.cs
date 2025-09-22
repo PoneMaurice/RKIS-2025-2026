@@ -28,12 +28,12 @@ namespace TodoList
         public static void Main()
         {
             Console.Write("Нужны ли титры(y/N): "); //Преветственная строка
-            string? ansver = Console.ReadLine();
-            if (ansver == "y")
+            string? answer = Console.ReadLine();
+            if (answer == "y")
             {
                 Console.WriteLine(@"Работу сделали: 
-Отвецтвенный по исходному коду и README: Шевченко Э. 3831.9
-Отвецтвенный по .gitignore и всей git состовляющей: Титов М. 3831.9
+Ответственный по исходному коду и README: Шевченко Э. 3831.9
+Ответственный по .gitignore, всей git составляющей и некоторыми частями исходного кода: Титов М. 3831.9
 ");
 
             }
@@ -48,37 +48,37 @@ namespace TodoList
             int year = survey("Введите ваш год рождения: ", NowYear - OldestPersonYear, NowYear);
             int month = survey("Введите ваш месяц рождения: ", 1, 12);
             int day = survey("Введите ваш день рождения: ", 1, 31); 
-            // опрос с допутимыми значениями для выхода из опроса
+            // опрос с допуcтимыми значениями для выхода из опроса
 
             DateTime BirthDate = new DateTime(year, month, day); // Переводим полученые значения в класс DateTime
             var UserName = UserFirstName + " " + UserLastName; // Объединение для дальнейшего вывода 
             var text = $"\n{DateTime.Now}: добавлен пользователь {UserName}, день рождения {BirthDate.ToLongDateString()}\nвозраст - {DateTime.Now.Year - BirthDate.Year}";
             string WriteTextStart01 = $"Date;UserLastName;UserFirstName;BirthDate"; // создание верха таблици по формату Markdown
             string WriteText = $"{DateTime.Now};{UserLastName};{UserFirstName};{BirthDate.ToShortDateString()}"; // Вводимые значения
-            string dataPath = "/.config/RKIS-TodoList/";
-            string winDataPath = "\\RKIS-todoList\\";
+            string dataPath = "/.config/RKIS-TodoList/"; // Расположение файла для UNIX и MacOSX
+            string winDataPath = "\\RKIS-todoList\\"; // Расположение файла для Win32NT
 
-            string homePath = (Environment.OSVersion.Platform == PlatformID.Unix || 
-                   Environment.OSVersion.Platform == PlatformID.MacOSX)
+            string homePath = (Environment.OSVersion.Platform == PlatformID.Unix || // Если платформа UNIX или MacOSX, то homePath = $HOME
+                   Environment.OSVersion.Platform == PlatformID.MacOSX)             
                    ? Environment.GetEnvironmentVariable("HOME")
-                   : Environment.ExpandEnvironmentVariables("CSIDL_MYDOCUMENTS");
+                   : Environment.ExpandEnvironmentVariables("CSIDL_MYDOCUMENTS");   // Если платформа Win32NT, то homepath = \users\<username>\Documents 
             string fullPath;
             if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX)
             {
-                fullPath = Path.Join(homePath, dataPath);
+                fullPath = Path.Join(homePath, dataPath); // Если платформа UNIX или MacOSX, то мы соединяем homePath и dataPath
             }
             else
             {
-                fullPath = Path.Join(homePath, winDataPath);
+                fullPath = Path.Join(homePath, winDataPath); // Если платформа Win32NT, то мы соединяем homePath и winDataPath
             }
-            string FilePath = Path.Join(fullPath, "data.csv"); // относительный путь к файлу. По умолчанию он находиться в папке bin
+            string FilePath = Path.Join(fullPath, "data.csv"); // Полный путь к файлу, используется для его создания и/или чтения
 
             bool StartText = true; // флаг наличия или отсутствия заголовка таблици
             FileStream? file = null; // инициализация класса файла
-            DirectoryInfo? directory = new DirectoryInfo(fullPath);
+            DirectoryInfo? directory = new DirectoryInfo(fullPath); // Инициализируем объект класса для создания директории
             if (!directory.Exists)
             {
-                Directory.CreateDirectory(fullPath);
+                Directory.CreateDirectory(fullPath); // Если директория не существует, то мы её создаём по пути fullPath
             }
             try
             {
