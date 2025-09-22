@@ -55,7 +55,7 @@ namespace TodoList
             var text = $"\n{DateTime.Now}: добавлен пользователь {UserName}, день рождения {BirthDate.ToLongDateString()}\nвозраст - {DateTime.Now.Year - BirthDate.Year}";
             string WriteTextStart01 = $"Date;UserLastName;UserFirstName;BirthDate"; // создание верха таблици по формату Markdown
             string WriteText = $"{DateTime.Now};{UserLastName};{UserFirstName};{BirthDate.ToShortDateString()}"; // Вводимые значения
-            string FilePath = "./data.csv"; // относительный путь к файлу. По умолчанию он находиться в папке bin
+            string FilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data.csv"); // относительный путь к файлу. По умолчанию он находиться в папке bin
 
             bool StartText = true; // флаг наличия или отсутствия заголовка таблици
             FileStream? file = null; // инициализация класса файла
