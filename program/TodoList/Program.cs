@@ -32,10 +32,7 @@ namespace TodoList
             {
                 Console.Write(text); // перветственное сообщение 
                 num_str = Console.ReadLine() ?? "NULL";
-                if (!int.TryParse(num_str, out result))
-                {
-                    num_str = ProceStr(num_str);
-                }
+                if (!int.TryParse(num_str, out result)) num_str = ProceStr(num_str);
             }
             while (result < min || result > max); //условия выхода
             return result;
@@ -52,14 +49,11 @@ namespace TodoList
         {
             Console.Write("Нужны ли титры(y/N): "); //Преветственная строка
             string? answer = Console.ReadLine();
-            if (answer == "y")
-            {
-                Console.WriteLine(@"Работу сделали: 
+            string Captions = @"Работу сделали: 
 Ответственный по исходному коду и README: Шевченко Э. 3831.9
 Ответственный по .gitignore, всей git составляющей и некоторыми частями исходного кода: Титов М. 3831.9
-");
-
-            }
+";
+            if (answer == "y") Console.WriteLine(Captions);
             var UserFirstName = survey("Введите ваше имя: ");
             var UserLastName = survey("Введите вашу фамилию: ");
 
@@ -85,22 +79,15 @@ namespace TodoList
                    : Environment.ExpandEnvironmentVariables("%APPDATA%");   // Если платформа Win32NT, то homepath = \users\<username>\Documents 
             string fullPath;
             if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX)
-            {
                 fullPath = Path.Join(homePath, dataPath); // Если платформа UNIX или MacOSX, то мы соединяем homePath и dataPath
-            }
             else
-            {
                 fullPath = Path.Join(homePath, winDataPath); // Если платформа Win32NT, то мы соединяем homePath и winDataPath
-            }
             string FilePath = Path.Join(fullPath, "data.csv"); // Полный путь к файлу, используется для его создания и/или чтения
 
             bool StartText = true; // флаг наличия или отсутствия заголовка таблици
             FileStream? file = null; // инициализация класса файла
             DirectoryInfo? directory = new DirectoryInfo(fullPath); // Инициализируем объект класса для создания директории
-            if (!directory.Exists)
-            {
-                Directory.CreateDirectory(fullPath); // Если директория не существует, то мы её создаём по пути fullPath
-            }
+            if (!directory.Exists) Directory.CreateDirectory(fullPath); // Если директория не существует, то мы её создаём по пути fullPath
             try
             {
                 using (file = new FileStream(FilePath, FileMode.OpenOrCreate)) {}
@@ -110,25 +97,18 @@ namespace TodoList
                 // Поиск заголовка таблици
                 {
                     string? line = reader.ReadLine();
-                    if (line != WriteTextStart01)
-                    {
-                        StartText = false;
-                    }
+                    if (line != WriteTextStart01) StartText = false;
                 }
 
                 using (StreamWriter writer = new StreamWriter(FilePath, true, Encoding.UTF8))
                 // добовление строк в таблицу 
                 {
-                    if (!StartText)
-                    {
-                        writer.WriteLine(WriteTextStart01);
-                    }
+                    if (!StartText) writer.WriteLine(WriteTextStart01);
                     writer.WriteLine(WriteText);
                     writer.Close();
                 }
                 Console.WriteLine(text); // оповещение о завершении операции 
             }
-
             catch (Exception ex)
             {
                 Console.WriteLine($"Произошла ошибка при записи файла: {ex.Message}");
