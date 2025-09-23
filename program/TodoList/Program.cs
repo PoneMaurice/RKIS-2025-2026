@@ -10,6 +10,17 @@ namespace TodoList
 {
     class MainClass
     {
+        public static string ProceStr(string text)
+        {
+            if (text is null) return "NULL";
+
+            text = text.Trim();
+
+            if (text == "q" || text == "Q") Environment.Exit(0);
+            else if (text == "") return "NULL";
+
+            return text;
+        }
         
         public static int survey(string text, int min, int max)
         /*метод выводящий сообшение и
@@ -20,11 +31,10 @@ namespace TodoList
             do
             {
                 Console.Write(text); // перветственное сообщение 
-                num_str = Console.ReadLine() ?? "Null";
-                int.TryParse(num_str, out result); 
-                if (num_str == "q" || num_str == "Q")
+                num_str = Console.ReadLine() ?? "NULL";
+                if (!int.TryParse(num_str, out result))
                 {
-                    Environment.Exit(0);
+                    num_str = ProceStr(num_str);
                 }
             }
             while (result < min || result > max); //условия выхода
@@ -34,10 +44,7 @@ namespace TodoList
         {
             Console.Write(text);
             string str = Console.ReadLine() ?? "Неизвестно";
-            if (str == "q" || str == "Q")
-            {
-                Environment.Exit(0);
-            }
+            str = ProceStr(str);
             return str;
         }
 
@@ -72,7 +79,7 @@ namespace TodoList
             string dataPath = "/.config/RKIS-TodoList/"; // Расположение файла для UNIX и MacOSX
             string winDataPath = "\\RKIS-todoList\\"; // Расположение файла для Win32NT
 
-            string homePath = (Environment.OSVersion.Platform == PlatformID.Unix || // Если платформа UNIX или MacOSX, то homePath = $HOME
+            string? homePath = (Environment.OSVersion.Platform == PlatformID.Unix || // Если платформа UNIX или MacOSX, то homePath = $HOME
                    Environment.OSVersion.Platform == PlatformID.MacOSX)
                    ? Environment.GetEnvironmentVariable("HOME")
                    : Environment.ExpandEnvironmentVariables("%APPDATA%");   // Если платформа Win32NT, то homepath = \users\<username>\Documents 
