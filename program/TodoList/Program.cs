@@ -75,7 +75,7 @@ namespace TodoList
             string homePath = (Environment.OSVersion.Platform == PlatformID.Unix || // Если платформа UNIX или MacOSX, то homePath = $HOME
                    Environment.OSVersion.Platform == PlatformID.MacOSX)
                    ? Environment.GetEnvironmentVariable("HOME")
-                   : Environment.ExpandEnvironmentVariables("CSIDL_MYDOCUMENTS");   // Если платформа Win32NT, то homepath = \users\<username>\Documents 
+                   : Environment.ExpandEnvironmentVariables("%APPDATA%");   // Если платформа Win32NT, то homepath = \users\<username>\Documents 
             string fullPath;
             if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX)
             {
