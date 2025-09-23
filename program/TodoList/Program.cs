@@ -21,7 +21,7 @@ namespace TodoList
             {
                 Console.Write(text); // перветственное сообщение 
                 num_str = Console.ReadLine() ?? "Null";
-                int.TryParse(num_str, out result);
+                int.TryParse(num_str, out result); 
                 if (num_str == "q" || num_str == "Q")
                 {
                     Environment.Exit(0);
@@ -96,7 +96,7 @@ namespace TodoList
             }
             try
             {
-                file = new FileStream(FilePath, FileMode.OpenOrCreate);
+                using (file = new FileStream(FilePath, FileMode.OpenOrCreate)) {}
                 // Проверка на наличие файла и если его нет создает новый 
 
                 using (StreamReader reader = new StreamReader(FilePath, Encoding.UTF8))
@@ -125,10 +125,6 @@ namespace TodoList
             catch (Exception ex)
             {
                 Console.WriteLine($"Произошла ошибка при записи файла: {ex.Message}");
-            }
-            finally
-            {
-                file?.Close(); // после всех операций мы его закрываем
             }
         }
     }
