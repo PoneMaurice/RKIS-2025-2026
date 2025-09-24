@@ -2,51 +2,63 @@
 using System.Data;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks.Dataflow;
 using Microsoft.VisualBasic;
+using Task;
 
 namespace Task
 {
-    public static class Commands
+    public class Commands
     {
-        public static void help(Dictionary<string, bool> extensions)
+        public Survey c = new Survey();
+        public void help(Dictionary<string, bool> extensions)
         {
-            StartCommand(extensions, "help");
+            string text = "help";
+            if (extensions[c.Help]) Console.WriteLine($"{text} {c.Help}");
+            else if (extensions[c.Task]) Console.WriteLine($"{text} {c.Task}");
+            else if (extensions[c.Clear]) Console.WriteLine($"{text} {c.Clear}");
+            else if (extensions[c.Search]) Console.WriteLine($"{text} {c.Search}");
+            else Console.WriteLine(text);
         }
-        public static void add(Dictionary<string, bool> extensions)
+        public void add(Dictionary<string, bool> extensions)
         {
-            StartCommand(extensions, "add");
+            string text = "add";
+            if (extensions[c.Help]) Console.WriteLine($"{text} {c.Help}");
+            else if (extensions[c.Task]) Console.WriteLine($"{text} {c.Task}");
+            else if (extensions[c.Clear]) Console.WriteLine($"{text} {c.Clear}");
+            else if (extensions[c.Search]) Console.WriteLine($"{text} {c.Search}");
+            else Console.WriteLine(text);
         }
-        public static void print(Dictionary<string, bool> extensions)
+        public void print(Dictionary<string, bool> extensions)
         {
-            StartCommand(extensions, "print");
+            string text = "print";
+            if (extensions[c.Help]) Console.WriteLine($"{text} {c.Help}");
+            else if (extensions[c.Task]) Console.WriteLine($"{text} {c.Task}");
+            else if (extensions[c.Clear]) Console.WriteLine($"{text} {c.Clear}");
+            else if (extensions[c.Search]) Console.WriteLine($"{text} {c.Search}");
+            else Console.WriteLine(text);
         }
-        public static void none()
+        public void none()
         {
             Console.WriteLine("none");
         }
-        static void StartCommand(Dictionary<string, bool> extensions, string text)
-        {
-            if (extensions["help"]) Console.WriteLine($"{text} help");
-            else if (extensions["task"]) Console.WriteLine($"{text} task");
-            else if (extensions["clear"]) Console.WriteLine($"{text} clear");
-            else if (extensions["search"]) Console.WriteLine($"{text} search");
-            else Console.WriteLine(text);
-        }
-
     }
 
     public class Survey
     {
-        Dictionary<string, bool> extensions = new Dictionary<string, bool>
-        {
-            {"add", false},
-            {"help", false},
-            {"print", false},
-            {"task", false},
-            {"clear", false},
-            {"search", false}
-        };
+        public int counter = 0;
+        public string NewText = "";
+        public string Add = "add";
+        public string Help = "help";
+        public string Print = "print";
+        public string Task = "task";
+        public string Clear = "clear";
+        public string Search = "search";
+        public string Exit = "exit";
+
+        Dictionary<string, bool> extensions = new Dictionary<string, bool> { };
+        
 
         enum Command
         {
@@ -59,100 +71,121 @@ namespace Task
             search
         }
 
-        void SubObjCommand(Command[] command)
+        void SubObjCommand(Dictionary<int, Command> command)
         {
-            switch (command[1])
+            extensions.Add(Add, false);
+            extensions.Add(Help, false);
+            extensions.Add(Clear, false);
+            extensions.Add(Task, false);
+            extensions.Add(Print, false);
+            extensions.Add(Search, false);
+            if (command.Count >= 2)
             {
-                case Command.help:
-                    extensions["help"] = true;
-                    break;
-                case Command.task:
-                    extensions["task"] = true;
-                    break;
-                case Command.search:
-                    extensions["search"] = true;
-                    break;
-                case Command.clear:
-                    extensions["clear"] = true;
-                    break;
+                switch (command[1])
+                {
+                    case Command.help:
+                        extensions[Help] = true;
+                        break;
+                    case Command.task:
+                        extensions[Task] = true;
+                        break;
+                    case Command.search:
+                        extensions[Search] = true;
+                        break;
+                    case Command.clear:
+                        extensions[Clear] = true;
+                        break;
+                }
             }
         }
 
-        void ObjCommand(Command[] command)
+        void ObjCommand(Dictionary<int, Command> command)
         {
+        Commands c = new Commands();
             switch (command[0])
-            {
-                case Command.add:
-                    SubObjCommand(command);
-                    Commands.add(extensions);
-                    break;
-                case Command.help:
-                    SubObjCommand(command);
-                    Commands.help(extensions);
-                    break;
-                case Command.print:
-                    SubObjCommand(command);
-                    Commands.print(extensions);
-                    break;
-                case Command.none:
-                    Commands.none();
-                    break;
-            }
+        {
+            case Command.add:
+                SubObjCommand(command);
+                c.add(extensions);
+                break;
+            case Command.help:
+                SubObjCommand(command);
+                c.help(extensions);
+                break;
+            case Command.print:
+                SubObjCommand(command);
+                c.print(extensions);
+                break;
+            case Command.none:
+                c.none();
+                break;
         }
-        public void str(string text)
+        }
+        public void ProceStr(string text)
         {
             Console.Write(text);
             string ans = Console.ReadLine() ?? "NULL";
-            string[] PartsText = ProceStr(ans);
+            ans = ans.Trim();
+            if (ans == "") ans = "NULL";
+            string[] PartsText = ans.Split(" ");
             ObjCommand(SearchCommand(PartsText));
+            NewText = AssociationString(PartsText);
+            Console.WriteLine(NewText);
         }
-        public string[] ProceStr(string text)
+
+        public string AssociationString(string[] SepText)
         {
-            if (text == null) return ["NULL"];
-            text = text.Trim();
-            if (text == "") return ["NULL"];
-            string[] PartsText = text.Split(" ");
-            return PartsText;
+            string text = "";
+            bool nonetext = true;
+            for (int i = counter; i < SepText.Length; ++i)
+            {
+                if (nonetext)
+                {
+                    text = text + SepText[i];
+                    nonetext = false;
+                }
+                else text = text + " " + SepText[i];
+            }
+            return text;
         }
 
         Command SubCommand(string text, int light)
         {
-            if (light >= 2 && text == "help") return Command.help;
-            else if (light >= 2 && text == "task") return Command.task;
-            else if (light >= 2 && text == "clear") return Command.clear;
-            else if (light >= 2 && text == "search") return Command.search;
+            if (light >= 2 && text == Help) return Command.help;
+            else if (light >= 2 && text == Task) return Command.task;
+            else if (light >= 2 && text == Clear) return Command.clear;
+            else if (light >= 2 && text == Search) return Command.search;
             else return Command.none;
         }
-        Command[] SearchCommand(string[] command)
+        Dictionary<int, Command> SearchCommand(string[] command)
         {
-            Command[] instructions = new Command[3]
-            {
-                Command.none,
-                Command.none,
-                Command.none
-            };
+            var instructions = new Dictionary<int, Command> {};
 
             int CommLight = command.Length;
 
-            if (command[0] == "help")
+            if (command[0] == Help)
             {
                 instructions[0] = Command.help;
                 if (CommLight >= 2) instructions[1] = SubCommand(command[1], CommLight);
-                return instructions;
             }
-            else if (command[0] == "add")
+            else if (command[0] == Add)
             {
                 instructions[0] = Command.add;
                 if (CommLight >= 2) instructions[1] = SubCommand(command[1], CommLight);
-                return instructions;
             }
-            else if (command[0] == "print")
+            else if (command[0] == Print)
             {
                 instructions[0] = Command.print;
                 if (CommLight >= 2) instructions[1] = SubCommand(command[1], CommLight);
-                return instructions;
             }
-            else if (command[0] == "exit") Environment.Exit(0);
+            else if (command[0] == Exit) Environment.Exit(0);
+
+            int num = 0;
+            for (int i = 0; i < instructions.Count; i++)
+            {
+                if (instructions[i] != Command.none) ++num;
+            }
+            counter = num;
             return instructions;
         }
     }
@@ -163,7 +196,7 @@ namespace Task
             do
             {
                 var STR = new Survey();
-                STR.str("-- ");
+                STR.ProceStr("-- ");
             }
             while (true);
         }
