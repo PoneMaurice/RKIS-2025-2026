@@ -11,40 +11,54 @@ namespace Task
     {
         public static void help(Dictionary<string, bool> extensions)
         {
-            Console.WriteLine("help");
+            StartCommand(extensions, "help");
         }
         public static void add(Dictionary<string, bool> extensions)
         {
-            if (extensions["help"]) Console.WriteLine("add help");
-            else if (extensions["task"]) Console.WriteLine("add task");
-            else Console.WriteLine("add");
+            StartCommand(extensions, "add");
         }
         public static void print(Dictionary<string, bool> extensions)
         {
-            if (extensions["help"]) Console.WriteLine("print help");
-            else if (extensions["task"]) Console.WriteLine("print task");
-            else Console.WriteLine("print");
+            StartCommand(extensions, "print");
         }
         public static void none()
         {
             Console.WriteLine("none");
         }
+        static void StartCommand(Dictionary<string, bool> extensions, string text)
+        {
+            if (extensions["help"]) Console.WriteLine($"{text} help");
+            else if (extensions["task"]) Console.WriteLine($"{text} task");
+            else if (extensions["clear"]) Console.WriteLine($"{text} clear");
+            else if (extensions["search"]) Console.WriteLine($"{text} search");
+            else Console.WriteLine(text);
+        }
+
     }
+
     public class Survey
     {
         Dictionary<string, bool> extensions = new Dictionary<string, bool>
         {
+            {"add", false},
             {"help", false},
+            {"print", false},
             {"task", false},
+            {"clear", false},
+            {"search", false}
         };
+
         enum Command
         {
             add,
             help,
             print,
             task,
-            none
+            none,
+            clear,
+            search
         }
+
         void SubObjCommand(Command[] command)
         {
             switch (command[1])
@@ -55,8 +69,15 @@ namespace Task
                 case Command.task:
                     extensions["task"] = true;
                     break;
+                case Command.search:
+                    extensions["search"] = true;
+                    break;
+                case Command.clear:
+                    extensions["clear"] = true;
+                    break;
             }
         }
+
         void ObjCommand(Command[] command)
         {
             switch (command[0])
@@ -66,6 +87,7 @@ namespace Task
                     Commands.add(extensions);
                     break;
                 case Command.help:
+                    SubObjCommand(command);
                     Commands.help(extensions);
                     break;
                 case Command.print:
@@ -92,7 +114,16 @@ namespace Task
             string[] PartsText = text.Split(" ");
             return PartsText;
         }
-        Command [] SearchCommand(string [] command)
+
+        Command SubCommand(string text, int light)
+        {
+            if (light >= 2 && text == "help") return Command.help;
+            else if (light >= 2 && text == "task") return Command.task;
+            else if (light >= 2 && text == "clear") return Command.clear;
+            else if (light >= 2 && text == "search") return Command.search;
+            else return Command.none;
+        }
+        Command[] SearchCommand(string[] command)
         {
             Command[] instructions = new Command[3]
             {
@@ -100,29 +131,29 @@ namespace Task
                 Command.none,
                 Command.none
             };
-            
+
             int CommLight = command.Length;
 
             if (command[0] == "help")
             {
                 instructions[0] = Command.help;
+                if (CommLight >= 2) instructions[1] = SubCommand(command[1], CommLight);
                 return instructions;
             }
             else if (command[0] == "add")
             {
                 instructions[0] = Command.add;
-                if (CommLight >= 2 && command[1] == "help") instructions[1] = Command.help;
-                else if (CommLight >= 2 && command[1] == "task") instructions[1] = Command.task;
+                if (CommLight >= 2) instructions[1] = SubCommand(command[1], CommLight);
                 return instructions;
             }
             else if (command[0] == "print")
             {
                 instructions[0] = Command.print;
-                if (CommLight >= 2 && command[1] == "help") instructions[1] = Command.help;
-                else if (CommLight >= 2 && command[1] == "task") instructions[1] = Command.task;
+                if (CommLight >= 2) instructions[1] = SubCommand(command[1], CommLight);
                 return instructions;
             }
-            return [Command.none];
+            else if (command[0] == "exit") Environment.Exit(0);
+            return instructions;
         }
     }
     public static class TaskExtensions
