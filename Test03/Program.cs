@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Data;
+using System.Formats.Asn1;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks.Dataflow;
 using Microsoft.VisualBasic;
@@ -63,116 +65,100 @@ namespace Task
     }
     public class Commands
     {
-        public Survey c = new Survey();
-        public void help(Dictionary<string, bool> extensions)
-        {
-            string text = "help";
-            if (extensions[c.Help]) Console.WriteLine($"{text} {c.Help}");
-            else if (extensions[c.Task]) Console.WriteLine($"{text} {c.Task}");
-            else if (extensions[c.Clear]) Console.WriteLine($"{text} {c.Clear}");
-            else if (extensions[c.Search]) Console.WriteLine($"{text} {c.Search}");
-            else Console.WriteLine(text);
-        }
-        public void add(Dictionary<string, bool> extensions)
-        {
-            string text = "add";
-            if (extensions[c.Help]) Console.WriteLine($"{text} {c.Help}");
-            else if (extensions[c.Task]) Console.WriteLine($"{text} {c.Task}");
-            else if (extensions[c.Clear]) Console.WriteLine($"{text} {c.Clear}");
-            else if (extensions[c.Search]) Console.WriteLine($"{text} {c.Search}");
-            else Console.WriteLine(text);
-        }
-        public void print(Dictionary<string, bool> extensions)
-        {
-            string text = "print";
-            if (extensions[c.Help]) Console.WriteLine($"{text} {c.Help}");
-            else if (extensions[c.Task]) Console.WriteLine($"{text} {c.Task}");
-            else if (extensions[c.Clear]) Console.WriteLine($"{text} {c.Clear}");
-            else if (extensions[c.Search]) Console.WriteLine($"{text} {c.Search}");
-            else Console.WriteLine(text);
-        }
-        public void none()
-        {
-            Console.WriteLine("none");
-        }
+        
     }
 
     public class Survey
     {
         public int counter = 0;
         public string NewText = "";
-        public string Add = "add";
-        public string Help = "help";
-        public string Print = "print";
-        public string Task = "task";
-        public string Clear = "clear";
-        public string Search = "search";
-        public string Exit = "exit";
-
-        Dictionary<string, bool> extensions = new Dictionary<string, bool> { };
-
-
-        enum Command
+        public string[] listcomm = {
+            "none",
+            "add",
+            "help",
+            "print",
+            "task",
+            "clear",
+            "search",
+            "exit"
+        };
+        public void GlobalCommamd()
         {
-            add,
-            help,
-            print,
-            task,
-            none,
-            clear,
-            search
+            if (SearchExtension(0, "none")) none();
+            else if (SearchExtension(0, "help")) help();
+            else if (SearchExtension(0, "add")) add();
+            else if (SearchExtension(0, "task")) task();
+            else none();
+        }
+        public void help()
+        {
+            string text = "help";
+            Console.WriteLine(text);
+        }
+        public void add()
+        {
+            string text = "add";
+            if (SearchExtension(1, "help")) Console.WriteLine($"{text} help");
+            else if (SearchExtension("task") && SearchExtension("print"))
+                Console.WriteLine($"{text} task and print");
+            else if (SearchExtension(1, "task")) Console.WriteLine($"{text} task");
+            else Console.WriteLine(text);
+        }
+        public void task()
+        {
+            string text = "task";
+            if (SearchExtension(1, "help")) Console.WriteLine($"{text} help");
+            else if (SearchExtension(1, "clear")) Console.WriteLine($"{text} clear");
+            else if (SearchExtension(1, "search")) Console.WriteLine($"{text} search");
+            else if (SearchExtension(1, "print")) Console.WriteLine($"{text} print");
+            else Console.WriteLine(text);
+        }
+        public void none()
+        {
+            Console.WriteLine("none");
         }
 
-        void SubObjCommand(Dictionary<int, Command> command)
+
+        public Dictionary<string, bool> extensions = new Dictionary<string, bool> { };
+        public void AddExtensions()
         {
-            extensions.Add(Add, false);
-            extensions.Add(Help, false);
-            extensions.Add(Clear, false);
-            extensions.Add(Task, false);
-            extensions.Add(Print, false);
-            extensions.Add(Search, false);
-            if (command.Count >= 2)
+            for (int i = 0; i < listcomm.Length; ++i)
             {
-                switch (command[1])
-                {
-                    case Command.help:
-                        extensions[Help] = true;
-                        break;
-                    case Command.task:
-                        extensions[Task] = true;
-                        break;
-                    case Command.search:
-                        extensions[Search] = true;
-                        break;
-                    case Command.clear:
-                        extensions[Clear] = true;
-                        break;
-                }
+                extensions.Add(listcomm[i], false);
             }
         }
-
-        void ObjCommand(Dictionary<int, Command> command)
-        {
-            Commands c = new Commands();
-            switch (command[0])
+        public void ClearExtensions() {
+            for (int i = 0; i < extensions.Count; ++i)
             {
-                case Command.add:
-                    SubObjCommand(command);
-                    c.add(extensions);
-                    break;
-                case Command.help:
-                    SubObjCommand(command);
-                    c.help(extensions);
-                    break;
-                case Command.print:
-                    SubObjCommand(command);
-                    c.print(extensions);
-                    break;
-                case Command.none:
-                    c.none();
-                    break;
+                extensions[listcomm[i]] = false;
             }
         }
+        public Dictionary<string, int> extensionsNUM = new Dictionary<string, int> { };
+        public void AddExtensionsNUM()
+        {
+            for (int i = 0; i < listcomm.Length; ++i)
+            {
+                extensionsNUM.Add(listcomm[i], 0);
+            }
+        }
+        public void ClearExtensionsNUM() {
+            for (int i = 0; i < extensionsNUM.Count; ++i)
+            {
+                extensionsNUM[listcomm[i]] = 0;
+            }
+        }
+        public bool SearchExtension(int position, string extension)
+        {
+            if (extensionsNUM[extension] == position &&
+            extensions[extension] == true) return true;
+            return false;
+        }
+        public bool SearchExtension(string extension)
+        {
+            if (extensions[extension] == true) return true;
+            return false;
+        }
+        
         public void ProceStr(string text)
         {
             Console.Write(text);
@@ -180,8 +166,9 @@ namespace Task
             ans = ans.Trim();
             if (ans == "") ans = "NULL";
             string[] PartsText = ans.Split(" ");
-            ObjCommand(SearchCommand(PartsText));
+            SearchCommand(PartsText);
             NewText = AssociationString(PartsText);
+            GlobalCommamd();
             Console.WriteLine(NewText);
         }
 
@@ -198,51 +185,41 @@ namespace Task
                 }
                 else text = text + " " + SepText[i];
             }
+            if (text == "") text = "NULL";
             return text;
         }
 
-        Command SubCommand(string text, int light)
+        void SearchCommand(string[] command)
         {
-            if (light >= 2 && text == Help) return Command.help;
-            else if (light >= 2 && text == Task) return Command.task;
-            else if (light >= 2 && text == Clear) return Command.clear;
-            else if (light >= 2 && text == Search) return Command.search;
-            else return Command.none;
-        }
-        Dictionary<int, Command> SearchCommand(string[] command)
-        {
-            var instructions = new Dictionary<int, Command> { };
-
-            int CommLight = command.Length;
-
-            if (command[0] == Help)
-            {
-                instructions[0] = Command.help;
-                if (CommLight >= 2) instructions[1] = SubCommand(command[1], CommLight);
-            }
-            else if (command[0] == Add)
-            {
-                instructions[0] = Command.add;
-                if (CommLight >= 2) instructions[1] = SubCommand(command[1], CommLight);
-            }
-            else if (command[0] == Print)
-            {
-                instructions[0] = Command.print;
-                if (CommLight >= 2) instructions[1] = SubCommand(command[1], CommLight);
-            }
-            else if (command[0] == Exit) Environment.Exit(0);
-            else
-            {
-                instructions[0] = Command.none;
-            }
-
+            AddExtensions();
+            AddExtensionsNUM();
             int num = 0;
-            for (int i = 0; i < instructions.Count; i++)
+
+            for (int i = 0; i < command.Length; ++i)
             {
-                if (instructions[i] != Command.none) ++num;
+                string testcomm = command[i].Trim();
+                Console.WriteLine($"'{command[i]}' - '{testcomm}'");
+                if (testcomm == "") continue;
+                int lus = 1;
+                for (int j = 1; j < listcomm.Length; ++j)
+                {
+                    if (testcomm == listcomm[j] &&
+                    extensions[listcomm[j]] != true)
+                    {
+                        extensions[listcomm[j]] = true;
+                        extensionsNUM[listcomm[j]] = i;
+                        num++;
+                        break;
+                    }
+                    else ++lus;
+                }
+                if (lus == listcomm.Length)
+                {
+                    if (i == 0) extensions["none"] = true;
+                    break;
+                }
             }
             counter = num;
-            return instructions;
         }
     }
     public static class TaskExtensions
