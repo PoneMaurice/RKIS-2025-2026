@@ -9,6 +9,59 @@ using Task;
 
 namespace Task
 {
+    public class Captions
+    {
+        public string TextCaptions = "";
+        public void WriteCaption()
+        {
+            if (TextCaptions == "") CompText();
+            Console.Write("Вывести титры?(y/N): ");
+            string Char = Console.ReadLine() ?? "NULL";
+            Char = Char.Trim();
+            if (Char == "") Char = "NULL";
+            Char = Char.ToLower();
+            if (Char == "y") Console.WriteLine(TextCaptions);
+        }
+        void CompText()
+        {
+            string[] Ed =
+            {
+            "README",
+            "исходный код",
+            "некоторые аспекты git",
+            "xnj nj to`"
+            };
+            string[] Misha =
+            {
+            "git",
+            ".gitignore",
+            "некоторый части исходного кода"
+            };
+
+            Dictionary<int, string> fices = new Dictionary<int, string>()
+            {
+                {0, "Шевченок Э."},
+                {1, "Титов М."}
+            };
+            Dictionary<int, string[]> captions = new Dictionary<int, string[]>()
+            {
+                {0 , Ed},
+                {1 , Misha}
+            };
+            string text = "За работу отвецтвенны:\n";
+            for (int i = 0; i < fices.Count; ++i)
+            {
+                text = text + $"{fices[i]} :";
+                for (int j = 0; j < captions[i].Length; ++j)
+                {
+                    string[] caption = captions[i];
+                    text = text + $" {caption[j]}";
+                }
+                text = text + "\n";
+            }
+            TextCaptions = text;
+        }
+    }
     public class Commands
     {
         public Survey c = new Survey();
@@ -179,6 +232,10 @@ namespace Task
                 if (CommLight >= 2) instructions[1] = SubCommand(command[1], CommLight);
             }
             else if (command[0] == Exit) Environment.Exit(0);
+            else
+            {
+                instructions[0] = Command.none;
+            }
 
             int num = 0;
             for (int i = 0; i < instructions.Count; i++)
@@ -193,10 +250,17 @@ namespace Task
     {
         public static void Main()
         {
+            int cycle = 0;
             do
             {
+                if (cycle == 0)
+                {
+                    var cap = new Captions();
+                    cap.WriteCaption();
+                }
                 var STR = new Survey();
                 STR.ProceStr("-- ");
+                ++cycle;
             }
             while (true);
         }
