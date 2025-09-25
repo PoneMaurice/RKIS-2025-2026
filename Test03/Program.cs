@@ -3,7 +3,6 @@ using System.Data;
 using System.Formats.Asn1;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks.Dataflow;
 using Microsoft.VisualBasic;
@@ -197,13 +196,10 @@ namespace Task
 
             for (int i = 0; i < command.Length; ++i)
             {
-                string testcomm = command[i].Trim();
-                Console.WriteLine($"'{command[i]}' - '{testcomm}'");
-                if (testcomm == "") continue;
                 int lus = 1;
                 for (int j = 1; j < listcomm.Length; ++j)
                 {
-                    if (testcomm == listcomm[j] &&
+                    if (command[i] == listcomm[j] &&
                     extensions[listcomm[j]] != true)
                     {
                         extensions[listcomm[j]] = true;
