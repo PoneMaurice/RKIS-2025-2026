@@ -83,7 +83,7 @@ namespace Task
         };
         public void GlobalCommamd()
         {
-            if (SearchExtension(0, "none")) none();
+            if (SearchExtension(0, "exit")) exit();
             else if (SearchExtension(0, "help")) help();
             else if (SearchExtension(0, "add")) add();
             else if (SearchExtension(0, "task")) task();
@@ -111,6 +111,10 @@ namespace Task
             else if (SearchExtension(1, "search")) Console.WriteLine($"{text} search");
             else if (SearchExtension(1, "print")) Console.WriteLine($"{text} print");
             else Console.WriteLine(text);
+        }
+        public void exit()
+        {
+            Environment.Exit(200);
         }
         public void none()
         {
@@ -227,6 +231,7 @@ namespace Task
             {
                 if (cycle == 0)
                 {
+                    Console.Title = "My ConsApp";
                     var cap = new Captions();
                     cap.WriteCaption();
                 }
