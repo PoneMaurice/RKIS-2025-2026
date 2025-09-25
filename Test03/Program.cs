@@ -28,8 +28,7 @@ namespace Task
             {
             "README",
             "исходный код",
-            "некоторые аспекты git",
-            "xnj nj to`"
+            "некоторые аспекты git"
             };
             string[] Misha =
             {
@@ -111,7 +110,7 @@ namespace Task
         public string Exit = "exit";
 
         Dictionary<string, bool> extensions = new Dictionary<string, bool> { };
-        
+
 
         enum Command
         {
@@ -154,25 +153,25 @@ namespace Task
 
         void ObjCommand(Dictionary<int, Command> command)
         {
-        Commands c = new Commands();
+            Commands c = new Commands();
             switch (command[0])
-        {
-            case Command.add:
-                SubObjCommand(command);
-                c.add(extensions);
-                break;
-            case Command.help:
-                SubObjCommand(command);
-                c.help(extensions);
-                break;
-            case Command.print:
-                SubObjCommand(command);
-                c.print(extensions);
-                break;
-            case Command.none:
-                c.none();
-                break;
-        }
+            {
+                case Command.add:
+                    SubObjCommand(command);
+                    c.add(extensions);
+                    break;
+                case Command.help:
+                    SubObjCommand(command);
+                    c.help(extensions);
+                    break;
+                case Command.print:
+                    SubObjCommand(command);
+                    c.print(extensions);
+                    break;
+                case Command.none:
+                    c.none();
+                    break;
+            }
         }
         public void ProceStr(string text)
         {
@@ -212,7 +211,7 @@ namespace Task
         }
         Dictionary<int, Command> SearchCommand(string[] command)
         {
-            var instructions = new Dictionary<int, Command> {};
+            var instructions = new Dictionary<int, Command> { };
 
             int CommLight = command.Length;
 
