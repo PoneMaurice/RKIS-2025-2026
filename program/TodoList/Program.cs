@@ -62,13 +62,13 @@ namespace TodoList
             int year = Survey("Введите ваш год рождения: ", NowYear - oldestPersonYear, NowYear);
             int month = Survey("Введите ваш месяц рождения: ", 1, 12);
             int day = Survey("Введите ваш день рождения: ", 1, 31);
-            string fullDate = $"{day}/{month}/{year}";
+            string fullDate = $"{day}.{month}.{year}";
             // опрос с допуcтимыми значениями для выхода из опроса
 
             CultureInfo dateProvider = CultureInfo.InvariantCulture;
 
-            string dateFormat = "dd/MM/yyyy";
-            DateTime birthDate = DateTime.ParseExact(fullDate, dateFormat, System.Globalization.CultureInfo.InvariantCulture); // Переводим полученые значения в класс DateTime
+            string dateFormat = "d.M.yyyy";
+            DateTime birthDate = DateTime.ParseExact(fullDate, dateFormat, CultureInfo.InvariantCulture); // Переводим полученые значения в класс DateTime
             var userName = userFirstName + " " + userLastName; // Объединение для дальнейшего вывода 
             var text = $"\n{DateTime.Now}: добавлен пользователь {userName}, день рождения {birthDate.ToLongDateString()}\nвозраст - {DateTime.Now.Year - birthDate.Year}";
             string WriteTextStart01 = $"Date;userLastName;userFirstName;birthDate"; // создание верха таблици по формату Markdown
