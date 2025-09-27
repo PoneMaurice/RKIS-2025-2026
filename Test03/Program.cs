@@ -7,9 +7,108 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks.Dataflow;
 using Microsoft.VisualBasic;
 using Task;
+using System.Text;
 
 namespace Task
 {
+    public static class Commands{
+        public static string InputString(string text)
+        {
+            Console.Write(text);
+            string input = Console.ReadLine() ?? "NULL";
+            input = input.Trim();
+            if (input == "") input = "NULL";
+            return input;
+        }
+        public static int InputIntDate(string text, int min, int max)
+        {
+            int result = -1; // сродникоду об ошибке
+            string input;
+            do
+            {
+                input = InputString(text);
+                int.TryParse(input, out result);
+            }
+            while (result < min || result > max); //условия выхода
+            return result;
+        }
+        public static int InputIntDate(string text)
+        {
+            int result = -1; // сродникоду об ошибке
+            do
+            {
+                string input = InputString(text);
+                int.TryParse(input, out result);
+            }
+            while (result <= 0);
+            return result;
+        }
+        private static string GetModeDate()
+        {
+            string modeDate = InputString($"Выберете метод ввода даты (Стандартный('S'), Попунктный('P')): ");
+            modeDate = modeDate.ToLower();
+            if (modeDate == "s")
+            {
+                string exampleDate = FormatRows.GetNowDate();
+                string dateString = InputString($"Введите дату (Пример {exampleDate}): ");
+                return dateString;
+            }
+            else if (modeDate == "p")
+            {
+                int year = InputIntDate("Введите год: ");
+                int month = InputIntDate("Введите месяц: ", 1, 12);
+                int day = InputIntDate("Введите день: ", 1, DateTime.DaysInMonth(year, month));
+                int hour = InputIntDate("Введите час: ", 0, 23);
+                int minute = InputIntDate("Введите минуты: ", 0, 59);
+                string dateString = $"{day}.{month}.{year} {hour}:{minute}";
+                return dateString;
+            }
+            else
+            {
+                Console.WriteLine("Вы не выбрали режим все даты по default будут 'NULL'");
+            }
+            return "NULL";
+        }
+        public static void AddTask()
+        {
+            string nameTask = InputString("Введите название задания: ");
+            string description = InputString("Введите описание задания: ");
+            string deadLine = GetModeDate();
+            string dateNow = FormatRows.GetNowDate();
+
+            string fileName = "tasks";
+
+            string[] titleRowArray = { "nameTask", "nameTask", "description", "deadLine" };
+            string titleRow = FormatRows.FormatRow(titleRowArray);
+            string[] rowArray = { nameTask, description, dateNow, deadLine };
+            string row = FormatRows.FormatRow(rowArray);
+            FileWriter file = new();
+            if (!file.GetBoolReadLineFile(fileName, titleRow, 0))
+                file.WriteFile(fileName, titleRow);
+            file.WriteFile(fileName, row);
+        }
+    }
+    public class FormatRows
+    {
+        public string endRows = "\n";
+        public static string FormatRow(string[] data)
+        {
+            string text = "";
+            foreach (string pathRow in data)
+            {
+                text = text + pathRow + "|";
+            }
+            return text;
+        }
+        public static string GetNowDate()
+        {
+            DateTime nowDate = DateTime.Now;
+            string date = nowDate.ToShortDateString();
+            string time = nowDate.ToShortTimeString();
+            string dateString = ($"{date} {time}");
+            return dateString;
+        }
+    }
     public class Captions
     {
         public string TextCaptions = "";
@@ -62,16 +161,158 @@ namespace Task
             TextCaptions = text;
         }
     }
-    public class Commands
+    public class FileWriter
     {
-        
-    }
+        public string endRows = "\n";
+        public string seporRows = "|";
+        public string? fullPath = null;
+        public void CreatePath(string nameFile)
+        {
+            string dataPath = "/.config/RKIS-TodoList/"; // Расположение файла для UNIX и MacOSX
+            string winDataPath = "\\RKIS-todoList\\"; // Расположение файла для Win32NT
 
+            string? homePath = (Environment.OSVersion.Platform == PlatformID.Unix || // Если платформа UNIX или MacOSX, то homePath = $HOME
+                   Environment.OSVersion.Platform == PlatformID.MacOSX)
+                   ? Environment.GetEnvironmentVariable("HOME")
+                   : Environment.ExpandEnvironmentVariables("%APPDATA%");   // Если платформа Win32NT, то homepath = \users\<username>\Documents 
+            if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX)
+                fullPath = Path.Join(homePath, dataPath); // Если платформа UNIX или MacOSX, то мы соединяем homePath и dataPath
+            else
+                fullPath = Path.Join(homePath, winDataPath); // Если платформа Win32NT, то мы соединяем homePath и winDataPath
+            DirectoryInfo? directory = new DirectoryInfo(fullPath); // Инициализируем объект класса для создания директории
+            if (!directory.Exists) Directory.CreateDirectory(fullPath); // Если директория не существует, то мы её создаём по пути fullPath
+            string filePath = Path.Join(fullPath, $"{nameFile}.csv");
+            if (File.Exists(filePath))
+                using (FileStream fileCreate = new(filePath, FileMode.OpenOrCreate)) { }
+            fullPath = filePath;
+        }
+        public void WriteFile(string fileName, string dataFile)
+        {
+            CreatePath(fileName);
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(fullPath, true, Encoding.UTF8))
+                {
+                    sw.WriteLine(dataFile);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex}\n");
+            }
+        }
+        public bool GetBoolReadPathLineFile(string fileName, string dataFile)
+        {
+            CreatePath(fileName);
+            try
+            {
+                using (StreamReader sr = new StreamReader(fullPath, Encoding.UTF8))
+                {
+                    foreach (string line in sr.ReadLine().Split(endRows))
+                    {
+                        foreach (string pathLine in line.Split(seporRows))
+                        {
+                            if (pathLine == dataFile) return true;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex}\n");
+            }
+            return false;
+        }
+        public bool GetBoolReadLineFile(string fileName, string dataFile)
+        {
+            CreatePath(fileName);
+            try
+            {
+                using (StreamReader sr = new StreamReader(fullPath, Encoding.UTF8))
+                {
+                    foreach (string line in sr.ReadLine().Split(endRows))
+                    {
+                        if (line == dataFile) return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex}\n");
+            }
+            return false;
+        }
+        public bool GetBoolReadLineFile(string fileName, string dataFile, int position)
+        {
+            CreatePath(fileName);
+            try
+            {
+                using (StreamReader sr = new StreamReader(fullPath, Encoding.UTF8))
+                {
+                    FileInfo fi = new FileInfo(fullPath);
+                    if (fi.Length > 0)
+                    {
+                        string[] lines = sr.ReadLine().Split(endRows);
+                        if (lines[position] == dataFile) return true;
+                        else return false;
+                    }
+                    else return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"!!!GetBoolReadLineFile!!!\n{ex}\n");
+            }
+            return false;
+        }
+        public string GetLineFile(string fileName, string dataFile, int position)
+        {
+            CreatePath(fileName);
+            try
+            {
+                using (StreamReader sr = new StreamReader(fullPath, Encoding.UTF8))
+                {
+                    foreach (string line in sr.ReadLine().Split(endRows))
+                    {
+                        string[] pathText = line.Split(seporRows);
+                        if (pathText[position] == dataFile) return line;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex}\n");
+            }
+            return "NULL";
+        }
+        public string GetLineFile(string fileName, string dataFile)
+        {
+            CreatePath(fileName);
+            try
+            {
+                using (StreamReader sr = new StreamReader(fullPath, Encoding.UTF8))
+                {
+                    foreach (string line in sr.ReadLine().Split(endRows))
+                    {
+                        foreach (string pathLine in line.Split(seporRows))
+                        {
+                            if (pathLine == dataFile) return line;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex}\n");
+            }
+            return "NULL";
+        }
+    }
     public class Survey
     {
         public int counter = 0;
-        public string NewText = "";
-        public string[] listcomm = {
+        public string newText = "";
+        public string[] listComm = {
             "none",
             "add",
             "help",
@@ -83,27 +324,27 @@ namespace Task
         };
         public void GlobalCommamd()
         {
-            if (SearchExtension(0, "exit")) exit();
-            else if (SearchExtension(0, "help")) help();
-            else if (SearchExtension(0, "add")) add();
-            else if (SearchExtension(0, "task")) task();
-            else none();
+            if (SearchExtension(0, "exit")) Exit();
+            else if (SearchExtension(0, "help")) Help();
+            else if (SearchExtension(0, "add")) Add();
+            else if (SearchExtension(0, "task")) Task();
+            else None();
         }
-        public void help()
+        public void Help()
         {
             string text = "help";
             Console.WriteLine(text);
         }
-        public void add()
+        public void Add()
         {
             string text = "add";
             if (SearchExtension(1, "help")) Console.WriteLine($"{text} help");
             else if (SearchExtension("task") && SearchExtension("print"))
                 Console.WriteLine($"{text} task and print");
-            else if (SearchExtension(1, "task")) Console.WriteLine($"{text} task");
+            else if (SearchExtension(1, "task")) Commands.AddTask();
             else Console.WriteLine(text);
         }
-        public void task()
+        public void Task()
         {
             string text = "task";
             if (SearchExtension(1, "help")) Console.WriteLine($"{text} help");
@@ -112,11 +353,11 @@ namespace Task
             else if (SearchExtension(1, "print")) Console.WriteLine($"{text} print");
             else Console.WriteLine(text);
         }
-        public void exit()
+        public void Exit()
         {
-            Environment.Exit(200);
+            Environment.Exit(0);
         }
-        public void none()
+        public void None()
         {
             Console.WriteLine("none");
         }
@@ -125,29 +366,29 @@ namespace Task
         public Dictionary<string, bool> extensions = new Dictionary<string, bool> { };
         public void AddExtensions()
         {
-            for (int i = 0; i < listcomm.Length; ++i)
+            for (int i = 0; i < listComm.Length; ++i)
             {
-                extensions.Add(listcomm[i], false);
+                extensions.Add(listComm[i], false);
             }
         }
         public void ClearExtensions() {
             for (int i = 0; i < extensions.Count; ++i)
             {
-                extensions[listcomm[i]] = false;
+                extensions[listComm[i]] = false;
             }
         }
         public Dictionary<string, int> extensionsNUM = new Dictionary<string, int> { };
         public void AddExtensionsNUM()
         {
-            for (int i = 0; i < listcomm.Length; ++i)
+            for (int i = 0; i < listComm.Length; ++i)
             {
-                extensionsNUM.Add(listcomm[i], 0);
+                extensionsNUM.Add(listComm[i], 0);
             }
         }
         public void ClearExtensionsNUM() {
             for (int i = 0; i < extensionsNUM.Count; ++i)
             {
-                extensionsNUM[listcomm[i]] = 0;
+                extensionsNUM[listComm[i]] = 0;
             }
         }
         public bool SearchExtension(int position, string extension)
@@ -165,28 +406,28 @@ namespace Task
         public void ProceStr(string text)
         {
             Console.Write(text);
-            string ans = Console.ReadLine() ?? "NULL";
-            ans = ans.Trim();
-            if (ans == "") ans = "NULL";
-            string[] PartsText = ans.Split(" ");
-            SearchCommand(PartsText);
-            NewText = AssociationString(PartsText);
+            string ask = Console.ReadLine() ?? "NULL";
+            ask = ask.Trim();
+            if (ask == "") ask = "NULL";
+            string[] partsText = ask.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            SearchCommand(partsText);
+            newText = AssociationString(partsText);
             GlobalCommamd();
-            Console.WriteLine(NewText);
+            Console.WriteLine(newText);
         }
 
-        public string AssociationString(string[] SepText)
+        public string AssociationString(string[] sepText)
         {
             string text = "";
-            bool nonetext = true;
-            for (int i = counter; i < SepText.Length; ++i)
+            bool noneText = true;
+            for (int i = counter; i < sepText.Length; ++i)
             {
-                if (nonetext)
+                if (noneText)
                 {
-                    text = text + SepText[i];
-                    nonetext = false;
+                    text = text + sepText[i];
+                    noneText = false;
                 }
-                else text = text + " " + SepText[i];
+                else text = text + " " + sepText[i];
             }
             if (text == "") text = "NULL";
             return text;
@@ -201,19 +442,19 @@ namespace Task
             for (int i = 0; i < command.Length; ++i)
             {
                 int lus = 1;
-                for (int j = 1; j < listcomm.Length; ++j)
+                for (int j = 1; j < listComm.Length; ++j)
                 {
-                    if (command[i] == listcomm[j] &&
-                    extensions[listcomm[j]] != true)
+                    if (command[i] == listComm[j] &&
+                    extensions[listComm[j]] != true)
                     {
-                        extensions[listcomm[j]] = true;
-                        extensionsNUM[listcomm[j]] = i;
+                        extensions[listComm[j]] = true;
+                        extensionsNUM[listComm[j]] = i;
                         num++;
                         break;
                     }
                     else ++lus;
                 }
-                if (lus == listcomm.Length)
+                if (lus == listComm.Length)
                 {
                     if (i == 0) extensions["none"] = true;
                     break;
@@ -231,12 +472,11 @@ namespace Task
             {
                 if (cycle == 0)
                 {
-                    Console.Title = "My ConsApp";
                     var cap = new Captions();
                     cap.WriteCaption();
                 }
-                var STR = new Survey();
-                STR.ProceStr("-- ");
+                var sur = new Survey();
+                sur.ProceStr("-- ");
                 ++cycle;
             }
             while (true);
