@@ -11,7 +11,30 @@ using System.Text;
 
 namespace Task
 {
-    public static class Commands{
+    public static class Commands
+    {
+        public static string InputDataType(string text)
+        {
+            while (true)
+            {
+                Console.Write(text);
+                string input = Console.ReadLine() ?? "NULL";
+                input = input.Trim();
+                string inputLow = input.ToLower();
+                if (input == "" || input == "NULL")
+                {
+                    Console.WriteLine("Требуеться ввести тип данных");
+                    continue;
+                }
+                else if (inputLow == "integer" || inputLow == "int" || inputLow == "i") return "i";
+                else if (inputLow == "double" || inputLow == "float" || inputLow == "f") return "f";
+                else if (inputLow == "string" || inputLow == "str" || inputLow == "s") return "s";
+                else if (inputLow == "date" || inputLow == "d") return "d";
+                else if (inputLow == "time" || inputLow == "t") return "t";
+                else if (inputLow == "date and time" || inputLow == "dt") return "dt";
+                else Console.WriteLine("Вы ввели неподдерживваемый тип данных");
+            }
+        }
         public static string InputString(string text)
         {
             Console.Write(text);
@@ -42,7 +65,7 @@ namespace Task
                 int.TryParse(input, out result);
             }
             while (result <= 0);
-            string resultString = result.ToString().PadLeft(2, '0');
+            string resultString = string.Format("{0:d2}", result);
             return resultString;
         }
         private static string GetModeDate()
@@ -76,6 +99,7 @@ namespace Task
         {
             string nameTask = InputString("Введите название задания: ");
             string description = InputString("Введите описание задания: ");
+            System.Console.WriteLine("--- Ввод крайнего срока выполнения ---");
             string deadLine = GetModeDate();
             string dateNow = FormatRows.GetNowDate();
 
@@ -88,6 +112,75 @@ namespace Task
             FileWriter file = new();
             file.CreatePath(fileName, titleRow);
             file.WriteFile(row);
+        }
+        public static void AddTaskAndPrint()
+        {
+            string nameTask = InputString("Введите название задания: ");
+            string description = InputString("Введите описание задания: ");
+            System.Console.WriteLine("--- Ввод крайнего срока выполнения ---");
+            string deadLine = GetModeDate();
+            string dateNow = FormatRows.GetNowDate();
+
+            string fileName = "tasks";
+
+            string[] titleRowArray = { "nameTask", "nameTask", "description", "deadLine" };
+            string titleRow = FormatRows.FormatRow(titleRowArray);
+            string[] rowArray = { nameTask, description, dateNow, deadLine };
+            string row = FormatRows.FormatRow(rowArray);
+            try
+            {
+                FileWriter file = new();
+                file.CreatePath(fileName, titleRow);
+                file.WriteFile(row);
+
+                System.Console.WriteLine("\nTask подназванием {0} успешно занесен в файл", nameTask);
+                System.Console.WriteLine("Описание: {0}", description);
+                System.Console.WriteLine("Крайний срок выполнения {0}", deadLine);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Возникла ошибка при записи в файл\n", ex.Message);
+            }
+
+        }
+        public static void AddUserData(string nameDate)
+        {
+            if (nameDate == "NULL")
+            {
+                nameDate = InputString("Введие название для файла с данными: ");
+            }
+            string intermediateResults = "";
+            string[] titleRowArray = { };
+            string sepor = "|||";
+            do
+            {
+                string intermediateResultString =
+                    InputString("Введите название пункта титульного оформления файла: ");
+                if (intermediateResultString == "exit" &&
+                intermediateResults != "") break;
+                else if (intermediateResultString == "exit")
+                    System.Console.WriteLine("В титульном оформлении должен быть хотябы один пункт: ");
+                else if (intermediateResults != "")
+                    intermediateResults = intermediateResults + sepor + intermediateResultString;
+                else intermediateResults = intermediateResults + intermediateResultString;
+            }
+            while (true);
+            titleRowArray = intermediateResults.Split(sepor);
+            string[] dataTypeRowAttay = { };
+            string dataTypesRowString = "";
+            string titleRow = FormatRows.FormatRow(titleRowArray);
+            foreach (string title in titleRowArray)
+            {
+                string dataTypeString = InputDataType($"Введите тип данных для строки {title}: ");
+                if (dataTypesRowString != "")
+                {
+                    dataTypesRowString = dataTypesRowString + sepor + dataTypeString;
+                }
+                else dataTypesRowString = dataTypesRowString + dataTypeString;
+            }
+            dataTypeRowAttay = dataTypesRowString.Split(sepor);
+            string dataTypeRow = FormatRows.FormatRow(dataTypeRowAttay);
+            Console.WriteLine($"{titleRow}\n{dataTypeRow}");
         }
     }
     public class FormatRows
@@ -342,9 +435,9 @@ namespace Task
             string text = "add";
             if (SearchExtension(1, "help")) Console.WriteLine($"{text} help");
             else if (SearchExtension("task") && SearchExtension("print"))
-                Console.WriteLine($"{text} task and print");
+                Commands.AddTaskAndPrint();
             else if (SearchExtension(1, "task")) Commands.AddTask();
-            else Console.WriteLine(text);
+            else Commands.AddUserData(newText);
         }
         public void Task()
         {
