@@ -20,7 +20,7 @@ namespace Task
             if (input == "") input = "NULL";
             return input;
         }
-        public static int InputIntDate(string text, int min, int max)
+        public static string InputDate(string text, int min, int max)
         {
             int result = -1; // сродникоду об ошибке
             string input;
@@ -30,9 +30,10 @@ namespace Task
                 int.TryParse(input, out result);
             }
             while (result < min || result > max); //условия выхода
-            return result;
+            string resultString = result.ToString().PadLeft(2, '0');
+            return resultString;
         }
-        public static int InputIntDate(string text)
+        public static string InputDate(string text)
         {
             int result = -1; // сродникоду об ошибке
             do
@@ -41,7 +42,8 @@ namespace Task
                 int.TryParse(input, out result);
             }
             while (result <= 0);
-            return result;
+            string resultString = result.ToString().PadLeft(2, '0');
+            return resultString;
         }
         private static string GetModeDate()
         {
@@ -55,11 +57,12 @@ namespace Task
             }
             else if (modeDate == "p")
             {
-                int year = InputIntDate("Введите год: ");
-                int month = InputIntDate("Введите месяц: ", 1, 12);
-                int day = InputIntDate("Введите день: ", 1, DateTime.DaysInMonth(year, month));
-                int hour = InputIntDate("Введите час: ", 0, 23);
-                int minute = InputIntDate("Введите минуты: ", 0, 59);
+                string year = InputDate("Введите год: ");
+                string month = InputDate("Введите месяц: ", 1, 12);
+                string day = InputDate("Введите день: ",
+                1, DateTime.DaysInMonth(int.Parse(year), int.Parse(month)));
+                string hour = InputDate("Введите час: ", 0, 23);
+                string minute = InputDate("Введите минуты: ", 0, 59);
                 string dateString = $"{day}.{month}.{year} {hour}:{minute}";
                 return dateString;
             }
@@ -83,9 +86,8 @@ namespace Task
             string[] rowArray = { nameTask, description, dateNow, deadLine };
             string row = FormatRows.FormatRow(rowArray);
             FileWriter file = new();
-            if (!file.GetBoolReadLineFile(fileName, titleRow, 0))
-                file.WriteFile(fileName, titleRow);
-            file.WriteFile(fileName, row);
+            file.CreatePath(fileName, titleRow);
+            file.WriteFile(row);
         }
     }
     public class FormatRows
@@ -165,8 +167,8 @@ namespace Task
     {
         public string endRows = "\n";
         public string seporRows = "|";
-        public string? fullPath = null;
-        public void CreatePath(string nameFile)
+        public string fullPath = "string";
+        public void CreatePath(string nameFile, string titleRow)
         {
             string dataPath = "/.config/RKIS-TodoList/"; // Расположение файла для UNIX и MacOSX
             string winDataPath = "\\RKIS-todoList\\"; // Расположение файла для Win32NT
@@ -181,14 +183,19 @@ namespace Task
                 fullPath = Path.Join(homePath, winDataPath); // Если платформа Win32NT, то мы соединяем homePath и winDataPath
             DirectoryInfo? directory = new DirectoryInfo(fullPath); // Инициализируем объект класса для создания директории
             if (!directory.Exists) Directory.CreateDirectory(fullPath); // Если директория не существует, то мы её создаём по пути fullPath
-            string filePath = Path.Join(fullPath, $"{nameFile}.csv");
-            if (File.Exists(filePath))
-                using (FileStream fileCreate = new(filePath, FileMode.OpenOrCreate)) { }
-            fullPath = filePath;
+            fullPath = Path.Join(fullPath, $"{nameFile}.csv");
+            if (!File.Exists(fullPath))
+                using (var fs = new FileStream(fullPath, FileMode.CreateNew,
+                FileAccess.Write, FileShare.Read))
+                {
+                    using (var sw = new StreamWriter(fs))
+                    {
+                        sw.WriteLine(titleRow);
+                    }
+                }
         }
-        public void WriteFile(string fileName, string dataFile)
+        public void WriteFile(string dataFile)
         {
-            CreatePath(fileName);
             try
             {
                 using (StreamWriter sw = new StreamWriter(fullPath, true, Encoding.UTF8))
@@ -201,9 +208,8 @@ namespace Task
                 Console.WriteLine($"{ex}\n");
             }
         }
-        public bool GetBoolReadPathLineFile(string fileName, string dataFile)
+        public bool GetBoolReadPathLineFile(string dataFile)
         {
-            CreatePath(fileName);
             try
             {
                 using (StreamReader sr = new StreamReader(fullPath, Encoding.UTF8))
@@ -223,9 +229,8 @@ namespace Task
             }
             return false;
         }
-        public bool GetBoolReadLineFile(string fileName, string dataFile)
+        public bool GetBoolReadLineFile(string dataFile)
         {
-            CreatePath(fileName);
             try
             {
                 using (StreamReader sr = new StreamReader(fullPath, Encoding.UTF8))
@@ -242,9 +247,8 @@ namespace Task
             }
             return false;
         }
-        public bool GetBoolReadLineFile(string fileName, string dataFile, int position)
+        public bool GetBoolReadLineFile(string dataFile, int position)
         {
-            CreatePath(fileName);
             try
             {
                 using (StreamReader sr = new StreamReader(fullPath, Encoding.UTF8))
@@ -265,9 +269,8 @@ namespace Task
             }
             return false;
         }
-        public string GetLineFile(string fileName, string dataFile, int position)
+        public string GetLineFile(string dataFile, int position)
         {
-            CreatePath(fileName);
             try
             {
                 using (StreamReader sr = new StreamReader(fullPath, Encoding.UTF8))
@@ -285,9 +288,8 @@ namespace Task
             }
             return "NULL";
         }
-        public string GetLineFile(string fileName, string dataFile)
+        public string GetLineFile(string dataFile)
         {
-            CreatePath(fileName);
             try
             {
                 using (StreamReader sr = new StreamReader(fullPath, Encoding.UTF8))
