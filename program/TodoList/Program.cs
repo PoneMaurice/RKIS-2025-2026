@@ -1,37 +1,63 @@
 ﻿using System;
 using System.Data;
+using System.Formats.Asn1;
+using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks.Dataflow;
+using Microsoft.VisualBasic;
 using Task;
 using System.Text;
+using System.Xml;
+using System.ComponentModel;
+using System.Net;
+using System.Reflection;
 using System.Text.Json.Serialization;
+using System.Reflection.Metadata;
 
 namespace Task
 {
-    public static class Commands
+    public class Commands
     {
-        public static string InputDataType(string text)
+        string StringChar = "s";
+        string IntegerChar = "i";
+        string DoubleChar = "f";
+        string TimeChar = "t";
+        string DateChar = "d";
+        string DateAndTime = "dt";
+        string NowDateTime = "ndt";
+        public string InputDataType(string text)
         {
+
             /*Выводит на экран текст и запрашивает у пользователя 
             ввести тип данных и вводит его в бесконечный цикл 
             вводимая пользователем строка проверяеться на наличие 
             такого типа и если он есть возвращает его сокращение*/
+
+            Dictionary<string, string> DataTypePros = new Dictionary<string, string>()
+            {
+                {"string", StringChar}, {"str", StringChar}, {"s", StringChar},
+                {"integer", IntegerChar}, {"int", IntegerChar}, {"i", IntegerChar},
+                {"double", DoubleChar}, {"float", DoubleChar}, {"f", DoubleChar},
+                {"date", DateChar}, {"d", DateChar},
+                {"time", TimeChar}, {"t", TimeChar},
+                {"date and time", DateAndTime}, {"dt", DateAndTime}, {"datetime", DateAndTime},
+                {"now date time", NowDateTime}, {"ndt", NowDateTime}, {"nowdatetime", NowDateTime}
+            };
             while (true)
             {
                 Console.Write(text);
                 string input = Console.ReadLine() ?? "NULL";
                 input = input.Trim();
                 string inputLow = input.ToLower();
-                if (input == "" || input == "NULL")
+                foreach (var dataType in DataTypePros)
                 {
-                    Console.WriteLine("Требуеться ввести тип данных");
-                    continue;
+                    if (inputLow == dataType.Key)
+                    {
+                        return dataType.Value;
+                    }
                 }
-                else if (inputLow == "integer" || inputLow == "int" || inputLow == "i") return "i";
-                else if (inputLow == "double" || inputLow == "float" || inputLow == "f") return "f";
-                else if (inputLow == "string" || inputLow == "str" || inputLow == "s") return "s";
-                else if (inputLow == "date" || inputLow == "d") return "d";
-                else if (inputLow == "time" || inputLow == "t") return "t";
-                else if (inputLow == "date and time" || inputLow == "dt") return "dt";
-                else Console.WriteLine("Вы ввели неподдерживваемый тип данных");
+                Console.WriteLine("Вы ввели неподдерживваемый тип данных");
             }
         }
         public static string InputString(string text)
@@ -77,7 +103,7 @@ namespace Task
             string resultString = string.Format("{0:d2}", result);
             return resultString;
         }
-        private static string GetModeDate()
+        private static string GetModeDateTime()
         {
             /*Запрашивает всю дату в двух вариантах простом и 
             когда пользователя спрашивают по пунктам 
@@ -87,7 +113,7 @@ namespace Task
             modeDate = modeDate.ToLower();
             if (modeDate == "s")
             {
-                string exampleDate = FormatRows.GetNowDate();
+                string exampleDate = FormatRows.GetNowDateTime();
                 string dateString = InputString($"Введите дату (Пример {exampleDate}): ");
                 return dateString;
             }
@@ -108,6 +134,62 @@ namespace Task
             }
             return "NULL";
         }
+        private static string GetModeDate()
+        {
+            /*Запрашивает всю дату в двух вариантах простом и 
+            когда пользователя спрашивают по пунктам 
+            а так же если он не выберет какойто из вариантов 
+            ввода даты то программа автоматически введет "NULL"*/
+            string modeDate = InputString($"Выберете метод ввода даты (Стандартный('S'), Попунктный('P')): ");
+            modeDate = modeDate.ToLower();
+            if (modeDate == "s")
+            {
+                string exampleDate = DateTime.Now.ToShortDateString();
+                string dateString = InputString($"Введите дату (Пример {exampleDate}): ");
+                return dateString;
+            }
+            else if (modeDate == "p")
+            {
+                string year = InputDate("Введите год: ");
+                string month = InputDate("Введите месяц: ", 1, 12);
+                string day = InputDate("Введите день: ",
+                1, DateTime.DaysInMonth(int.Parse(year), int.Parse(month)));
+                string dateString = $"{day}.{month}.{year}";
+                return dateString;
+            }
+            else
+            {
+                Console.WriteLine("Вы не выбрали режим все даты по default будут 'NULL'");
+            }
+            return "NULL";
+        }
+        private static string GetModeTime()
+        {
+            /*Запрашивает всю дату в двух вариантах простом и 
+            когда пользователя спрашивают по пунктам 
+            а так же если он не выберет какойто из вариантов 
+            ввода даты то программа автоматически введет "NULL"*/
+            string modeDate = InputString($"Выберете метод ввода даты (Стандартный('S'), Попунктный('P')): ");
+            modeDate = modeDate.ToLower();
+            if (modeDate == "s")
+            {
+                string exampleDate = DateTime.Now.ToShortTimeString();
+                string dateString = InputString($"Введите время (Пример {exampleDate}): ");
+                return dateString;
+            }
+            else if (modeDate == "p")
+            {
+                string hour = InputDate("Введите час: ", 0, 23);
+                string minute = InputDate("Введите минуты: ", 0, 59);
+                string dateString = $"{hour}:{minute}";
+                return dateString;
+            }
+            else
+            {
+                Console.WriteLine("Вы не выбрали режим все даты по default будут 'NULL'");
+            }
+            return "NULL";
+        }
         public static void AddTask()
         {
             /*программа запрашивает у пользователя все необходимые ей данные
@@ -115,8 +197,8 @@ namespace Task
             string nameTask = InputString("Введите название задания: ");
             string description = InputString("Введите описание задания: ");
             System.Console.WriteLine("--- Ввод крайнего срока выполнения ---");
-            string deadLine = GetModeDate();
-            string dateNow = FormatRows.GetNowDate();
+            string deadLine = GetModeDateTime();
+            string dateNow = FormatRows.GetNowDateTime();
 
             string fileName = "tasks";
 
@@ -137,8 +219,8 @@ namespace Task
             string nameTask = InputString("Введите название задания: ");
             string description = InputString("Введите описание задания: ");
             System.Console.WriteLine("--- Ввод крайнего срока выполнения ---");
-            string deadLine = GetModeDate();
-            string dateNow = FormatRows.GetNowDate();
+            string deadLine = GetModeDateTime();
+            string dateNow = FormatRows.GetNowDateTime();
 
             string fileName = "tasks";
 
@@ -162,64 +244,60 @@ namespace Task
             }
 
         }
-        public static void AddConfUserData(string nameDate)
+        public static void AddConfUserData(string nameData)
         {
-
-            if (nameDate == "NULL")
+            if (nameData == "NULL")
             {
-                nameDate = InputString("Введие название для файла с данными: ");
+                nameData = InputString("Введие название для файла с данными: ");
             }
 
-            FileWriter search = new();
-            string searchPath = search.CreatePath(nameDate);
-            string askFile = "";
+            FileWriter file = new();
+            string fullPathConfig = file.CreatePath($"{nameData}_conf");
+            string askFile = "y";
             string searchLine1 = "NULL";
             string searchLine2 = "NULL";
-            if (File.Exists(searchPath))
+            if (File.Exists(fullPathConfig))
             {
-                searchLine1 = search.GetLineFile(searchPath, 0);
-                searchLine2 = search.GetLineFile(searchPath, 1);
+                searchLine1 = file.GetLineFile(fullPathConfig, 0);
+                searchLine2 = file.GetLineFile(fullPathConfig, 1);
                 Console.WriteLine($"{searchLine1}\n{searchLine2}");
                 askFile = InputString($"Вы точно уверены что хотите перерзаписать конфигкрацию?(y/N): ");
             }
             if (askFile == "y")
             {
-                string intermediateResults = "";
-                string sepor = "|||";
+                string titleRow = "";
+                string sepor = file.seporRows;
                 do
                 {
                     string intermediateResultString =
                         InputString("Введите название пункта титульного оформления файла: ");
                     if (intermediateResultString == "exit" &&
-                    intermediateResults != "") break;
+                    titleRow != "") break;
                     else if (intermediateResultString == "exit")
                         Console.WriteLine("В титульном оформлении должен быть хотябы один пункт: ");
-                    else if (intermediateResults != "")
-                        intermediateResults = intermediateResults + sepor + intermediateResultString;
-                    else intermediateResults = intermediateResults + intermediateResultString;
+                    else if (titleRow != "")
+                        titleRow = titleRow + sepor + intermediateResultString;
+                    else titleRow = titleRow + intermediateResultString;
                 }
                 while (true);
-                string[] titleRowArray = intermediateResults.Split(sepor);
-                string dataTypesRowString = "";
-                string titleRow = FormatRows.FormatRow(titleRowArray);
+                string[] titleRowArray = titleRow.Split(sepor);
+                string dataTypeRow = "";
                 foreach (string title in titleRowArray)
                 {
-                    string dataTypeString = InputDataType($"Введите тип данных для строки {title}: ");
-                    if (dataTypesRowString != "")
+                    Commands config = new();
+                    string dataTypeString = config.InputDataType($"Введите тип данных для строки {title}: ");
+                    if (dataTypeRow != "")
                     {
-                        dataTypesRowString = dataTypesRowString + sepor + dataTypeString;
+                        dataTypeRow = dataTypeRow + sepor + dataTypeString;
                     }
-                    else dataTypesRowString = dataTypesRowString + dataTypeString;
+                    else dataTypeRow = dataTypeRow + dataTypeString;
                 }
-                string[] dataTypeRowAttay = dataTypesRowString.Split(sepor);
-                string dataTypeRow = FormatRows.FormatRow(dataTypeRowAttay);
                 Console.WriteLine($"{titleRow}\n{dataTypeRow}");
-                FileWriter file = new FileWriter();
-                string fullPathConfig = file.CreatePath($"{nameDate}_conf", titleRow);
+                fullPathConfig = file.CreatePath($"{nameData}_conf", titleRow);
                 string line1 = file.GetLineFile(fullPathConfig, 0);
                 string line2 = file.GetLineFile(fullPathConfig, 1);
-                string askTitle = "";
-                string askDataType = "";
+                string askTitle = "y";
+                string askDataType = "y";
                 if (line1 != titleRow && line1 != "NULL")
                 {
                     askTitle = InputString($"Титульный лист отличается \nНыняшний: {titleRow}\nПрошлый: {line1}\nЗаменить?(y/N): ");
@@ -240,21 +318,73 @@ namespace Task
                 System.Console.WriteLine($"{searchLine1}\n{searchLine2}");
             }
         }
+        public static void AddUserData(string nameData)
+        {
+            FileWriter file = new();
+
+            string fullPathConfig = file.CreatePath($"{nameData}_conf");
+            if (File.Exists(fullPathConfig))
+            {
+                string titleRow = file.GetLineFile(fullPathConfig, 0);
+                string[] titleRowArray = titleRow.Split(file.seporRows);
+                string dataTypeRow = file.GetLineFile(fullPathConfig, 1);
+                string[] dataTypeRowArray = dataTypeRow.Split(file.seporRows);
+                string row = "";
+                for (int i = 0; i < titleRowArray.Length; i++)
+                {
+                    string path = "NULL";
+                    switch (dataTypeRowArray[i])
+                    {
+                        case "s":
+                            path = InputString($"введите {titleRowArray[i]}: ");
+                            break;
+                        case "i":
+                            path = InputString($"введите {titleRowArray[i]}: ");
+                            break;
+                        case "f":
+                            path = InputString($"введите {titleRowArray[i]}: ");
+                            break;
+                        case "d":
+                            path = GetModeDate();
+                            break;
+                        case "t":
+                            path = GetModeTime();
+                            break;
+                        case "dt":
+                            path = GetModeDateTime();
+                            break;
+                        case "ndt":
+                            path = FormatRows.GetNowDateTime();
+                            break;
+                    }
+                    if (row == "") row = row + path;
+                    else row = row + file.seporRows + path;
+                }
+                string fullPath = file.CreatePath(nameData, titleRow);
+                string testTitleRow = file.GetLineFile(fullPath, 0);
+                if (testTitleRow != titleRow)
+                {
+                    file.WriteFile(fullPath, titleRow, false);
+                }
+                file.WriteFile(fullPath, row, true);
+            }
+            else Console.WriteLine($"Сначала создайте конфигурацию или провертие правильность написания названия => '{nameData}'");
+        }
     }
     public class FormatRows
     {
-        public string endRows = "\n";
         public static string FormatRow(string[] data)
         {
             /*Форматирует масив данных под будущию таблицу csv*/
             string text = "";
             foreach (string pathRow in data)
             {
-                text = text + pathRow + "|";
+                if (text == "") text = text + pathRow;
+                else text = text + "|" + pathRow;
             }
             return text;
         }
-        public static string GetNowDate()
+        public static string GetNowDateTime()
         {
             /*возвращает сегодняшнюю дату и время в нужном формате*/
             DateTime nowDate = DateTime.Now;
@@ -321,7 +451,6 @@ namespace Task
     }
     public class FileWriter
     {
-        public string endRows = "\n";
         public string seporRows = "|";
         public string CreatePath(string nameFile, string titleRow)
         {
@@ -341,6 +470,15 @@ namespace Task
             DirectoryInfo? directory = new DirectoryInfo(fullPath); // Инициализируем объект класса для создания директории
             if (!directory.Exists) Directory.CreateDirectory(fullPath); // Если директория не существует, то мы её создаём по пути fullPath
             fullPath = Path.Join(fullPath, $"{nameFile}.csv");
+            if (!File.Exists(fullPath))
+                using (var fs = new FileStream(fullPath, FileMode.CreateNew,
+                FileAccess.Write, FileShare.Read))
+                {
+                    using (var sw = new StreamWriter(fs))
+                    {
+                        sw.WriteLine(titleRow);
+                    }
+                }
             return fullPath;
         }
         public string CreatePath(string nameFile)
@@ -361,8 +499,6 @@ namespace Task
             DirectoryInfo? directory = new DirectoryInfo(fullPath); // Инициализируем объект класса для создания директории
             if (!directory.Exists) Directory.CreateDirectory(fullPath); // Если директория не существует, то мы её создаём по пути fullPath
             fullPath = Path.Join(fullPath, $"{nameFile}.csv");
-            if (!File.Exists(fullPath))
-                using (var fs = new FileStream(fullPath, FileMode.CreateNew)){}
             return fullPath;
         }
         public void WriteFile(string fullPath, string dataFile, bool noRewrite)
@@ -485,6 +621,7 @@ namespace Task
             "task",
             "clear",
             "search",
+            "config",
             "exit"
         };
         public void GlobalCommamd()
@@ -493,6 +630,7 @@ namespace Task
             else if (SearchExtension(0, "help")) Help();
             else if (SearchExtension(0, "add")) Add();
             else if (SearchExtension(0, "task")) Task();
+            else if (SearchExtension(0, "print")) Print();
             else None();
         }
         public void Help()
@@ -507,7 +645,8 @@ namespace Task
             else if (SearchExtension("task") && SearchExtension("print"))
                 Commands.AddTaskAndPrint();
             else if (SearchExtension(1, "task")) Commands.AddTask();
-            else Commands.AddConfUserData(newText);
+            else if (SearchExtension(1, "config")) Commands.AddConfUserData(newText);
+            else Commands.AddUserData(newText);
         }
         public void Task()
         {
@@ -516,6 +655,12 @@ namespace Task
             else if (SearchExtension(1, "clear")) Console.WriteLine($"{text} clear");
             else if (SearchExtension(1, "search")) Console.WriteLine($"{text} search");
             else if (SearchExtension(1, "print")) Console.WriteLine($"{text} print");
+            else Console.WriteLine(text);
+        }
+        public void Print()
+        {
+            string text = "print";
+            if (SearchExtension(1, "help")) Console.WriteLine($"{text} help");
             else Console.WriteLine(text);
         }
         public void Exit()
