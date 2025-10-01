@@ -63,7 +63,7 @@ namespace Task
         public static string InputString(string text)
         {
             /*выводит текст пользователю и запрашивает 
-            ввести строковые данные, они проверяются на           // Eduard сам поставил запятую, не может быть - PoneMaurice
+            ввести строковые данные, они проверяются на
             наличие и если строка пуста то возвращаеться 
             "NULL" если нет то возвращается обработаная 
             версия строки*/
@@ -132,7 +132,7 @@ namespace Task
             }
             else
             {
-                Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'"); // Eduard выучи запятые - PoneMaurice
+                Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'");
             }
             return "NULL";
         }
@@ -161,7 +161,7 @@ namespace Task
             }
             else
             {
-                Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'"); // Eduard выучи запятые!!! - PoneMaurice
+                Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'"); 
             }
             return "NULL";
         }
@@ -188,7 +188,7 @@ namespace Task
             }
             else
             {
-                Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'"); // Eduard выучи запятые!!!!!!!!!!!1!111 - PoneMaurice
+                Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'");
             }
             return "NULL";
         }
@@ -263,7 +263,7 @@ namespace Task
                 searchLine1 = file.GetLineFile(fullPathConfig, 0);
                 searchLine2 = file.GetLineFile(fullPathConfig, 1);
                 Console.WriteLine($"{searchLine1}\n{searchLine2}");
-                askFile = InputString($"Вы точно уверены, что хотите перезаписать конфигурацию?(y/N): "); // Eduard выучи запятые!!!!!! Я уже не могу на это смотреть - PoneMaurie
+                askFile = InputString($"Вы точно уверены, что хотите перезаписать конфигурацию?(y/N): ");
             }
             if (askFile == "y")
             {
