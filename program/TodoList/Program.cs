@@ -57,13 +57,13 @@ namespace Task
                         return dataType.Value;
                     }
                 }
-                Console.WriteLine("Вы ввели неподдерживваемый тип данных");
+                Console.WriteLine("Вы ввели неподдерживаемый тип данных");
             }
         }
         public static string InputString(string text)
         {
             /*выводит текст пользователю и запрашивает 
-            ввести строковые данные, они проверяютяся на 
+            ввести строковые данные, они проверяются на           // Eduard сам поставил запятую, не может быть - PoneMaurice
             наличие и если строка пуста то возвращаеться 
             "NULL" если нет то возвращается обработаная 
             версия строки*/
@@ -75,8 +75,8 @@ namespace Task
         }
         public static string InputDate(string text, int min, int max)
         {
-            /*Запрашивает у пользователя дату проверяется
-            на миниммальное и максимальное допустимое значение
+            /*Запрашивает у пользователя дату, проверяется
+            на миниммальное и максимальное допустимое значение,
             а так же возвращает простые цифры с нулем.
             Пример: 02, 00, 09 и тд.s*/
             int result = -1; // сродникоду об ошибке
@@ -105,11 +105,11 @@ namespace Task
         }
         private static string GetModeDateTime()
         {
-            /*Запрашивает всю дату в двух вариантах простом и 
-            когда пользователя спрашивают по пунктам 
-            а так же если он не выберет какойто из вариантов 
+            /*Запрашивает всю дату в двух вариантах опросом и 
+            когда пользователя спрашивают по пунктам, 
+            а так же если он не выберет какой-то из вариантов 
             ввода даты то программа автоматически введет "NULL"*/
-            string modeDate = InputString($"Выберете метод ввода даты (Стандартный('S'), Попунктный('P')): ");
+            string modeDate = InputString($"Выберете метод ввода даты: (Стандартный('S'), Попунктный('P')): ");
             modeDate = modeDate.ToLower();
             if (modeDate == "s")
             {
@@ -130,17 +130,17 @@ namespace Task
             }
             else
             {
-                Console.WriteLine("Вы не выбрали режим все даты по default будут 'NULL'");
+                Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'"); // Eduard выучи запятые - PoneMaurice
             }
             return "NULL";
         }
         private static string GetModeDate()
         {
-            /*Запрашивает всю дату в двух вариантах простом и 
-            когда пользователя спрашивают по пунктам 
-            а так же если он не выберет какойто из вариантов 
+            /*Запрашивает всю дату в двух вариантах опросом и 
+            когда пользователя спрашивают по пунктам, 
+            а так же если он не выберет какой-то из вариантов 
             ввода даты то программа автоматически введет "NULL"*/
-            string modeDate = InputString($"Выберете метод ввода даты (Стандартный('S'), Попунктный('P')): ");
+            string modeDate = InputString($"Выберете метод ввода даты: (Стандартный('S'), Попунктный('P')): ");
             modeDate = modeDate.ToLower();
             if (modeDate == "s")
             {
@@ -159,17 +159,17 @@ namespace Task
             }
             else
             {
-                Console.WriteLine("Вы не выбрали режим все даты по default будут 'NULL'");
+                Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'"); // Eduard выучи запятые!!! - PoneMaurice
             }
             return "NULL";
         }
         private static string GetModeTime()
         {
-            /*Запрашивает всю дату в двух вариантах простом и 
-            когда пользователя спрашивают по пунктам 
-            а так же если он не выберет какойто из вариантов 
+            /*Запрашивает всю дату в двух вариантах опросом и 
+            когда пользователя спрашивают по пунктам, 
+            а так же если он не выберет какой-то из вариантов 
             ввода даты то программа автоматически введет "NULL"*/
-            string modeDate = InputString($"Выберете метод ввода даты (Стандартный('S'), Попунктный('P')): ");
+            string modeDate = InputString($"Выберете метод ввода даты: (Стандартный('S'), Попунктный('P')): ");
             modeDate = modeDate.ToLower();
             if (modeDate == "s")
             {
@@ -186,14 +186,14 @@ namespace Task
             }
             else
             {
-                Console.WriteLine("Вы не выбрали режим все даты по default будут 'NULL'");
+                Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'"); // Eduard выучи запятые!!!!!!!!!!!1!111 - PoneMaurice
             }
             return "NULL";
         }
         public static void AddTask()
         {
             /*программа запрашивает у пользователя все необходимые ей данные
-            и записует их в файл tasks.csv с нужным форматированием*/
+            и записывает их в файл tasks.csv с нужным форматированием*/
             string nameTask = InputString("Введите название задания: ");
             string description = InputString("Введите описание задания: ");
             System.Console.WriteLine("--- Ввод крайнего срока выполнения ---");
@@ -213,8 +213,8 @@ namespace Task
         public static void AddTaskAndPrint()
         {
             /*программа запрашивает у пользователя все необходимые ей данные
-            и записует их в файл tasks.csv с нужным форматированием 
-            после чего выводит сообщение о добовление данных дублируя их 
+            и записывает их в файл tasks.csv с нужным форматированием 
+            после чего выводит сообщение о добовлении данных дублируя их 
             пользователю для проверки*/
             string nameTask = InputString("Введите название задания: ");
             string description = InputString("Введите описание задания: ");
@@ -234,7 +234,7 @@ namespace Task
                 string fullPath = file.CreatePath(fileName, titleRow);
                 file.WriteFile(fullPath, row, true);
 
-                System.Console.WriteLine("\nTask подназванием {0} успешно занесен в файл", nameTask);
+                System.Console.WriteLine("\nTask под названием {0} успешно занесен в файл", nameTask);
                 System.Console.WriteLine("Описание: {0}", description);
                 System.Console.WriteLine("Крайний срок выполнения {0}", deadLine);
             }
@@ -248,7 +248,7 @@ namespace Task
         {
             if (nameData == "NULL")
             {
-                nameData = InputString("Введие название для файла с данными: ");
+                nameData = InputString("Введите название для файла с данными: ");
             }
 
             FileWriter file = new();
@@ -261,7 +261,7 @@ namespace Task
                 searchLine1 = file.GetLineFile(fullPathConfig, 0);
                 searchLine2 = file.GetLineFile(fullPathConfig, 1);
                 Console.WriteLine($"{searchLine1}\n{searchLine2}");
-                askFile = InputString($"Вы точно уверены что хотите перерзаписать конфигкрацию?(y/N): ");
+                askFile = InputString($"Вы точно уверены, что хотите перезаписать конфигурацию?(y/N): "); // Eduard выучи запятые!!!!!! Я уже не могу на это смотреть - PoneMaurie
             }
             if (askFile == "y")
             {
@@ -274,7 +274,7 @@ namespace Task
                     if (intermediateResultString == "exit" &&
                     titleRow != "") break;
                     else if (intermediateResultString == "exit")
-                        Console.WriteLine("В титульном оформлении должен быть хотябы один пункт: ");
+                        Console.WriteLine("В титульном оформлении должен быть хотя бы один пункт: ");
                     else if (titleRow != "")
                         titleRow = titleRow + sepor + intermediateResultString;
                     else titleRow = titleRow + intermediateResultString;
@@ -304,7 +304,7 @@ namespace Task
                 }
                 else if (line2 != dataTypeRow && line2 != "NULL")
                 {
-                    askDataType = InputString($"Конфигурация уже имееться\nНынешняя: {dataTypeRow}\nПрошлая: {line2}\nЗаменить?(y/N): ");
+                    askDataType = InputString($"Конфигурация уже имеется\nНынешняя: {dataTypeRow}\nПрошлая: {line2}\nЗаменить?(y/N): ");
                 }
                 if (askTitle == "y" || askDataType == "y")
                 {
@@ -368,14 +368,14 @@ namespace Task
                 }
                 file.WriteFile(fullPath, row, true);
             }
-            else Console.WriteLine($"Сначала создайте конфигурацию или провертие правильность написания названия => '{nameData}'");
+            else Console.WriteLine($"Сначала создайте конфигурацию или проверьте правильность написания названия => '{nameData}'");
         }
     }
     public class FormatRows
     {
         public static string FormatRow(string[] data)
         {
-            /*Форматирует масив данных под будущию таблицу csv*/
+            /*Форматирует массив данных под будущию таблицу csv*/
             string text = "";
             foreach (string pathRow in data)
             {
@@ -399,7 +399,7 @@ namespace Task
         public string TextCaptions = "";
         public void WriteCaption()
         {
-            /*спрашивает и выводит текст субтитров созданый 
+            /*спрашивает и выводит текст субтитров созданный 
             методом CompText*/
             if (TextCaptions == "") CompText();
             Console.Write("Вывести титры?(y/N): ");
@@ -411,7 +411,8 @@ namespace Task
         }
         void CompText()
         {
-            /*Составляет текст для судтитров*/
+            /*Составляет текст для субтитров*/
+            /*WHAT THE HAY IS THAT?! I think i actually like that;) - PoneMaurice */
             string[] Ed =
             {
             "README",
@@ -425,9 +426,9 @@ namespace Task
             "некоторый части исходного кода"
             };
 
-            Dictionary<int, string> fices = new Dictionary<int, string>()
+            Dictionary<int, string> feces /*An appropriate name for our duo*/= new Dictionary<int, string>()
             {
-                {0, "Шевченок Э."},
+                {0, "Шевченок Э."}, // Шевченок Э. на месте? - PoneMaurice
                 {1, "Титов М."}
             };
             Dictionary<int, string[]> captions = new Dictionary<int, string[]>()
@@ -435,10 +436,10 @@ namespace Task
                 {0 , Ed},
                 {1 , Misha}
             };
-            string text = "За работу отвецтвенны:\n";
-            for (int i = 0; i < fices.Count; ++i)
+            string text = "За работу ответственны:\n";
+            for (int i = 0; i < feces.Count; ++i)
             {
-                text = text + $"{fices[i]} :";
+                text = text + $"{feces[i]} :";
                 for (int j = 0; j < captions[i].Length; ++j)
                 {
                     string[] caption = captions[i];
@@ -481,7 +482,7 @@ namespace Task
                 }
             return fullPath;
         }
-        public string CreatePath(string nameFile)
+        public string CreatePath(string nameFile) // WHY ARE THERE 2 CreatePath ()?! I will fix that in next commit - PoneMaurice
         {
             /*Создание актульного пути под каждый нужный файл находящийся в деректории с конфигами*/
             string dataPath = "/.config/RKIS-TodoList/"; // Расположение файла для UNIX и MacOSX
@@ -528,8 +529,8 @@ namespace Task
         }
         public string GetLineFile(string fullPath, string dataFile, int positionInRow)
         {
-            /*Возвращвает строку если ее элемент по заданой позиции 
-            соотвецтввует введеным нами данным*/
+            /*Возвращает строку если ее элемент по заданой позиции 
+            соответствует введеным нами данным*/
             try
             {
                 using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
@@ -561,8 +562,8 @@ namespace Task
         }
         public string GetLineFile(string fullPath, int positionRow)
         {
-            /*Возвращвает строку если ее элемент по заданой позиции 
-            соотвецтввует введеным нами данным*/
+            /*Возвращает строку если ее элемент по заданной позиции 
+            соответствует введеным нами данным*/
             try
             {
                 using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
@@ -587,7 +588,7 @@ namespace Task
         }
         public string GetLineFile(string fullPath, string dataFile)
         {
-            /*перрегрузка метода только без позиции*/
+            /*перегрузка метода только без позиции*/
             try
             {
                 using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
