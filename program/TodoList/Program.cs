@@ -19,13 +19,13 @@ namespace Task
 {
     public class Commands
     {
-        string StringChar = "s";
-        string IntegerChar = "i";
-        string DoubleChar = "f";
-        string TimeChar = "t";
-        string DateChar = "d";
-        string DateAndTime = "dt";
-        string NowDateTime = "ndt";
+        const string StringChar = "s";
+        public const string IntegerChar = "i";
+        public const string DoubleChar = "f";
+        public const string TimeChar = "t";
+        public const string DateChar = "d";
+        public const string DateAndTime = "dt";
+        public const string NowDateTime = "ndt";
         public string InputDataType(string text)
         {
 
@@ -335,25 +335,25 @@ namespace Task
                     string path = "NULL";
                     switch (dataTypeRowArray[i])
                     {
-                        case "s":
+                        case Commands.StringChar:
                             path = InputString($"введите {titleRowArray[i]}: ");
                             break;
-                        case "i":
+                        case Commands.IntegerChar:
                             path = InputString($"введите {titleRowArray[i]}: ");
                             break;
-                        case "f":
+                        case Commands.DoubleChar:
                             path = InputString($"введите {titleRowArray[i]}: ");
                             break;
-                        case "d":
+                        case Commands.DateChar:
                             path = GetModeDate();
                             break;
-                        case "t":
+                        case Commands.TimeChar:
                             path = GetModeTime();
                             break;
-                        case "dt":
+                        case Commands.DateAndTime:
                             path = GetModeDateTime();
                             break;
-                        case "ndt":
+                        case Commands.NowDateTime:
                             path = FormatRows.GetNowDateTime();
                             break;
                     }
