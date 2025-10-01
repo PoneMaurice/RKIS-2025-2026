@@ -345,12 +345,15 @@ namespace Task
                             path = InputString($"введите {titleRowArray[i]}: ");
                             break;
                         case Commands.DateChar:
+                            Console.WriteLine($"---ввод {titleRowArray[i]}---");
                             path = GetModeDate();
                             break;
                         case Commands.TimeChar:
+                            Console.WriteLine($"---ввод {titleRowArray[i]}---");
                             path = GetModeTime();
                             break;
                         case Commands.DateAndTime:
+                            Console.WriteLine($"---ввод {titleRowArray[i]}---");
                             path = GetModeDateTime();
                             break;
                         case Commands.NowDateTime:
