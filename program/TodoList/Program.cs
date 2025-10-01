@@ -458,7 +458,7 @@ namespace Task
     }
     public class FileWriter
     {
-        public string seporRows = ";";
+        public string seporRows = "|";
         public string CreatePath(string nameFile) // Function for creating file path - PoneMaurice
         {
             /*Создание актульного пути под каждый нужный файл находящийся в деректории с конфигами*/
