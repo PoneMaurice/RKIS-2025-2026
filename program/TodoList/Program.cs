@@ -207,7 +207,7 @@ namespace Task
             string[] rowArray = { nameTask, description, dateNow, deadLine };
             string row = FormatRows.FormatRow(rowArray);
             FileWriter file = new();
-            string fullPath = file.CreatePath(fileName, titleRow);
+            string fullPath = file.TitleRowWriter(fileName, titleRow);
             file.WriteFile(fullPath, row, true);
         }
         public static void AddTaskAndPrint()
@@ -231,7 +231,7 @@ namespace Task
             try
             {
                 FileWriter file = new();
-                string fullPath = file.CreatePath(fileName, titleRow);
+                string fullPath = file.TitleRowWriter(fileName, titleRow);
                 file.WriteFile(fullPath, row, true);
 
                 System.Console.WriteLine("\nTask под названием {0} успешно занесен в файл", nameTask);
@@ -293,7 +293,7 @@ namespace Task
                     else dataTypeRow = dataTypeRow + dataTypeString;
                 }
                 Console.WriteLine($"{titleRow}\n{dataTypeRow}");
-                fullPathConfig = file.CreatePath($"{nameData}_conf", titleRow);
+                fullPathConfig = file.TitleRowWriter($"{nameData}_conf", titleRow);
                 string line1 = file.GetLineFile(fullPathConfig, 0);
                 string line2 = file.GetLineFile(fullPathConfig, 1);
                 string askTitle = "y";
@@ -360,7 +360,7 @@ namespace Task
                     if (row == "") row = row + path;
                     else row = row + file.seporRows + path;
                 }
-                string fullPath = file.CreatePath(nameData, titleRow);
+                string fullPath = file.TitleRowWriter(nameData, titleRow);
                 string testTitleRow = file.GetLineFile(fullPath, 0);
                 if (testTitleRow != titleRow)
                 {
@@ -450,10 +450,10 @@ namespace Task
             TextCaptions = text;
         }
     }
-    public class FileWriter
+    public class FileWriter // Fixed some genius programming by Eduard which had two CreatePath functions - PoneMaurice
     {
         public string seporRows = "|";
-        public string CreatePath(string nameFile, string titleRow)
+        public string CreatePath(string nameFile) // Function for creating file path - PoneMaurice
         {
             /*Создание актульного пути под каждый нужный файл находящийся в деректории с конфигами*/
             string dataPath = "/.config/RKIS-TodoList/"; // Расположение файла для UNIX и MacOSX
@@ -471,35 +471,20 @@ namespace Task
             DirectoryInfo? directory = new DirectoryInfo(fullPath); // Инициализируем объект класса для создания директории
             if (!directory.Exists) Directory.CreateDirectory(fullPath); // Если директория не существует, то мы её создаём по пути fullPath
             fullPath = Path.Join(fullPath, $"{nameFile}.csv");
+            return fullPath;
+        }
+        public string TitleRowWriter(string nameFile, string titleRow) // function for writing title rows one by one - PoneMaurice
+        {
+            string fullPath = CreatePath(nameFile);
             if (!File.Exists(fullPath))
                 using (var fs = new FileStream(fullPath, FileMode.CreateNew,
                 FileAccess.Write, FileShare.Read))
                 {
-                    using (var sw = new StreamWriter(fs))
-                    {
-                        sw.WriteLine(titleRow);
-                    }
+                        using (var sw = new StreamWriter(fs))
+                        {
+                            sw.WriteLine(titleRow);
+                        }
                 }
-            return fullPath;
-        }
-        public string CreatePath(string nameFile) // WHY ARE THERE 2 CreatePath ()?! I will fix that in next commit - PoneMaurice
-        {
-            /*Создание актульного пути под каждый нужный файл находящийся в деректории с конфигами*/
-            string dataPath = "/.config/RKIS-TodoList/"; // Расположение файла для UNIX и MacOSX
-            string winDataPath = "\\RKIS-todoList\\"; // Расположение файла для Win32NT
-            string fullPath;
-
-            string? homePath = (Environment.OSVersion.Platform == PlatformID.Unix || // Если платформа UNIX или MacOSX, то homePath = $HOME
-                   Environment.OSVersion.Platform == PlatformID.MacOSX)
-                   ? Environment.GetEnvironmentVariable("HOME")
-                   : Environment.ExpandEnvironmentVariables("%APPDATA%");   // Если платформа Win32NT, то homepath = \users\<username>\Documents 
-            if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX)
-                fullPath = Path.Join(homePath, dataPath); // Если платформа UNIX или MacOSX, то мы соединяем homePath и dataPath
-            else
-                fullPath = Path.Join(homePath, winDataPath); // Если платформа Win32NT, то мы соединяем homePath и winDataPath
-            DirectoryInfo? directory = new DirectoryInfo(fullPath); // Инициализируем объект класса для создания директории
-            if (!directory.Exists) Directory.CreateDirectory(fullPath); // Если директория не существует, то мы её создаём по пути fullPath
-            fullPath = Path.Join(fullPath, $"{nameFile}.csv");
             return fullPath;
         }
         public void WriteFile(string fullPath, string dataFile, bool noRewrite)
