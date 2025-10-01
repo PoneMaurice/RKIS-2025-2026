@@ -73,7 +73,7 @@ namespace Task
             if (input == "") input = "NULL";
             return input;
         }
-        public static string InputDate(string text, int min, int max)
+        public static int InputDate(string text, int min, int max)
         {
             /*Запрашивает у пользователя дату, проверяется
             на миниммальное и максимальное допустимое значение,
@@ -87,10 +87,9 @@ namespace Task
                 int.TryParse(input, out result);
             }
             while (result < min || result > max); //условия выхода
-            string resultString = result.ToString().PadLeft(2, '0');
-            return resultString;
+            return result;
         }
-        public static string InputDate(string text)
+        public static int InputDate(string text)
         {
             /*Перегрузка метода InputDate только без лимитов*/
             int result = -1; // сродникоду об ошибке
@@ -100,8 +99,7 @@ namespace Task
                 int.TryParse(input, out result);
             }
             while (result <= 0);
-            string resultString = string.Format("{0:d2}", result);
-            return resultString;
+            return result;
         }
         private static string GetModeDateTime()
         {
@@ -119,13 +117,17 @@ namespace Task
             }
             else if (modeDate == "p")
             {
-                string year = InputDate("Введите год: ");
-                string month = InputDate("Введите месяц: ", 1, 12);
-                string day = InputDate("Введите день: ",
-                1, DateTime.DaysInMonth(int.Parse(year), int.Parse(month)));
-                string hour = InputDate("Введите час: ", 0, 23);
-                string minute = InputDate("Введите минуты: ", 0, 59);
-                string dateString = $"{day}.{month}.{year} {hour}:{minute}";
+                int year = InputDate("Введите год: ");
+                int month = InputDate("Введите месяц: ", 1, 12);
+                int day = InputDate("Введите день: ", 1,
+                    DateTime.DaysInMonth(year, month));
+                DateOnly yearMonthDay = new(year, month, day);
+                string date = yearMonthDay.ToShortDateString();
+                int hour = InputDate("Введите час: ", 0, 23);
+                int minute = InputDate("Введите минуты: ", 0, 59);
+                TimeOnly hourAndMinute = new(hour, minute);
+                string time = hourAndMinute.ToShortTimeString();
+                string dateString = $"{date} {time}";
                 return dateString;
             }
             else
@@ -150,12 +152,12 @@ namespace Task
             }
             else if (modeDate == "p")
             {
-                string year = InputDate("Введите год: ");
-                string month = InputDate("Введите месяц: ", 1, 12);
-                string day = InputDate("Введите день: ",
-                1, DateTime.DaysInMonth(int.Parse(year), int.Parse(month)));
-                string dateString = $"{day}.{month}.{year}";
-                return dateString;
+                int year = InputDate("Введите год: ");
+                int month = InputDate("Введите месяц: ", 1, 12);
+                int day = InputDate("Введите день: ", 1,
+                    DateTime.DaysInMonth(year, month));
+                DateOnly yearMonthDay = new(year, month, day);
+                return yearMonthDay.ToShortDateString();
             }
             else
             {
@@ -179,10 +181,10 @@ namespace Task
             }
             else if (modeDate == "p")
             {
-                string hour = InputDate("Введите час: ", 0, 23);
-                string minute = InputDate("Введите минуты: ", 0, 59);
-                string dateString = $"{hour}:{minute}";
-                return dateString;
+                int hour = InputDate("Введите час: ", 0, 23);
+                int minute = InputDate("Введите минуты: ", 0, 59);
+                TimeOnly hourAndMinute = new(hour, minute);
+                return hourAndMinute.ToShortTimeString();
             }
             else
             {
