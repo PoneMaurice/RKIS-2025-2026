@@ -453,7 +453,7 @@ namespace Task
             TextCaptions = text;
         }
     }
-    public class FileWriter // Fixed some genius programming by Eduard which had two CreatePath functions - PoneMaurice
+    public class FileWriter
     {
         public string seporRows = "|";
         public string CreatePath(string nameFile) // Function for creating file path - PoneMaurice
@@ -476,7 +476,7 @@ namespace Task
             fullPath = Path.Join(fullPath, $"{nameFile}.csv");
             return fullPath;
         }
-        public string TitleRowWriter(string nameFile, string titleRow) // function for writing title rows one by one - PoneMaurice
+        public string TitleRowWriter(string nameFile, string titleRow)
         {
             string fullPath = CreatePath(nameFile);
             if (!File.Exists(fullPath))
