@@ -382,10 +382,11 @@ namespace Task
         {
             /*Форматирует массив данных под будущию таблицу csv*/
             string text = "";
+            FileWriter file = new();
             foreach (string pathRow in data)
             {
                 if (text == "") text = text + pathRow;
-                else text = text + "|" + pathRow;
+                else text = text + file.seporRows + pathRow;
             }
             return text;
         }
@@ -457,7 +458,7 @@ namespace Task
     }
     public class FileWriter
     {
-        public string seporRows = "|";
+        public string seporRows = ";";
         public string CreatePath(string nameFile) // Function for creating file path - PoneMaurice
         {
             /*Создание актульного пути под каждый нужный файл находящийся в деректории с конфигами*/
