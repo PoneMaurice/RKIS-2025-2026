@@ -6,7 +6,7 @@ namespace Task
     public class Survey
     {
         public int counter = 0;
-        public string newText = "";
+        public string nowText = "";
         public string[] listComm = {
             "none",
             "add",
@@ -39,15 +39,18 @@ namespace Task
             else if (SearchExtension("task") && SearchExtension("print"))
                 Commands.AddTaskAndPrint();
             else if (SearchExtension(1, "task")) Commands.AddTask();
-            else if (SearchExtension(1, "config")) Commands.AddConfUserData(newText);
-            else Commands.AddUserData(newText);
+            else if (SearchExtension(1, "config")) Commands.AddConfUserData(nowText);
+            else Commands.AddUserData(nowText);
         }
         public void Task()
         {
             string text = "task";
+            Commands command = new();
             if (SearchExtension(1, "help")) Console.WriteLine($"{text} help");
+            else if (SearchExtension(1, "clear") && nowText == "NULL")
+                Commands.ClearAllTasks();
             else if (SearchExtension(1, "clear")) Console.WriteLine($"{text} clear");
-            else if (SearchExtension(1, "search")) Console.WriteLine($"{text} search");
+            else if (SearchExtension(1, "search")) command.SearchPartData(nowText, command.nameTask);
             else if (SearchExtension(1, "print")) Console.WriteLine($"{text} print");
             else Console.WriteLine(text);
         }
@@ -63,7 +66,7 @@ namespace Task
         }
         public void None()
         {
-            Console.WriteLine("none");
+            Console.WriteLine("Неизвестная команда");
         }
 
 
@@ -112,7 +115,7 @@ namespace Task
             string ask = Commands.InputString(text);
             string[] partsText = ask.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             SearchCommand(partsText);
-            newText = AssociationString(partsText);
+            nowText = AssociationString(partsText);
             GlobalCommamd();
         }
 

@@ -64,7 +64,7 @@ namespace Task
                 Console.WriteLine($"{ex}\n");
             }
         }
-        public string GetLineFilePositionInRowAndData(string fullPath, string dataFile, int positionInRow)
+        public string GetLineFileDataOnPositionInRow(string fullPath, string dataFile, int positionInRow)
         {
             /*Возвращает строку если ее элемент по заданой позиции 
             соответствует введеным нами данным*/
@@ -76,17 +76,10 @@ namespace Task
                     while ((line = reader.ReadLine()) != null)
                     {
                         string[] pathLine = line.Split(seporRows);
-                        if (pathLine.Length < positionInRow)
+                        if (pathLine.Length > positionInRow)
                         {
                             if (pathLine[positionInRow] == dataFile)
-                                return pathLine[positionInRow];
-                            else System.Console.WriteLine($"Строка '{line}'\nНе содержит {dataFile}.");
-                        }
-                        else
-                        {
-                            System.Console.WriteLine($"В файле нет столько позиций");
-                            System.Console.WriteLine(line);
-                            break;
+                                return line;
                         }
                     }
                 }

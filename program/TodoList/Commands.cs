@@ -1,12 +1,16 @@
 // This is the main file, it contains cruical components of the program - PoneMaurice
 using System;
 using System.Data;
+using System.IO.Enumeration;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 namespace Task
 {
     public class Commands
     {
+        const string NameTask = "tasks";
+        public string nameTask { get { return NameTask;}}
         const string StringChar = "s";
         const string IntegerChar = "i";
         const string DoubleChar = "f";
@@ -118,10 +122,7 @@ namespace Task
                 string dateString = $"{date} {time}";
                 return dateString;
             }
-            else
-            {
-                Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'");
-            }
+            else Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'");
             return "NULL";
         }
         private static string GetModeDate()
@@ -147,10 +148,7 @@ namespace Task
                 DateOnly yearMonthDay = new(year, month, day);
                 return yearMonthDay.ToShortDateString();
             }
-            else
-            {
-                Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'"); 
-            }
+            else Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'");
             return "NULL";
         }
         private static string GetModeTime()
@@ -184,7 +182,7 @@ namespace Task
         {
             /*программа запрашивает у пользователя все необходимые ей данные
             и записывает их в файл tasks.csv с нужным форматированием*/
-            string fileName = "tasks";
+            string fileName = NameTask;
             FormatRows titleRow = new(fileName, true), row = new(fileName, false);
             FileWriter file = new();
 
@@ -197,7 +195,7 @@ namespace Task
 
             string[] titleRowArray = { "nameTask", "description", "nowDateAndTime", "deadLine" };
             foreach (string pathTitleRow in titleRowArray)
-                {titleRow.AddInRow(pathTitleRow); }
+                titleRow.AddInRow(pathTitleRow);
 
             string fullPath = file.TitleRowWriter(fileName, titleRow.Row.ToString());
             file.WriteFile(fullPath, row.Row.ToString(), true);
@@ -208,7 +206,7 @@ namespace Task
             и записывает их в файл tasks.csv с нужным форматированием 
             после чего выводит сообщение о добовлении данных дублируя их 
             пользователю для проверки*/
-            string fileName = "tasks";
+            string fileName = NameTask;
             FormatRows titleRow = new(fileName, true), row = new(fileName, false);
             FileWriter file = new();
 
@@ -220,7 +218,7 @@ namespace Task
 
             string[] titleRowArray = { "nameTask", "description", "nowDateAndTime", "deadLine" };
             foreach (string pathTitleRow in titleRowArray)
-                {titleRow.AddInRow(pathTitleRow);}
+            { titleRow.AddInRow(pathTitleRow); }
 
             try
             {
@@ -228,7 +226,7 @@ namespace Task
                 file.WriteFile(fullPath, row.Row.ToString(), true);
                 string[] titleRowString = titleRow.Row.ToString().Split(file.seporRows);
                 string[] rowString = row.Row.ToString().Split(file.seporRows);
-                    
+
                 for (int i = 0; i < titleRowString.Length; ++i)
                 { Console.WriteLine($"{titleRowString[i]}: {rowString[i]}"); }
             }
@@ -289,13 +287,9 @@ namespace Task
                 string askTitle = "y";
                 string askDataType = "y";
                 if (lastTitleRow != titleRow.Row.ToString() && lastTitleRow != "NULL")
-                {
                     askTitle = InputString($"Титульный лист отличается \nНыняшний: {titleRow}\nПрошлый: {lastTitleRow}\nЗаменить?(y/N): ");
-                }
                 else if (lastDataTypeRow != dataTypeRow.Row.ToString() && lastDataTypeRow != "NULL")
-                {
                     askDataType = InputString($"Конфигурация уже имеется\nНынешняя: {dataTypeRow}\nПрошлая: {lastDataTypeRow}\nЗаменить?(y/N): ");
-                }
                 if (askTitle == "y" || askDataType == "y")
                 {
                     file.WriteFile(fullPathConfig, titleRow.Row.ToString(), false);
@@ -353,12 +347,71 @@ namespace Task
                 string fullPath = file.TitleRowWriter(nameData, titleRow);
                 string testTitleRow = file.GetLineFilePositionRow(fullPath, 0);
                 if (testTitleRow != titleRow)
-                {
                     file.WriteFile(fullPath, titleRow, false);
-                }
                 file.WriteFile(fullPath, row.Row.ToString(), true);
             }
             else Console.WriteLine($"Сначала создайте конфигурацию или проверьте правильность написания названия => '{nameData}'");
+        }
+        public static void ClearAllTasks()
+        {
+            if (InputString("Вы уверены что хотите очистить весь файл task? (y/N): ") == "y")
+            {
+                string fileName = NameTask;
+                FileWriter file = new();
+                FormatRows titleRow = new(fileName, true);
+                string fullPath = file.CreatePath(fileName);
+                string[] titleRowArray = { "nameTask", "description", "nowDateAndTime", "deadLine" };
+                foreach (string pathTitleRow in titleRowArray)
+                    titleRow.AddInRow(pathTitleRow);
+                file.WriteFile(fullPath, titleRow.Row.ToString(), false);
+            }
+            else System.Console.WriteLine("Будте внимателны");
+        }
+        public void ClearPartTask(string text) // недописан обязательно исправить
+        {
+            string fileName = NameTask;
+            FileWriter file = new();
+            string fullPath = file.CreatePath(fileName);
+            string[] titleRowArray = file.GetLineFilePositionRow(fullPath, 0).Split(file.seporRows);
+            Dictionary<int, bool> tableClear = new Dictionary<int, bool>();
+
+            System.Console.WriteLine($"Выберете в каком столбце искать {text} (t/F): ");
+            for (int i = 0; i < titleRowArray.Length; ++i)
+            {
+                if (InputString($"{titleRowArray[i]}: ") == "t")
+                    tableClear.Add(i, true);
+                else tableClear.Add(i, false);
+            }
+        }
+        public void SearchPartData(string text, string fileName = "NULL")
+        {
+            if (fileName == "NULL")
+                fileName = InputString("Ведите название файла: ");
+            if (text == "NULL")
+                text = InputString("Поиск: ");
+            FileWriter file = new();
+            string fullPath = file.CreatePath(fileName);
+            
+            if (File.Exists(fullPath))
+            {
+                string[] titleRowArray = file.GetLineFilePositionRow(fullPath, 0).Split(file.seporRows);
+                Dictionary<int, bool> tableClear = new Dictionary<int, bool>();
+
+
+                System.Console.WriteLine($"Выберете в каком столбце искать {text} (t/F): ");
+                for (int i = 0; i < titleRowArray.Length; ++i)
+                {
+                    if (InputString($"{titleRowArray[i]}: ") == "t")
+                        tableClear.Add(i, true);
+                    else tableClear.Add(i, false);
+                }
+                foreach (int i in tableClear.Keys)
+                {
+                    if (tableClear[i])
+                        Console.Write(file.GetLineFileDataOnPositionInRow(fullPath, text, i));
+                }
+            }
+            else System.Console.WriteLine(fileName + ": такого файла не существует.");
         }
     }
 }
