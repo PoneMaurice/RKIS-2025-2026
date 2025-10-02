@@ -32,10 +32,10 @@ namespace Task
                 using (var fs = new FileStream(fullPath, FileMode.CreateNew,
                 FileAccess.Write, FileShare.Read))
                 {
-                        using (var sw = new StreamWriter(fs, Encoding.UTF8))
-                        {
-                            sw.WriteLine(titleRow);
-                        }
+                    using (var sw = new StreamWriter(fs, Encoding.UTF8))
+                    {
+                        sw.WriteLine(titleRow);
+                    }
                 }
             return fullPath;
         }
@@ -64,7 +64,7 @@ namespace Task
                 Console.WriteLine($"{ex}\n");
             }
         }
-        public string GetLineFile(string fullPath, string dataFile, int positionInRow)
+        public string GetLineFilePositionInRowAndData(string fullPath, string dataFile, int positionInRow)
         {
             /*Возвращает строку если ее элемент по заданой позиции 
             соответствует введеным нами данным*/
@@ -97,7 +97,7 @@ namespace Task
             }
             return "NULL";
         }
-        public string GetLineFile(string fullPath, int positionRow)
+        public string GetLineFilePositionRow(string fullPath, int positionRow)
         {
             /*Возвращает строку если ее элемент по заданной позиции 
             соответствует введеным нами данным*/
@@ -123,7 +123,7 @@ namespace Task
             }
             return "NULL";
         }
-        public string GetLineFile(string fullPath, string dataFile)
+        public string GetLineFileData(string fullPath, string dataFile)
         {
             /*перегрузка метода только без позиции*/
             try
@@ -146,6 +146,29 @@ namespace Task
             }
             return "NULL";
         }
+        public int GetLeghtFile(string fullPath)
+        {
+            int numLine = 0;
+            try
+            {
+                if (File.Exists(fullPath))
+                {
+                    using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
+                    {
+                        string? line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            ++numLine;
+                        }
+                    }
+                }
+                else return 1;
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message);
+            }
+            return numLine;
+        }
     }
-
 }

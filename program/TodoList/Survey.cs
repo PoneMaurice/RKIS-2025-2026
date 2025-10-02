@@ -1,4 +1,6 @@
 //This file contains every command and option for program and their logic - PoneMaurice 
+using System.Text;
+
 namespace Task
 {
     public class Survey
@@ -107,32 +109,28 @@ namespace Task
         
         public void ProceStr(string text)
         {
-            Console.Write(text);
-            string ask = Console.ReadLine() ?? "NULL";
-            ask = ask.Trim();
-            if (ask == "") ask = "NULL";
+            string ask = Commands.InputString(text);
             string[] partsText = ask.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             SearchCommand(partsText);
             newText = AssociationString(partsText);
             GlobalCommamd();
-            Console.WriteLine(newText);
         }
 
         public string AssociationString(string[] sepText)
         {
-            string text = "";
+            StringBuilder text = new();
             bool noneText = true;
             for (int i = counter; i < sepText.Length; ++i)
             {
                 if (noneText)
                 {
-                    text = text + sepText[i];
+                    text.Append(sepText[i]);
                     noneText = false;
                 }
-                else text = text + " " + sepText[i];
+                else text.Append($" {sepText[i]}");
             }
-            if (text == "") text = "NULL";
-            return text;
+            if (text.ToString() == "") text.Append("NULL");
+            return text.ToString();
         }
 
         void SearchCommand(string[] command)
