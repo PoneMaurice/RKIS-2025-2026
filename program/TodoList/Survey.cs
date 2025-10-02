@@ -1,4 +1,5 @@
 //This file contains every command and option for program and their logic - PoneMaurice 
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Task
@@ -25,6 +26,7 @@ namespace Task
             else if (SearchExtension(0, "add")) Add();
             else if (SearchExtension(0, "task")) Task();
             else if (SearchExtension(0, "print")) Print();
+            else if (SearchExtension(0, "search")) Search();
             else None();
         }
         public void Help()
@@ -57,6 +59,13 @@ namespace Task
             string text = "print";
             if (SearchExtension(1, "help")) Console.WriteLine($"{text} help");
             else Commands.PrintData(nowText);
+        }
+        public void Search()
+        {
+            string text = "search";
+            Commands command = new();
+            if (SearchExtension(1, "help")) Console.WriteLine($"{text} help");
+            else command.SearchPartData("NULL", nowText);
         }
         public void Exit()
         {

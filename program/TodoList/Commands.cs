@@ -408,7 +408,7 @@ namespace Task
                 foreach (int i in tableClear.Keys)
                 {
                     if (tableClear[i])
-                        Console.Write(file.GetLineFileDataOnPositionInRow(fullPath, text, i));
+                        Console.WriteLine(file.GetLineFileDataOnPositionInRow(fullPath, text, i));
                 }
             }
             else System.Console.WriteLine(fileName + ": такого файла не существует.");
