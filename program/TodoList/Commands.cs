@@ -10,7 +10,7 @@ namespace Task
     public class Commands
     {
         const string NameTask = "tasks";
-        public string nameTask { get { return NameTask;}}
+        public string nameTask { get { return NameTask; } }
         const string StringChar = "s";
         const string IntegerChar = "i";
         const string DoubleChar = "f";
@@ -391,7 +391,7 @@ namespace Task
                 text = InputString("Поиск: ");
             FileWriter file = new();
             string fullPath = file.CreatePath(fileName);
-            
+
             if (File.Exists(fullPath))
             {
                 string[] titleRowArray = file.GetLineFilePositionRow(fullPath, 0).Split(file.seporRows);
@@ -412,6 +412,29 @@ namespace Task
                 }
             }
             else System.Console.WriteLine(fileName + ": такого файла не существует.");
+        }
+        public static void PrintData(string fileName)
+        {
+            if (fileName == "NULL")
+                fileName = InputString("Ведите название файла: ");
+            FileWriter file = new();
+            string fullPath = file.CreatePath(fileName);
+
+            try
+            {
+                using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
+                {
+                    string? line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        Console.WriteLine(line);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex}\n");
+            }
         }
     }
 }

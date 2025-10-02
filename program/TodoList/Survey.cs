@@ -49,10 +49,8 @@ namespace Task
             if (SearchExtension(1, "help")) Console.WriteLine($"{text} help");
             else if (SearchExtension(1, "clear") && nowText == "NULL")
                 Commands.ClearAllTasks();
-            else if (SearchExtension(1, "clear")) Console.WriteLine($"{text} clear");
             else if (SearchExtension(1, "search")) command.SearchPartData(nowText, command.nameTask);
-            else if (SearchExtension(1, "print")) Console.WriteLine($"{text} print");
-            else Console.WriteLine(text);
+            else Commands.PrintData(command.nameTask);
         }
         public void Print()
         {
