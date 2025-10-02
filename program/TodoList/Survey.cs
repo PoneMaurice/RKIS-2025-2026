@@ -56,7 +56,7 @@ namespace Task
         {
             string text = "print";
             if (SearchExtension(1, "help")) Console.WriteLine($"{text} help");
-            else Console.WriteLine(text);
+            else Commands.PrintData(nowText);
         }
         public void Exit()
         {
