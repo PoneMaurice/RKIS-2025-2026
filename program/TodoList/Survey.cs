@@ -31,20 +31,21 @@ namespace Task
         }
         public void Help()
         {
-            StringBuilder TextCaptions = new();
-            TextCaptions.Append("Данная программа позволяет пользователю создавать свой список заданий и контролировать их выполнение\n");
-            TextCaptions.Append("help - Выводит помощь по программе и её командам например: add help\n");
-            TextCaptions.Append("add - Добавляет запись по базовой конфигурации: add task;\n Добавляет файл конфигурации: add config <File>;\n Добавляет запись по заранее созданной конфигурации: add <File>;\n");
-            TextCaptions.Append("clear - очищает выбранный файл\n");
-            TextCaptions.Append("search - Ищет все идентичные строчки в файле\n");
-            TextCaptions.Append("exit - Выход из программы либо из текщуего действия\n");
-            TextCaptions.Append("print - Выводит всё содержимое файла\n");
-            
+            StringBuilder text = new();
+            text.Append("Данная программа позволяет пользователю создавать свой список заданий и контролировать их выполнение\n");
+            text.Append("help - Выводит помощь по программе и её командам например: add help\n");
+            text.Append("add - Добавляет запись по базовой конфигурации: add task;\nДобавляет файл конфигурации: add config <File>;\nДобавляет запись по заранее созданной конфигурации: add <File>;\n");
+            text.Append("clear - очищает выбранный файл\n");
+            text.Append("search - Ищет все идентичные строчки в файле\n");
+            text.Append("exit - Выход из программы либо из текущего действия\n");
+            text.Append("print - Выводит всё содержимое файла\n");
+            Console.WriteLine(text.ToString());
         }
         public void Add()
         {
             StringBuilder text = new();
-            text.Append("add - Добавляет запись по базовой конфигурации: add task;\n");
+            text.Append("add - Добавляет записи(задания);\n");
+            text.Append("Добавляет запись по базовой конфигурации: add task;\n");
             text.Append("Добавляет файл конфигурации: add config <File>;\n");
             text.Append("Добавляет запись по заранее созданной конфигурации: add <File>;\n");
             text.Append("При добавлении print в конце команды, выводится добавленный текст\n");
@@ -96,8 +97,6 @@ namespace Task
         {
             Console.WriteLine("Неизвестная команда");
         }
-
-
         public Dictionary<string, bool> extensions = new Dictionary<string, bool> { };
         public void AddExtensions()
         {
@@ -137,7 +136,6 @@ namespace Task
             if (extensions[extension] == true) return true;
             return false;
         }
-        
         public void ProceStr(string text)
         {
             string ask = Commands.InputString(text);
@@ -146,7 +144,6 @@ namespace Task
             nowText = AssociationString(partsText);
             GlobalCommamd();
         }
-
         public string AssociationString(string[] sepText)
         {
             StringBuilder text = new();
@@ -163,7 +160,6 @@ namespace Task
             if (text.ToString() == "") text.Append("NULL");
             return text.ToString();
         }
-
         void SearchCommand(string[] command)
         {
             AddExtensions();
