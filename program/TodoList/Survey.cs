@@ -31,13 +31,24 @@ namespace Task
         }
         public void Help()
         {
-            string text = "help";
-            Console.WriteLine(text);
+            StringBuilder TextCaptions = new();
+            TextCaptions.Append("Данная программа позволяет пользователю создавать свой список заданий и контролировать их выполнение\n");
+            TextCaptions.Append("help - Выводит помощь по программе и её командам например: add help\n");
+            TextCaptions.Append("add - Добавляет запись по базовой конфигурации: add task;\n Добавляет файл конфигурации: add config <File>;\n Добавляет запись по заранее созданной конфигурации: add <File>;\n");
+            TextCaptions.Append("clear - очищает выбранный файл\n");
+            TextCaptions.Append("search - Ищет все идентичные строчки в файле\n");
+            TextCaptions.Append("exit - Выход из программы либо из текщуего действия\n");
+            TextCaptions.Append("print - Выводит всё содержимое файла\n");
+            
         }
         public void Add()
         {
-            string text = "add";
-            if (SearchExtension(1, "help")) Console.WriteLine($"{text} help");
+            StringBuilder text = new();
+            text.Append("add - Добавляет запись по базовой конфигурации: add task;\n");
+            text.Append("Добавляет файл конфигурации: add config <File>;\n");
+            text.Append("Добавляет запись по заранее созданной конфигурации: add <File>;\n");
+            text.Append("При добавлении print в конце команды, выводится добавленный текст\n");
+            if (SearchExtension(1, "help")) Console.WriteLine(text.ToString());
             else if (SearchExtension("task") && SearchExtension("print"))
                 Commands.AddTaskAndPrint();
             else if (SearchExtension(1, "task")) Commands.AddTask();
@@ -46,9 +57,15 @@ namespace Task
         }
         public void Task()
         {
-            string text = "task";
             Commands command = new();
-            if (SearchExtension(1, "help")) Console.WriteLine($"{text} help");
+            StringBuilder text = new();
+            text.Append("task - Служебная команда для работы со стандартным конфигурационным файлом;\n");
+            text.Append("task - Используется как аргумент для таких команд как: add, clear, search, print;\n");
+            text.Append("add - Добавляет запись по базовой конфигурации: add task;\n");
+            text.Append("clear - Удаляет все записи из файла tasks: clear task;\n");
+            text.Append("search - Ищет все идентичные строчки в файле: search task;\n");
+            text.Append("print - Выводит всё содержимое файла: print task;\n");
+            if (SearchExtension(1, "help")) Console.WriteLine(text.ToString());
             else if (SearchExtension(1, "clear") && nowText == "NULL")
                 Commands.ClearAllTasks();
             else if (SearchExtension(1, "search")) command.SearchPartData(nowText, command.nameTask);
@@ -56,15 +73,19 @@ namespace Task
         }
         public void Print()
         {
-            string text = "print";
-            if (SearchExtension(1, "help")) Console.WriteLine($"{text} help");
+            StringBuilder text = new();
+            text.Append("print - Команда позволяющая получить содержимое файла;\n");
+            text.Append("Примеры: print task; print <File>;\n");
+            text.Append("Также может использоваться как аргумент в командах add task print/add <File> print,\nпосле создания записи её содержимое будет выведено в консоль;\n");
+            if (SearchExtension(1, "help")) Console.WriteLine(text.ToString());
             else Commands.PrintData(nowText);
         }
         public void Search()
         {
-            string text = "search";
             Commands command = new();
-            if (SearchExtension(1, "help")) Console.WriteLine($"{text} help");
+            StringBuilder text = new();
+            text.Append("search - Ищет все идентичные строчки в файле;\n");
+            if (SearchExtension(1, "help")) Console.WriteLine(text.ToString());
             else command.SearchPartData("NULL", nowText);
         }
         public void Exit()
