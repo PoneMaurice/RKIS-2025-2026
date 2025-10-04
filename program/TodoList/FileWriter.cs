@@ -111,9 +111,9 @@ namespace Task
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"{ex}\n");
+                System.Console.WriteLine("не найдено");    
             }
             return stringNull;
         }

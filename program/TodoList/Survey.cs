@@ -1,4 +1,5 @@
 //This file contains every command and option for program and their logic - PoneMaurice 
+using System.Runtime;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
@@ -10,6 +11,7 @@ namespace Task
         public string nowText = "";
         public string[] listComm = {
             "none",
+            "profile",
             "add",
             "help",
             "print",
@@ -19,15 +21,20 @@ namespace Task
             "config",
             "exit"
         };
-        public void GlobalCommamd()
+        public void GlobalCommand()
         {
             if (SearchExtension(0, "exit")) Exit();
             else if (SearchExtension(0, "help")) Help();
+            else if (SearchExtension(0, "profile")) Profile();
             else if (SearchExtension(0, "add")) Add();
             else if (SearchExtension(0, "task")) Task();
             else if (SearchExtension(0, "print")) Print();
             else if (SearchExtension(0, "search")) Search();
             else None();
+        }
+        public void Profile()
+        {
+            Commands.PrintProfile();
         }
         public void Help()
         {
@@ -54,6 +61,7 @@ namespace Task
                 Commands.AddTaskAndPrint();
             else if (SearchExtension(1, "task")) Commands.AddTask();
             else if (SearchExtension(1, "config")) Commands.AddConfUserData(nowText);
+            else if (SearchExtension(1, "profile")) Commands.AddProfile();
             else Commands.AddUserData(nowText);
         }
         public void Task()
@@ -142,7 +150,7 @@ namespace Task
             string[] partsText = ask.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             SearchCommand(partsText);
             nowText = AssociationString(partsText);
-            GlobalCommamd();
+            GlobalCommand();
         }
         public string AssociationString(string[] sepText)
         {

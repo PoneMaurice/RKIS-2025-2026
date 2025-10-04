@@ -10,6 +10,7 @@ namespace Task
     public class Commands
     {
         const string NameTask = "tasks";
+        const string ProFile = "user";
         public string nameTask { get { return NameTask; } }
         const string StringChar = "s";
         const string IntegerChar = "i";
@@ -64,6 +65,35 @@ namespace Task
             input.Append((Console.ReadLine() ?? FileWriter.stringNull).Trim());
             if (input.ToString() == "") input.Append(FileWriter.stringNull);
             return input.ToString();
+        }
+        public static void AddProfile()
+        {
+            string fileName = ProFile;
+            FormatRows titleRow = new(fileName, true), row = new(fileName);
+            FileWriter file = new();
+            string[] titleRowArray = {"name", "surname", "year of birth"};
+            foreach (string pathTitle in titleRowArray) titleRow.AddInRow(pathTitle);
+            string fullPath = file.TitleRowWriter(fileName, titleRow.Row.ToString());
+            if (File.Exists(fullPath))
+            {
+                row.AddInRow(InputString("Введите имя: "));
+                row.AddInRow(InputString("Введите фамилию: "));
+                Console.WriteLine("Введите вашу дату рождения: ");
+                row.AddInRow(GetModeDate());
+                file.WriteFile(fullPath, row.Row.ToString(), true);
+            }
+            else System.Console.WriteLine("Возникла ошибка");
+        }
+        public static void PrintProfile()
+        {
+            FileWriter file = new();
+            string fileName = ProFile;
+            string fullPath = file.CreatePath(fileName);
+            string prof = file.GetLineFilePositionRow(fullPath, 1);
+            if (prof == FileWriter.stringNull){
+                AddProfile();
+            }
+            else System.Console.WriteLine(prof);
         }
         public static int InputDate(string text, int min, int max)
         {

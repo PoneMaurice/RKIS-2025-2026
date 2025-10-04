@@ -9,12 +9,13 @@ namespace Task
             int cycle = 0;
             do
             {
+                var sur = new Survey();
                 if (cycle == 0)
                 {
                     var cap = new Captions();
                     cap.WriteCaption();
+                    sur.Profile();
                 }
-                var sur = new Survey();
                 sur.ProceStr("-- ");
                 ++cycle;
             }
