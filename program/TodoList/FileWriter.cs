@@ -2,11 +2,18 @@
 using System.Text;
 namespace Task
 {
-    public static class FileWriter
+    public class FileWriter
     {
         public const string stringNull = "NULL";
-        const string seporRows = "|";
-        public static string CreatePath(string nameFile) // Function for creating file path - PoneMaurice
+        public const string Yes = "y";
+        public string fullPath;
+        public string nameFile;
+        public FileWriter(string fileName)
+        {
+            nameFile = fileName;
+            fullPath = CreatePath(nameFile);
+        }
+        public string CreatePath(string nameFile) // Function for creating file path - PoneMaurice
         {
             /*Создание актульного пути под каждый нужный файл находящийся в деректории с конфигами*/
             string dataPath = "/.config/RKIS-TodoList/"; // Расположение файла для UNIX и MacOSX
@@ -26,7 +33,7 @@ namespace Task
             fullPath = Path.Join(fullPath, $"{nameFile}.csv");
             return fullPath;
         }
-        public static string TitleRowWriter(string nameFile, string titleRow) // Function for writing rows in tasks titles - PoneMaurice
+        public string TitleRowWriter(string titleRow) // Function for writing rows in tasks titles - PoneMaurice
         {
             string fullPath = CreatePath(nameFile);
             if (!File.Exists(fullPath))
@@ -40,7 +47,7 @@ namespace Task
                 }
             return fullPath;
         }
-        public static void WriteFile(string fullPath, string dataFile, bool noRewrite)
+        public void WriteFile(string dataFile, bool noRewrite)
         {
             /*Запись в конец файла строки*/
             try
@@ -65,7 +72,7 @@ namespace Task
                 Console.WriteLine($"{ex}\n");
             }
         }
-        public static string GetLineFileDataOnPositionInRow(string fullPath, string dataFile, int positionInRow)
+        public string GetLineFileDataOnPositionInRow(string dataFile, int positionInRow)
         {
             /*Возвращает строку если ее элемент по заданой позиции 
             соответствует введеным нами данным*/
@@ -91,7 +98,7 @@ namespace Task
             }
             return stringNull;
         }
-        public static string GetLineFilePositionRow(string fullPath, int positionRow)
+        public string GetLineFilePositionRow(int positionRow)
         {
             /*Возвращает строку если ее элемент по заданной позиции 
             соответствует введеным нами данным*/
@@ -117,7 +124,7 @@ namespace Task
             }
             return stringNull;
         }
-        public static string GetLineFileData(string fullPath, string dataFile)
+        public string GetLineFileData(string dataFile)
         {
             /*перегрузка метода только без позиции*/
             try
@@ -140,7 +147,7 @@ namespace Task
             }
             return stringNull;
         }
-        public static int GetLeghtFile(string fullPath)
+        public int GetLeghtFile()
         {
             int numLine = 0;
             try

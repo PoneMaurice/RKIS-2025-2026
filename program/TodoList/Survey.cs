@@ -7,7 +7,7 @@ namespace Task
 {
     public class Survey
     {
-        public int counter = 0;
+        public static int counter = 0;
         public string nowText = "";
         public string[] listComm = {
             "none",
@@ -39,7 +39,7 @@ namespace Task
             text.Append("При простом вызове, выводится первый добавленный пользователь: profile;\n");
             text.Append("При использовании как аргумент с командой add - добавляется новый пользователь: add profile;\n");
             if (SearchExtension(1, "help")) Console.WriteLine(text.ToString());
-            else Commands.PrintProfile();
+            // else Commands.PrintProfile();
         }
         public void Help()
         {
@@ -68,7 +68,7 @@ namespace Task
                 Commands.AddTaskAndPrint();
             else if (SearchExtension(1, "task")) Commands.AddTask();
             else if (SearchExtension(1, "config")) Commands.AddConfUserData(nowText);
-            else if (SearchExtension(1, "profile")) Commands.AddProfile();
+            // else if (SearchExtension(1, "profile")) Commands.AddProfile();
             else Commands.AddUserData(nowText);
         }
         public void Task()
@@ -159,7 +159,7 @@ namespace Task
             nowText = AssociationString(partsText);
             GlobalCommand();
         }
-        public string AssociationString(string[] sepText)
+        public static string AssociationString(string[] sepText)
         {
             StringBuilder text = new();
             bool noneText = true;

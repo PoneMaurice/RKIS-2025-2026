@@ -13,7 +13,7 @@ namespace Task
             if (TextCaptions.ToString() == "") CompText();
             string Char = Commands.InputString("Вывести титры?(y/N): ");
             Char = Char.ToLower();
-            if (Char.Equals("y", StringComparison.CurrentCultureIgnoreCase))
+            if (Char.Equals(FileWriter.Yes, StringComparison.CurrentCultureIgnoreCase))
                 Console.WriteLine(TextCaptions.ToString());
         }
         void CompText()

@@ -3,16 +3,16 @@ using System;
 using System.Data;
 using System.IO.Enumeration;
 using System.Net;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+
 namespace Task
 {
     public class Commands
     {
-        const string NameTask = "tasks";
-        static string[] TitleTask = { "nameTask", "description", "nowDateAndTime", "deadLine" };
-        static string[] TitleTaskTypeData = { "s", "s", "ndt", "dt" };
-        public string nameTask { get { return NameTask; } }
+        const string TaskName = "tasks";
+        public string nameTask { get { return TaskName; } }
         const string StringChar = "s";
         const string IntegerChar = "i";
         const string DoubleChar = "f";
@@ -20,6 +20,8 @@ namespace Task
         const string DateChar = "d";
         const string DateAndTime = "dt";
         const string NowDateTime = "ndt";
+        static string[] TaskTitle = { "nameTask", "description", "nowDateAndTime", "deadLine" };
+        static string[] TaskTypeData = { StringChar, StringChar, NowDateTime, DateAndTime };
         const string PrefConfigFile = "_conf";
         public string InputDataType(string text)
         {
@@ -29,7 +31,7 @@ namespace Task
             вводимая пользователем строка проверяеться на наличие 
             такого типа и если он есть возвращает его сокращение*/
 
-            Dictionary<string, string> DataTypePros = new Dictionary<string, string>()
+            string[,] DataTypePros =
             {
                 {"string", StringChar}, {"str", StringChar}, {"s", StringChar},
                 {"integer", IntegerChar}, {"int", IntegerChar}, {"i", IntegerChar},
@@ -41,15 +43,14 @@ namespace Task
             };
             while (true)
             {
-                Console.Write(text);
-                string input = Console.ReadLine() ?? FileWriter.stringNull;
-                input = input.Trim();
-                string inputLow = input.ToLower();
-                foreach (var dataType in DataTypePros)
+
+                string input = InputString(text);
+                int rows = DataTypePros.GetUpperBound(0) + 1;
+                for (int i = 0; i < rows; i++)
                 {
-                    if (inputLow == dataType.Key)
+                    if (DataTypePros[i, 0] == input)
                     {
-                        return dataType.Value;
+                        return DataTypePros[i, 1].ToString();
                     }
                 }
                 Console.WriteLine("Вы ввели неподдерживаемый тип данных");
@@ -84,7 +85,7 @@ namespace Task
             while (result < min || result > max); //условия выхода
             return result;
         }
-        public static int InputInt(string text)
+        public static int InputInteger(string text)
         {
             /*Перегрузка метода InputDate только без лимитов*/
             int result = -1; // сродникоду об ошибке
@@ -102,7 +103,7 @@ namespace Task
             когда пользователя спрашивают по пунктам, 
             а так же если он не выберет какой-то из вариантов 
             ввода даты то программа автоматически введет "NULL"*/
-            string dateAndTime = $"{GetDate()} {GetTime}";
+            string dateAndTime = GetDate()+" "+GetTime();
             return dateAndTime;
         }
         private static string GetDate()
@@ -122,7 +123,7 @@ namespace Task
             }
             else if (modeDate == "p")
             {
-                int year = InputInt("Введите год: ");
+                int year = InputInteger("Введите год: ");
                 int month = InputIntegerWithMinMax("Введите месяц: ", 1, 12);
                 int day = InputIntegerWithMinMax("Введите день: ", 1,
                     DateTime.DaysInMonth(year, month));
@@ -164,23 +165,12 @@ namespace Task
         {
             /*программа запрашивает у пользователя все необходимые ей данные
             и записывает их в файл tasks.csv с нужным форматированием*/
-            string fileName = NameTask;
-            FormatRows titleRow = new(fileName, true), row = new(fileName, false);
-            
-
-            row.AddInRow(InputString("Введите название задания: "));
-            row.AddInRow(InputString("Введите описание задания: "));
-            System.Console.WriteLine("--- Ввод крайнего срока выполнения ---");
-            row.AddInRow(FormatRows.GetNowDateTime());
-            row.AddInRow(GetDateAndTime());
-
-
-            string[] titleRowArray = TitleTask;
-            foreach (string pathTitleRow in titleRowArray)
-                titleRow.AddInRow(pathTitleRow);
-
-            string fullPath = FileWriter.TitleRowWriter(fileName, titleRow.Row.ToString());
-            FileWriter.WriteFile(fullPath, row.Row.ToString(), true);
+            FileWriter file = new(TaskName);
+            FormatRows titleRow = new(TaskName, FormatRows.Type.title);
+            string row = GetRowOnTitleAndConfig(TaskTitle, TaskTypeData);
+            titleRow.AddArrayInRow(TaskTitle);
+            file.TitleRowWriter(titleRow.Row.ToString());
+            file.WriteFile(row, true);
         }
         public static void AddTaskAndPrint()
         {
@@ -188,29 +178,23 @@ namespace Task
             и записывает их в файл tasks.csv с нужным форматированием 
             после чего выводит сообщение о добовлении данных дублируя их 
             пользователю для проверки*/
-            string fileName = NameTask;
-            FormatRows titleRow = new(fileName, true), row = new(fileName, false);
+            FormatRows titleRow = new(TaskName, FormatRows.Type.title);
+            FileWriter file = new(TaskName);
             
-
-            row.AddInRow(InputString("Введите название задания: "));
-            row.AddInRow(InputString("Введите описание задания: "));
-            System.Console.WriteLine("--- Ввод крайнего срока выполнения ---");
-            row.AddInRow(FormatRows.GetNowDateTime());
-            row.AddInRow(GetDateAndTime());
-
-            string[] titleRowArray = TitleTask;
-            foreach (string pathTitleRow in titleRowArray)
-            { titleRow.AddInRow(pathTitleRow); }
+            string row = GetRowOnTitleAndConfig(TaskTitle, TaskTypeData);
+            titleRow.AddArrayInRow(TaskTitle);
 
             try
             {
-                string fullPath = FileWriter.TitleRowWriter(fileName, titleRow.Row.ToString());
-                FileWriter.WriteFile(fullPath, row.Row.ToString(), true);
-                string[] titleRowString = titleRow.Row.ToString().Split(FormatRows.seporRows);
-                string[] rowString = row.Row.ToString().Split(FormatRows.seporRows);
+                file.TitleRowWriter(titleRow.Row.ToString());
+                file.WriteFile(row, true);
 
+                string[] titleRowString = titleRow.Row.ToString().Split(FormatRows.seporRows);
+                string[] rowString = row.Split(FormatRows.seporRows);
+                System.Console.WriteLine("\n");
                 for (int i = 0; i < titleRowString.Length; ++i)
                 { Console.WriteLine($"{titleRowString[i]}: {rowString[i]}"); }
+                System.Console.WriteLine("\n");
             }
             catch (Exception ex)
             {
@@ -224,23 +208,24 @@ namespace Task
                 fileName = InputString("Введите название для файла с данными: ");
             }
             fileName = fileName+PrefConfigFile;
-            
-            string fullPathConfig = FileWriter.CreatePath(fileName);
-            string askFile = "y";
+            FileWriter file = new(fileName);
+
+            string fullPathConfig = file.CreatePath(fileName);
+            string? askFile = null;
             string searchLine1 = FileWriter.stringNull;
             string searchLine2 = FileWriter.stringNull;
             if (File.Exists(fullPathConfig))
             {
-                searchLine1 = FileWriter.GetLineFilePositionRow(fullPathConfig, 0);
-                searchLine2 = FileWriter.GetLineFilePositionRow(fullPathConfig, 1);
+                searchLine1 = file.GetLineFilePositionRow(0);
+                searchLine2 = file.GetLineFilePositionRow(1);
                 Console.WriteLine($"{searchLine1}\n{searchLine2}");
                 askFile = InputString($"Вы точно уверены, что хотите перезаписать конфигурацию?(y/N): ");
             }
-            if (askFile == "y")
+            if (askFile == FileWriter.Yes || askFile == null)
             {
-                FormatRows titleRow = new(fileName, true), dataTypeRow = new(fileName, false, true);
+                FormatRows titleRow = new(fileName, FormatRows.Type.title), dataTypeRow = new(fileName, FormatRows.Type.dataType);
 
-                do
+                while (true)
                 {
                     string intermediateResultString =
                         InputString("Введите название пункта титульного оформления файла: ");
@@ -250,32 +235,31 @@ namespace Task
                         Console.WriteLine("В титульном оформлении должен быть хотя бы один пункт: ");
                     else titleRow.AddInRow(intermediateResultString);
                 }
-                while (true);
 
                 string[] titleRowArray = titleRow.Row.ToString().Split(FormatRows.seporRows);
 
                 Commands config = new();
                 foreach (string title in titleRowArray)
                 {
-                    if (title == "numbering") continue;
+                    if (title == FormatRows.titleFirstObject) continue;
                     else dataTypeRow.AddInRow(config.InputDataType($"Введите тип данных для строки {title}: "));
                 }
 
-                FileWriter.TitleRowWriter(fileName, titleRow.Row.ToString());
+                file.TitleRowWriter(titleRow.Row.ToString());
                 Console.WriteLine($"{titleRow.Row}\n{dataTypeRow.Row}");
 
-                string lastTitleRow = FileWriter.GetLineFilePositionRow(fullPathConfig, 0);
-                string lastDataTypeRow = FileWriter.GetLineFilePositionRow(fullPathConfig, 1);
-                string askTitle = "y";
-                string askDataType = "y";
+                string lastTitleRow = file.GetLineFilePositionRow(0);
+                string lastDataTypeRow = file.GetLineFilePositionRow(1);
+                string askTitle = FileWriter.Yes;
+                string askDataType = FileWriter.Yes;
                 if (lastTitleRow != titleRow.Row.ToString() && lastTitleRow != FileWriter.stringNull)
-                    askTitle = InputString($"Титульный лист отличается \nНыняшний: {titleRow}\nПрошлый: {lastTitleRow}\nЗаменить?(y/N): ");
+                    askTitle = InputString($"Титульный лист отличается \nНыняшний: {titleRow.Row}\nПрошлый: {lastTitleRow}\nЗаменить?(y/N): ");
                 else if (lastDataTypeRow != dataTypeRow.Row.ToString() && lastDataTypeRow != FileWriter.stringNull)
-                    askDataType = InputString($"Конфигурация уже имеется\nНынешняя: {dataTypeRow}\nПрошлая: {lastDataTypeRow}\nЗаменить?(y/N): ");
-                if (askTitle == "y" || askDataType == "y")
+                    askDataType = InputString($"Конфигурация уже имеется\nНынешняя: {dataTypeRow.Row}\nПрошлая: {lastDataTypeRow}\nЗаменить?(y/N): ");
+                if (askTitle == FileWriter.Yes || askDataType == FileWriter.Yes)
                 {
-                    FileWriter.WriteFile(fullPathConfig, titleRow.Row.ToString(), false);
-                    FileWriter.WriteFile(fullPathConfig, dataTypeRow.Row.ToString(), true);
+                    file.WriteFile(titleRow.Row.ToString(), false);
+                    file.WriteFile(dataTypeRow.Row.ToString(), true);
                 }
             }
             else
@@ -286,111 +270,120 @@ namespace Task
         }
         public static void AddUserData(string nameData)
         {
-            
-            FormatRows row = new(nameData, false);
+            FileWriter fileConf = new(nameData+PrefConfigFile);
+            FileWriter file = new(nameData);
 
-            string fullPathConfig = FileWriter.CreatePath(nameData+PrefConfigFile);
+            string fullPathConfig = fileConf.CreatePath(nameData+PrefConfigFile);
             if (File.Exists(fullPathConfig))
             {
-                string titleRow = FileWriter.GetLineFilePositionRow(fullPathConfig, 0);
+                string titleRow = fileConf.GetLineFilePositionRow(0);
+                string dataTypeRow = fileConf.GetLineFilePositionRow(1);
                 string[] titleRowArray = titleRow.Split(FormatRows.seporRows);
-                string dataTypeRow = FileWriter.GetLineFilePositionRow(fullPathConfig, 1);
                 string[] dataTypeRowArray = dataTypeRow.Split(FormatRows.seporRows);
-                for (int i = 0; i < titleRowArray.Length; i++)
-                {
-                    switch (dataTypeRowArray[i])
-                    {
-                        case Commands.StringChar:
-                            row.AddInRow(InputString($"введите {titleRowArray[i]}: "));
-                            break;
-                        case Commands.IntegerChar:
-                            row.AddInRow(InputString($"введите {titleRowArray[i]}: "));
-                            break;
-                        case Commands.DoubleChar:
-                            row.AddInRow(InputString($"введите {titleRowArray[i]}: "));
-                            break;
-                        case Commands.DateChar:
-                            Console.WriteLine($"---ввод {titleRowArray[i]}---");
-                            row.AddInRow(GetDate());
-                            break;
-                        case Commands.TimeChar:
-                            Console.WriteLine($"---ввод {titleRowArray[i]}---");
-                            row.AddInRow(GetTime());
-                            break;
-                        case Commands.DateAndTime:
-                            Console.WriteLine($"---ввод {titleRowArray[i]}---");
-                            row.AddInRow(GetDateAndTime());
-                            break;
-                        case Commands.NowDateTime:
-                            row.AddInRow(FormatRows.GetNowDateTime());
-                            break;
-                    }
-                }
-                string fullPath = FileWriter.TitleRowWriter(nameData, titleRow);
-                string testTitleRow = FileWriter.GetLineFilePositionRow(fullPath, 0);
+
+                string row = GetRowOnTitleAndConfig(titleRowArray, dataTypeRowArray, nameData);
+
+                file.TitleRowWriter(titleRow);
+                string testTitleRow = file.GetLineFilePositionRow(0);
                 if (testTitleRow != titleRow)
-                    FileWriter.WriteFile(fullPath, titleRow, false);
-                FileWriter.WriteFile(fullPath, row.Row.ToString(), true);
+                    file.WriteFile(titleRow, false);
+                file.WriteFile(row, true);
             }
             else Console.WriteLine($"Сначала создайте конфигурацию или проверьте правильность написания названия => '{nameData}'");
         }
+        public static string GetRowOnTitleAndConfig(string[] titleRowArray, string[] dataTypeRowArray, string nameData = TaskName)
+        {
+            FormatRows row = new(nameData);
+            for (int i = 0; i < titleRowArray.Length; i++)
+            {
+                switch (dataTypeRowArray[i])
+                {
+                    case Commands.StringChar:
+                        row.AddInRow(InputString($"введите {titleRowArray[i]}: "));
+                        break;
+                    case Commands.IntegerChar:
+                        row.AddInRow(InputInteger($"введите {titleRowArray[i]}: ").ToString());
+                        break;
+                    case Commands.DoubleChar:
+                        row.AddInRow(InputInteger($"введите {titleRowArray[i]}: ").ToString());
+                        break;
+                    case Commands.DateChar:
+                        Console.WriteLine($"---ввод {titleRowArray[i]}---");
+                        row.AddInRow(GetDate());
+                        break;
+                    case Commands.TimeChar:
+                        Console.WriteLine($"---ввод {titleRowArray[i]}---");
+                        row.AddInRow(GetTime());
+                        break;
+                    case Commands.DateAndTime:
+                        Console.WriteLine($"---ввод {titleRowArray[i]}---");
+                        row.AddInRow(GetDateAndTime());
+                        break;
+                    case Commands.NowDateTime:
+                        row.AddInRow(FormatRows.GetNowDateTime());
+                        break;
+                }
+            }
+            return row.Row.ToString();
+        }
         public static void ClearAllTasks()
         {
-            if (InputString("Вы уверены что хотите очистить весь файл task? (y/N): ") == "y")
+            if (InputString("Вы уверены что хотите очистить весь файл task? (y/N): ") == FileWriter.Yes)
             {
-                string fileName = NameTask;
-                
-                FormatRows titleRow = new(fileName, true);
-                string fullPath = FileWriter.CreatePath(fileName);
-                string[] titleRowArray = TitleTask;
+                string fileName = TaskName;
+
+                FormatRows titleRow = new(fileName, FormatRows.Type.title);
+                FileWriter file = new(fileName);
+                string[] titleRowArray = TaskTitle;
                 foreach (string pathTitleRow in titleRowArray)
                     titleRow.AddInRow(pathTitleRow);
-                FileWriter.WriteFile(fullPath, titleRow.Row.ToString(), false);
+                file.WriteFile(titleRow.Row.ToString(), false);
             }
             else System.Console.WriteLine("Будте внимателны");
         }
         public void ClearPartTask(string text) // недописан обязательно исправить
         {
-            string fileName = NameTask;
+            string fileName = TaskName;
+            FileWriter file = new(fileName);
             
-            string fullPath = FileWriter.CreatePath(fileName);
-            string[] titleRowArray = FileWriter.GetLineFilePositionRow(fullPath, 0).Split(FormatRows.seporRows);
+            string[] titleRowArray = file.GetLineFilePositionRow(0).Split(FormatRows.seporRows);
             Dictionary<int, bool> tableClear = new Dictionary<int, bool>();
 
-            System.Console.WriteLine($"Выберете в каком столбце искать {text} (t/F): ");
+            System.Console.WriteLine($"Выберете в каком столбце искать {text} (y/N): ");
             for (int i = 0; i < titleRowArray.Length; ++i)
             {
-                if (InputString($"{titleRowArray[i]}: ") == "t")
+                if (InputString($"{titleRowArray[i]}: ") == FileWriter.Yes)
                     tableClear.Add(i, true);
                 else tableClear.Add(i, false);
             }
         }
-        public void SearchPartData(string text, string fileName = FileWriter.stringNull)
+        public void SearchPartData(string fileName, string text = FileWriter.stringNull)
         {
             if (fileName == FileWriter.stringNull)
                 fileName = InputString("Ведите название файла: ");
             if (text == FileWriter.stringNull)
                 text = InputString("Поиск: ");
             
-            string fullPath = FileWriter.CreatePath(fileName);
+            FileWriter file = new(fileName);
+            
 
-            if (File.Exists(fullPath))
+            if (File.Exists(file.fullPath))
             {
-                string[] titleRowArray = FileWriter.GetLineFilePositionRow(fullPath, 0).Split(FormatRows.seporRows);
+                string[] titleRowArray = file.GetLineFilePositionRow(0).Split(FormatRows.seporRows);
                 Dictionary<int, bool> tableClear = new Dictionary<int, bool>();
 
 
-                System.Console.WriteLine($"Выберете в каком столбце искать {text} (t/F): ");
+                System.Console.WriteLine($"Выберете в каком столбце искать {text} (y/N): ");
                 for (int i = 0; i < titleRowArray.Length; ++i)
                 {
-                    if (InputString($"{titleRowArray[i]}: ") == "t")
+                    if (InputString($"{titleRowArray[i]}: ") == FileWriter.Yes)
                         tableClear.Add(i, true);
                     else tableClear.Add(i, false);
                 }
                 foreach (int i in tableClear.Keys)
                 {
                     if (tableClear[i])
-                        Console.WriteLine(FileWriter.GetLineFileDataOnPositionInRow(fullPath, text, i));
+                        Console.WriteLine(file.GetLineFileDataOnPositionInRow(text, i));
                 }
             }
             else System.Console.WriteLine(fileName + ": такого файла не существует.");
@@ -399,12 +392,12 @@ namespace Task
         {
             if (fileName == FileWriter.stringNull)
                 fileName = InputString("Ведите название файла: ");
-            
-            string fullPath = FileWriter.CreatePath(fileName);
+
+            FileWriter file = new(fileName);
 
             try
             {
-                using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
+                using (StreamReader reader = new StreamReader(file.fullPath, Encoding.UTF8))
                 {
                     string? line;
                     while ((line = reader.ReadLine()) != null)

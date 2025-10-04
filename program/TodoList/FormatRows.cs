@@ -1,67 +1,72 @@
 // This file contains row and date formatting - PoneMaurice
 
+using System.Collections;
 using System.Data;
 using System.Globalization;
 using System.Text;
 
 namespace Task
 {
-    public class FormatRows(string nameFile, bool TitleRow = false, bool dataTypeRow = false)
+    public class FormatRows
     {
         public const string seporRows = "|";
         public StringBuilder Row = new();
-        int Num;        
-        public string PathToFile = FileWriter.CreatePath(nameFile);
+        string? PathToFile;
+        int Num;
+        Type type;
+        public static string titleFirstObject = "numbering";
+        public static string dataTypeFirstObject = "counter";
+
+        public enum Type : int
+        {
+            title = 1,
+            row = 2,
+            dataType = 3
+        }
+        public FormatRows(string nameFile, Type typeOut = Type.row)
+        {
+            FileWriter file = new(nameFile);
+            Num = file.GetLeghtFile();
+            type = typeOut;
+        }
+        public string GetFirstObject()
+        {
+            switch (type)
+            {
+                case Type.row:
+                    return Num.ToString();
+                case Type.title:
+                    return titleFirstObject;
+                case Type.dataType:
+                    return dataTypeFirstObject;
+            }
+            return Num.ToString();
+        }
         public void AddInRow(string pathRow)
         {
             /*Форматирует массив данных под будущию таблицу csv*/
-            
-            if (PathToFile == null)
-            {
-                PathToFile = FileWriter.CreatePath(nameFile);
-            }
-            if (Row.ToString() == "" && dataTypeRow)
-            {
-                Num = FileWriter.GetLeghtFile(PathToFile);
-                Row.Append("counter" + FormatRows.seporRows + pathRow);
-            }
-            else if (Row.ToString() == "" && !TitleRow)
-            {
-                Num = FileWriter.GetLeghtFile(PathToFile);
-                Row.Append(Num + FormatRows.seporRows + pathRow);
-            }
-            else if (Row.ToString() == "" && TitleRow)
-            {
-                Num = 0;
-                Row.Append("numbering" + FormatRows.seporRows + pathRow);
-            }
-            else Row.Append(FormatRows.seporRows + pathRow);
+            if (Row.ToString() == "") Row.Append(GetFirstObject() + seporRows + pathRow);
+            else Row.Append(seporRows + pathRow);
         }
-        public void AddInRow(string[] pathRow)
+        public void AddArrayInRow(string[] row)
         {
-            
-            if (PathToFile == null)
+            foreach (string path in row)
             {
-                PathToFile = FileWriter.CreatePath(nameFile);
+                AddInRow(path);
             }
         }
         public int GetLeghtRow()
         {
             if (Row.Length != 0)
-            {
-                
-                return Row.ToString().Split(FormatRows.seporRows).Count();
-            }
-            else return 0;
+                return Row.ToString().Split(seporRows).Count();
+            return 0;
         }
         public static string GetNowDateTime()
         {
             /*возвращает сегодняшнюю дату и время в нужном формате*/
             DateTime nowDate = DateTime.Now;
-            StringBuilder dateTime = new();
-            dateTime.Append(nowDate.ToShortDateString() +
-                " " + nowDate.ToShortTimeString());
-            return dateTime.ToString();
+            return nowDate.ToShortDateString() +
+                " " + nowDate.ToShortTimeString();
         }
     }
 }
