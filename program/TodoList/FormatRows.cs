@@ -8,40 +8,49 @@ namespace Task
 {
     public class FormatRows(string nameFile, bool TitleRow = false, bool dataTypeRow = false)
     {
+        public const string seporRows = "|";
         public StringBuilder Row = new();
-        public string? PathToFile;
-        public int Num;
+        int Num;        
+        public string PathToFile = FileWriter.CreatePath(nameFile);
         public void AddInRow(string pathRow)
         {
             /*Форматирует массив данных под будущию таблицу csv*/
-            FileWriter file = new();
+            
             if (PathToFile == null)
             {
-                PathToFile = file.CreatePath(nameFile);
+                PathToFile = FileWriter.CreatePath(nameFile);
             }
             if (Row.ToString() == "" && dataTypeRow)
             {
-                Num = file.GetLeghtFile(PathToFile);
-                Row.Append("counter" + file.seporRows + pathRow);
+                Num = FileWriter.GetLeghtFile(PathToFile);
+                Row.Append("counter" + FormatRows.seporRows + pathRow);
             }
             else if (Row.ToString() == "" && !TitleRow)
             {
-                Num = file.GetLeghtFile(PathToFile);
-                Row.Append(Num + file.seporRows + pathRow);
+                Num = FileWriter.GetLeghtFile(PathToFile);
+                Row.Append(Num + FormatRows.seporRows + pathRow);
             }
             else if (Row.ToString() == "" && TitleRow)
             {
                 Num = 0;
-                Row.Append("numbering" + file.seporRows + pathRow);
+                Row.Append("numbering" + FormatRows.seporRows + pathRow);
             }
-            else Row.Append(file.seporRows + pathRow);
+            else Row.Append(FormatRows.seporRows + pathRow);
+        }
+        public void AddInRow(string[] pathRow)
+        {
+            
+            if (PathToFile == null)
+            {
+                PathToFile = FileWriter.CreatePath(nameFile);
+            }
         }
         public int GetLeghtRow()
         {
             if (Row.Length != 0)
             {
-                FileWriter file = new();
-                return Row.ToString().Split(file.seporRows).Count();
+                
+                return Row.ToString().Split(FormatRows.seporRows).Count();
             }
             else return 0;
         }

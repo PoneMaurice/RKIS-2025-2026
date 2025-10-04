@@ -2,11 +2,11 @@
 using System.Text;
 namespace Task
 {
-    public class FileWriter
+    public static class FileWriter
     {
         public const string stringNull = "NULL";
-        public string seporRows = "|";
-        public string CreatePath(string nameFile) // Function for creating file path - PoneMaurice
+        const string seporRows = "|";
+        public static string CreatePath(string nameFile) // Function for creating file path - PoneMaurice
         {
             /*Создание актульного пути под каждый нужный файл находящийся в деректории с конфигами*/
             string dataPath = "/.config/RKIS-TodoList/"; // Расположение файла для UNIX и MacOSX
@@ -26,7 +26,7 @@ namespace Task
             fullPath = Path.Join(fullPath, $"{nameFile}.csv");
             return fullPath;
         }
-        public string TitleRowWriter(string nameFile, string titleRow) // Function for writing rows in tasks titles - PoneMaurice
+        public static string TitleRowWriter(string nameFile, string titleRow) // Function for writing rows in tasks titles - PoneMaurice
         {
             string fullPath = CreatePath(nameFile);
             if (!File.Exists(fullPath))
@@ -40,7 +40,7 @@ namespace Task
                 }
             return fullPath;
         }
-        public void WriteFile(string fullPath, string dataFile, bool noRewrite)
+        public static void WriteFile(string fullPath, string dataFile, bool noRewrite)
         {
             /*Запись в конец файла строки*/
             try
@@ -65,7 +65,7 @@ namespace Task
                 Console.WriteLine($"{ex}\n");
             }
         }
-        public string GetLineFileDataOnPositionInRow(string fullPath, string dataFile, int positionInRow)
+        public static string GetLineFileDataOnPositionInRow(string fullPath, string dataFile, int positionInRow)
         {
             /*Возвращает строку если ее элемент по заданой позиции 
             соответствует введеным нами данным*/
@@ -76,7 +76,7 @@ namespace Task
                     string? line;
                     while ((line = reader.ReadLine()) != null)
                     {
-                        string[] pathLine = line.Split(seporRows);
+                        string[] pathLine = line.Split(FormatRows.seporRows);
                         if (pathLine.Length > positionInRow)
                         {
                             if (pathLine[positionInRow] == dataFile)
@@ -91,7 +91,7 @@ namespace Task
             }
             return stringNull;
         }
-        public string GetLineFilePositionRow(string fullPath, int positionRow)
+        public static string GetLineFilePositionRow(string fullPath, int positionRow)
         {
             /*Возвращает строку если ее элемент по заданной позиции 
             соответствует введеным нами данным*/
@@ -117,7 +117,7 @@ namespace Task
             }
             return stringNull;
         }
-        public string GetLineFileData(string fullPath, string dataFile)
+        public static string GetLineFileData(string fullPath, string dataFile)
         {
             /*перегрузка метода только без позиции*/
             try
@@ -140,7 +140,7 @@ namespace Task
             }
             return stringNull;
         }
-        public int GetLeghtFile(string fullPath)
+        public static int GetLeghtFile(string fullPath)
         {
             int numLine = 0;
             try
