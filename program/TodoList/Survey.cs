@@ -34,13 +34,19 @@ namespace Task
         }
         public void Profile()
         {
-            Commands.PrintProfile();
+            StringBuilder text = new();
+            text.Append("Команда для работы с профилями;\n");
+            text.Append("При простом вызове, выводится первый добавленный пользователь: profile;\n");
+            text.Append("При использовании как аргумент с командой add - добавляется новый пользователь: add profile;\n");
+            if (SearchExtension(1, "help")) Console.WriteLine(text.ToString());
+            else Commands.PrintProfile();
         }
         public void Help()
         {
             StringBuilder text = new();
             text.Append("Данная программа позволяет пользователю создавать свой список заданий и контролировать их выполнение\n");
             text.Append("help - Выводит помощь по программе и её командам например: add help\n");
+            text.Append("profile - Команда для работы с профилями\n");
             text.Append("add - Добавляет запись по базовой конфигурации: add task;\nДобавляет файл конфигурации: add config <File>;\nДобавляет запись по заранее созданной конфигурации: add <File>;\n");
             text.Append("clear - очищает выбранный файл\n");
             text.Append("search - Ищет все идентичные строчки в файле\n");
@@ -55,6 +61,7 @@ namespace Task
             text.Append("Добавляет запись по базовой конфигурации: add task;\n");
             text.Append("Добавляет файл конфигурации: add config <File>;\n");
             text.Append("Добавляет запись по заранее созданной конфигурации: add <File>;\n");
+            text.Append("Создаёт новый профиль: add profile;\n");
             text.Append("При добавлении print в конце команды, выводится добавленный текст\n");
             if (SearchExtension(1, "help")) Console.WriteLine(text.ToString());
             else if (SearchExtension("task") && SearchExtension("print"))

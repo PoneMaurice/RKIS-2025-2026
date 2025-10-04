@@ -14,7 +14,7 @@ namespace Task
                 {
                     var cap = new Captions();
                     cap.WriteCaption();
-                    sur.Profile();
+                    Commands.PrintProfile();
                 }
                 sur.ProceStr("-- ");
                 ++cycle;
