@@ -4,6 +4,7 @@ namespace Task
 {
     public class FileWriter
     {
+        public const string stringNull = "NULL";
         public string seporRows = "|";
         public string CreatePath(string nameFile) // Function for creating file path - PoneMaurice
         {
@@ -88,7 +89,7 @@ namespace Task
             {
                 Console.WriteLine($"{ex}\n");
             }
-            return "NULL";
+            return stringNull;
         }
         public string GetLineFilePositionRow(string fullPath, int positionRow)
         {
@@ -114,7 +115,7 @@ namespace Task
             {
                 Console.WriteLine($"{ex}\n");
             }
-            return "NULL";
+            return stringNull;
         }
         public string GetLineFileData(string fullPath, string dataFile)
         {
@@ -137,7 +138,7 @@ namespace Task
             {
                 Console.WriteLine($"{ex}\n");
             }
-            return "NULL";
+            return stringNull;
         }
         public int GetLeghtFile(string fullPath)
         {

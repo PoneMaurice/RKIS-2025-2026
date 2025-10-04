@@ -67,7 +67,7 @@ namespace Task
             text.Append("search - Ищет все идентичные строчки в файле: search task;\n");
             text.Append("print - Выводит всё содержимое файла: print task;\n");
             if (SearchExtension(1, "help")) Console.WriteLine(text.ToString());
-            else if (SearchExtension(1, "clear") && nowText == "NULL")
+            else if (SearchExtension(1, "clear") && nowText == FileWriter.stringNull)
                 Commands.ClearAllTasks();
             else if (SearchExtension(1, "search")) command.SearchPartData(nowText, command.nameTask);
             else Commands.PrintData(command.nameTask);
@@ -87,7 +87,7 @@ namespace Task
             StringBuilder text = new();
             text.Append("search - Ищет все идентичные строчки в файле;\n");
             if (SearchExtension(1, "help")) Console.WriteLine(text.ToString());
-            else command.SearchPartData("NULL", nowText);
+            else command.SearchPartData(FileWriter.stringNull, nowText);
         }
         public void Exit()
         {
@@ -157,7 +157,7 @@ namespace Task
                 }
                 else text.Append($" {sepText[i]}");
             }
-            if (text.ToString() == "") text.Append("NULL");
+            if (text.ToString() == "") text.Append(FileWriter.stringNull);
             return text.ToString();
         }
         void SearchCommand(string[] command)

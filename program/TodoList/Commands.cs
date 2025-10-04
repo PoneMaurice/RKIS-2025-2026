@@ -39,7 +39,7 @@ namespace Task
             while (true)
             {
                 Console.Write(text);
-                string input = Console.ReadLine() ?? "NULL";
+                string input = Console.ReadLine() ?? FileWriter.stringNull;
                 input = input.Trim();
                 string inputLow = input.ToLower();
                 foreach (var dataType in DataTypePros)
@@ -61,8 +61,8 @@ namespace Task
             версия строки*/
             Console.Write(text);
             StringBuilder input = new();
-            input.Append((Console.ReadLine() ?? "NULL").Trim());
-            if (input.ToString() == "") input.Append("NULL");
+            input.Append((Console.ReadLine() ?? FileWriter.stringNull).Trim());
+            if (input.ToString() == "") input.Append(FileWriter.stringNull);
             return input.ToString();
         }
         public static int InputDate(string text, int min, int max)
@@ -123,7 +123,7 @@ namespace Task
                 return dateString;
             }
             else Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'");
-            return "NULL";
+            return FileWriter.stringNull;
         }
         private static string GetModeDate()
         {
@@ -149,7 +149,7 @@ namespace Task
                 return yearMonthDay.ToShortDateString();
             }
             else Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'");
-            return "NULL";
+            return FileWriter.stringNull;
         }
         private static string GetModeTime()
         {
@@ -176,7 +176,7 @@ namespace Task
             {
                 Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'");
             }
-            return "NULL";
+            return FileWriter.stringNull;
         }
         public static void AddTask()
         {
@@ -237,7 +237,7 @@ namespace Task
         }
         public static void AddConfUserData(string fileName)
         {
-            if (fileName == "NULL")
+            if (fileName == FileWriter.stringNull)
             {
                 fileName = InputString("Введите название для файла с данными: ");
             }
@@ -245,8 +245,8 @@ namespace Task
             FileWriter file = new();
             string fullPathConfig = file.CreatePath(fileName);
             string askFile = "y";
-            string searchLine1 = "NULL";
-            string searchLine2 = "NULL";
+            string searchLine1 = FileWriter.stringNull;
+            string searchLine2 = FileWriter.stringNull;
             if (File.Exists(fullPathConfig))
             {
                 searchLine1 = file.GetLineFilePositionRow(fullPathConfig, 0);
@@ -286,9 +286,9 @@ namespace Task
                 string lastDataTypeRow = file.GetLineFilePositionRow(fullPathConfig, 1);
                 string askTitle = "y";
                 string askDataType = "y";
-                if (lastTitleRow != titleRow.Row.ToString() && lastTitleRow != "NULL")
+                if (lastTitleRow != titleRow.Row.ToString() && lastTitleRow != FileWriter.stringNull)
                     askTitle = InputString($"Титульный лист отличается \nНыняшний: {titleRow}\nПрошлый: {lastTitleRow}\nЗаменить?(y/N): ");
-                else if (lastDataTypeRow != dataTypeRow.Row.ToString() && lastDataTypeRow != "NULL")
+                else if (lastDataTypeRow != dataTypeRow.Row.ToString() && lastDataTypeRow != FileWriter.stringNull)
                     askDataType = InputString($"Конфигурация уже имеется\nНынешняя: {dataTypeRow}\nПрошлая: {lastDataTypeRow}\nЗаменить?(y/N): ");
                 if (askTitle == "y" || askDataType == "y")
                 {
@@ -383,11 +383,11 @@ namespace Task
                 else tableClear.Add(i, false);
             }
         }
-        public void SearchPartData(string text, string fileName = "NULL")
+        public void SearchPartData(string text, string fileName = FileWriter.stringNull)
         {
-            if (fileName == "NULL")
+            if (fileName == FileWriter.stringNull)
                 fileName = InputString("Ведите название файла: ");
-            if (text == "NULL")
+            if (text == FileWriter.stringNull)
                 text = InputString("Поиск: ");
             FileWriter file = new();
             string fullPath = file.CreatePath(fileName);
@@ -415,7 +415,7 @@ namespace Task
         }
         public static void PrintData(string fileName)
         {
-            if (fileName == "NULL")
+            if (fileName == FileWriter.stringNull)
                 fileName = InputString("Ведите название файла: ");
             FileWriter file = new();
             string fullPath = file.CreatePath(fileName);
