@@ -12,6 +12,7 @@ namespace Task
     public class Commands
     {
         const string TaskName = "tasks";
+        const string ProfileName = "Profile";
         public string nameTask { get { return TaskName; } }
         const string StringChar = "s";
         const string IntegerChar = "i";
@@ -22,6 +23,8 @@ namespace Task
         const string NowDateTime = "ndt";
         static string[] TaskTitle = { "nameTask", "description", "nowDateAndTime", "deadLine" };
         static string[] TaskTypeData = { StringChar, StringChar, NowDateTime, DateAndTime };
+        static string[] ProfileTitle = {"name", "soreName", "DOB" , "nowDateAndTime"};
+        static string[] ProfileDataType = { StringChar, StringChar, DateChar, NowDateTime };
         const string PrefConfigFile = "_conf";
         public string InputDataType(string text)
         {
@@ -103,7 +106,7 @@ namespace Task
             когда пользователя спрашивают по пунктам, 
             а так же если он не выберет какой-то из вариантов 
             ввода даты то программа автоматически введет "NULL"*/
-            string dateAndTime = GetDate()+" "+GetTime();
+            string dateAndTime = GetDate() + " " + GetTime();
             return dateAndTime;
         }
         private static string GetDate()
@@ -165,12 +168,7 @@ namespace Task
         {
             /*программа запрашивает у пользователя все необходимые ей данные
             и записывает их в файл tasks.csv с нужным форматированием*/
-            FileWriter file = new(TaskName);
-            FormatRows titleRow = new(TaskName, FormatRows.Type.title);
-            string row = GetRowOnTitleAndConfig(TaskTitle, TaskTypeData);
-            titleRow.AddArrayInRow(TaskTitle);
-            file.TitleRowWriter(titleRow.Row.ToString());
-            file.WriteFile(row, true);
+            FileWriter.AddRowInFile(TaskName, TaskTitle, TaskTypeData);
         }
         public static void AddTaskAndPrint()
         {
@@ -178,23 +176,14 @@ namespace Task
             и записывает их в файл tasks.csv с нужным форматированием 
             после чего выводит сообщение о добовлении данных дублируя их 
             пользователю для проверки*/
-            FormatRows titleRow = new(TaskName, FormatRows.Type.title);
             FileWriter file = new(TaskName);
-            
-            string row = GetRowOnTitleAndConfig(TaskTitle, TaskTypeData);
-            titleRow.AddArrayInRow(TaskTitle);
-
+            FileWriter.AddRowInFile(TaskName, TaskTitle, TaskTypeData);
             try
             {
-                file.TitleRowWriter(titleRow.Row.ToString());
-                file.WriteFile(row, true);
-
-                string[] titleRowString = titleRow.Row.ToString().Split(FormatRows.seporRows);
-                string[] rowString = row.Split(FormatRows.seporRows);
-                System.Console.WriteLine("\n");
+                string[] titleRowString = file.GetLineFilePositionRow(0).Split(FormatRows.seporRows);
+                string[] rowString = file.GetLineFilePositionRow(file.GetLeghtFile()-1).Split(FormatRows.seporRows);
                 for (int i = 0; i < titleRowString.Length; ++i)
                 { Console.WriteLine($"{titleRowString[i]}: {rowString[i]}"); }
-                System.Console.WriteLine("\n");
             }
             catch (Exception ex)
             {
@@ -207,7 +196,7 @@ namespace Task
             {
                 fileName = InputString("Введите название для файла с данными: ");
             }
-            fileName = fileName+PrefConfigFile;
+            fileName = fileName + PrefConfigFile;
             FileWriter file = new(fileName);
 
             string fullPathConfig = file.CreatePath(fileName);
@@ -270,10 +259,10 @@ namespace Task
         }
         public static void AddUserData(string nameData)
         {
-            FileWriter fileConf = new(nameData+PrefConfigFile);
+            FileWriter fileConf = new(nameData + PrefConfigFile);
             FileWriter file = new(nameData);
 
-            string fullPathConfig = fileConf.CreatePath(nameData+PrefConfigFile);
+            string fullPathConfig = fileConf.CreatePath(nameData + PrefConfigFile);
             if (File.Exists(fullPathConfig))
             {
                 string titleRow = fileConf.GetLineFilePositionRow(0);
@@ -345,7 +334,7 @@ namespace Task
         {
             string fileName = TaskName;
             FileWriter file = new(fileName);
-            
+
             string[] titleRowArray = file.GetLineFilePositionRow(0).Split(FormatRows.seporRows);
             Dictionary<int, bool> tableClear = new Dictionary<int, bool>();
 
@@ -363,9 +352,9 @@ namespace Task
                 fileName = InputString("Ведите название файла: ");
             if (text == FileWriter.stringNull)
                 text = InputString("Поиск: ");
-            
+
             FileWriter file = new(fileName);
-            
+
 
             if (File.Exists(file.fullPath))
             {
@@ -410,6 +399,10 @@ namespace Task
             {
                 Console.WriteLine($"{ex}\n");
             }
+        }
+        public static void AddProfile()
+        {
+            FileWriter.AddRowInFile(ProfileName, ProfileTitle, ProfileDataType);
         }
     }
 }

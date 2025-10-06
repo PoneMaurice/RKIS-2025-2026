@@ -11,7 +11,6 @@ namespace Task
     {
         public const string seporRows = "|";
         public StringBuilder Row = new();
-        string? PathToFile;
         int Num;
         Type type;
         public static string titleFirstObject = "numbering";

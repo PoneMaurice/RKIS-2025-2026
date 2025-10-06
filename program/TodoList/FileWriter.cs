@@ -120,7 +120,7 @@ namespace Task
             }
             catch (Exception)
             {
-                System.Console.WriteLine("не найдено");    
+                System.Console.WriteLine("не найдено");
             }
             return stringNull;
         }
@@ -170,6 +170,15 @@ namespace Task
                 System.Console.WriteLine(ex.Message);
             }
             return numLine;
+        }
+        static public void AddRowInFile(string nameFile, string[] titleRowArray, string[] dataTypeRowArray)
+        {
+            FileWriter file = new(nameFile);
+            FormatRows titleRow = new(nameFile, FormatRows.Type.title);
+            string row = Commands.GetRowOnTitleAndConfig(titleRowArray, dataTypeRowArray);
+            titleRow.AddArrayInRow(titleRowArray);
+            file.TitleRowWriter(titleRow.Row.ToString());
+            file.WriteFile(row, true);
         }
     }
 }
