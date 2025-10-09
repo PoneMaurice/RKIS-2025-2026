@@ -23,9 +23,13 @@ namespace Task
             "exit"
         };
 
-        public void GlobalCommand(string[] slpitText)
+        public void GlobalCommand(string[] splitText)
         {
-            SearchCommandOnJson.hyi();
+            SearchCommandOnJson searchInText = new(splitText);
+            System.Console.WriteLine(searchInText.SearchCommands("add"));
+            System.Console.WriteLine(searchInText.SearchCommands("add", ["help"]));
+            System.Console.WriteLine(searchInText.SearchCommands("add", ["help", "config"]));
+            System.Console.WriteLine(searchInText.SearchOptionInArgs("add", ["help"]));
         }
         public void Profile()
         {
