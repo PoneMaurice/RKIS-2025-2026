@@ -23,7 +23,7 @@ namespace Task
         const string NowDateTime = "ndt";
         static string[] TaskTitle = { "nameTask", "description", "nowDateAndTime", "deadLine" };
         static string[] TaskTypeData = { StringChar, StringChar, NowDateTime, DateAndTime };
-        static string[] ProfileTitle = {"name", "soreName", "DOB" , "nowDateAndTime"};
+        static string[] ProfileTitle = { "name", "soreName", "DOB", "nowDateAndTime" };
         static string[] ProfileDataType = { StringChar, StringChar, DateChar, NowDateTime };
         const string PrefConfigFile = "_conf";
         public string InputDataType(string text)
@@ -181,7 +181,7 @@ namespace Task
             try
             {
                 string[] titleRowString = file.GetLineFilePositionRow(0).Split(FormatRows.seporRows);
-                string[] rowString = file.GetLineFilePositionRow(file.GetLeghtFile()-1).Split(FormatRows.seporRows);
+                string[] rowString = file.GetLineFilePositionRow(file.GetLeghtFile() - 1).Split(FormatRows.seporRows);
                 for (int i = 0; i < titleRowString.Length; ++i)
                 { Console.WriteLine($"{titleRowString[i]}: {rowString[i]}"); }
             }
@@ -404,5 +404,6 @@ namespace Task
         {
             FileWriter.AddRowInFile(ProfileName, ProfileTitle, ProfileDataType);
         }
+        
     }
 }

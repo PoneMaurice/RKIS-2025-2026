@@ -7,6 +7,7 @@ namespace Task
         public static void Main()
         {
             int cycle = 0;
+            Console.Clear();
             do
             {
                 var sur = new Survey();

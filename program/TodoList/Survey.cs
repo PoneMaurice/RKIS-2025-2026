@@ -2,6 +2,7 @@
 using System.Runtime;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Json.Nodes;
 
 namespace Task
 {
@@ -9,7 +10,7 @@ namespace Task
     {
         public static int counter = 0;
         public string nowText = "";
-        public string[] listComm = {
+        public string[] Commands = {
             "none",
             "profile",
             "add",
@@ -21,16 +22,10 @@ namespace Task
             "config",
             "exit"
         };
-        public void GlobalCommand()
+
+        public void GlobalCommand(string[] slpitText)
         {
-            if (SearchExtension(0, "exit")) Exit();
-            else if (SearchExtension(0, "help")) Help();
-            else if (SearchExtension(0, "profile")) Profile();
-            else if (SearchExtension(0, "add")) Add();
-            else if (SearchExtension(0, "task")) Task();
-            else if (SearchExtension(0, "print")) Print();
-            else if (SearchExtension(0, "search")) Search();
-            else None();
+            SearchCommandOnJson.hyi();
         }
         public void Profile()
         {
@@ -65,11 +60,11 @@ namespace Task
             text.Append("При добавлении print в конце команды, выводится добавленный текст\n");
             if (SearchExtension(1, "help")) Console.WriteLine(text.ToString());
             else if (SearchExtension("task") && SearchExtension("print"))
-                Commands.AddTaskAndPrint();
-            else if (SearchExtension(1, "task")) Commands.AddTask();
-            else if (SearchExtension(1, "config")) Commands.AddConfUserData(nowText);
-            // else if (SearchExtension(1, "profile")) Commands.AddProfile();
-            else Commands.AddUserData(nowText);
+                global::Task.Commands.AddTaskAndPrint();
+            else if (SearchExtension(1, "task")) global::Task.Commands.AddTask();
+            else if (SearchExtension(1, "config")) global::Task.Commands.AddConfUserData(nowText);
+            else if (SearchExtension(1, "profile")) global::Task.Commands.AddProfile();
+            else global::Task.Commands.AddUserData(nowText);
         }
         public void Task()
         {
@@ -83,9 +78,9 @@ namespace Task
             text.Append("print - Выводит всё содержимое файла: print task;\n");
             if (SearchExtension(1, "help")) Console.WriteLine(text.ToString());
             else if (SearchExtension(1, "clear") && nowText == FileWriter.stringNull)
-                Commands.ClearAllTasks();
+                global::Task.Commands.ClearAllTasks();
             else if (SearchExtension(1, "search")) command.SearchPartData(nowText, command.nameTask);
-            else Commands.PrintData(command.nameTask);
+            else global::Task.Commands.PrintData(command.nameTask);
         }
         public void Print()
         {
@@ -94,7 +89,7 @@ namespace Task
             text.Append("Примеры: print task; print <File>;\n");
             text.Append("Также может использоваться как аргумент в командах add task print/add <File> print,\nпосле создания записи её содержимое будет выведено в консоль;\n");
             if (SearchExtension(1, "help")) Console.WriteLine(text.ToString());
-            else Commands.PrintData(nowText);
+            else global::Task.Commands.PrintData(nowText);
         }
         public void Search()
         {
@@ -103,6 +98,10 @@ namespace Task
             text.Append("search - Ищет все идентичные строчки в файле;\n");
             if (SearchExtension(1, "help")) Console.WriteLine(text.ToString());
             else command.SearchPartData(FileWriter.stringNull, nowText);
+        }
+        public void Clear()
+        {
+            Console.Clear();
         }
         public void Exit()
         {
@@ -115,29 +114,29 @@ namespace Task
         public Dictionary<string, bool> extensions = new Dictionary<string, bool> { };
         public void AddExtensions()
         {
-            for (int i = 0; i < listComm.Length; ++i)
+            for (int i = 0; i < Commands.Length; ++i)
             {
-                extensions.Add(listComm[i], false);
+                extensions.Add(Commands[i], false);
             }
         }
         public void ClearExtensions() {
             for (int i = 0; i < extensions.Count; ++i)
             {
-                extensions[listComm[i]] = false;
+                extensions[Commands[i]] = false;
             }
         }
         public Dictionary<string, int> extensionsNUM = new Dictionary<string, int> { };
         public void AddExtensionsNUM()
         {
-            for (int i = 0; i < listComm.Length; ++i)
+            for (int i = 0; i < Commands.Length; ++i)
             {
-                extensionsNUM.Add(listComm[i], 0);
+                extensionsNUM.Add(Commands[i], 0);
             }
         }
         public void ClearExtensionsNUM() {
             for (int i = 0; i < extensionsNUM.Count; ++i)
             {
-                extensionsNUM[listComm[i]] = 0;
+                extensionsNUM[Commands[i]] = 0;
             }
         }
         public bool SearchExtension(int position, string extension)
@@ -153,11 +152,9 @@ namespace Task
         }
         public void ProceStr(string text)
         {
-            string ask = Commands.InputString(text);
+            string ask = global::Task.Commands.InputString(text);
             string[] partsText = ask.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            SearchCommand(partsText);
-            nowText = AssociationString(partsText);
-            GlobalCommand();
+            GlobalCommand(partsText);
         }
         public static string AssociationString(string[] sepText)
         {
@@ -184,19 +181,19 @@ namespace Task
             for (int i = 0; i < command.Length; ++i)
             {
                 int lus = 1;
-                for (int j = 1; j < listComm.Length; ++j)
+                for (int j = 1; j < Commands.Length; ++j)
                 {
-                    if (command[i] == listComm[j] &&
-                    extensions[listComm[j]] != true)
+                    if (command[i] == Commands[j] &&
+                    extensions[Commands[j]] != true)
                     {
-                        extensions[listComm[j]] = true;
-                        extensionsNUM[listComm[j]] = i;
+                        extensions[Commands[j]] = true;
+                        extensionsNUM[Commands[j]] = i;
                         num++;
                         break;
                     }
                     else ++lus;
                 }
-                if (lus == listComm.Length)
+                if (lus == Commands.Length)
                 {
                     if (i == 0) extensions["none"] = true;
                     break;
