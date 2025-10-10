@@ -385,6 +385,8 @@ namespace Task
         {
             if (fileName == "")
                 fileName = InputString("Ведите название файла: ");
+            
+            
 
             FileWriter file = new(fileName);
 
@@ -399,9 +401,9 @@ namespace Task
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"{ex}\n");
+                Console.WriteLine($"Ошибка при чтении файла");
             }
         }
         public static void AddProfile()

@@ -42,10 +42,8 @@ namespace Task
                     break;
 
                 case "profile":
-                System.Console.WriteLine("profileprofileprofileprofileprofile");
                     if (commandLine.optionsOut != null)
                     {
-                        System.Console.WriteLine("profileprofileprofileprofile");
                         if (commandLine.optionsOut[0] == "help")
                         {
                             ProfileHelp();
@@ -85,7 +83,7 @@ namespace Task
                         }
                         else {Commands.PrintData(commandLine.nextTextOut);}
                     }
-                    else { Commands.PrintData(); }
+                    else { Commands.PrintData(commandLine.nextTextOut); }
                     break;
 
                 case "search":
@@ -116,10 +114,8 @@ namespace Task
                     else {}
                     break;
                 case "clear":
-                System.Console.WriteLine("CCCCCCClear");
                     if (commandLine.optionsOut != null)
                     {
-                        System.Console.WriteLine("CCCCCCClear");
                         if (commandLine.optionsOut[0] == "help")
                         {
 

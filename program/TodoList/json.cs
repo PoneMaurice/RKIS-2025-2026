@@ -90,16 +90,16 @@ namespace Task
                     optionsOut = optionsLine.ToString().Split("|");
                 }
                 nextTextOut = textLine.ToString();
-                System.Console.WriteLine("com: " + commandOut);
-                System.Console.WriteLine("opt:");
-                if (optionsOut != null)
-                {
-                    foreach (var option in optionsOut)
-                    {
-                        System.Console.WriteLine("\t" + option);
-                    }
-                }
-                System.Console.WriteLine("text: "+ nextTextOut);
+                // System.Console.WriteLine("com: " + commandOut);
+                // System.Console.WriteLine("opt:");
+                // if (optionsOut != null)
+                // {
+                //     foreach (var option in optionsOut)
+                //     {
+                //         System.Console.WriteLine("\t" + option);
+                //     }
+                // }
+                // System.Console.WriteLine("text: "+ nextTextOut);
             }
         }
     }
