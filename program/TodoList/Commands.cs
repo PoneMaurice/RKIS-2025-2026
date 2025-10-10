@@ -190,7 +190,7 @@ namespace Task
                 Console.WriteLine("Возникла ошибка при записи в файл\n", ex.Message);
             }
         }
-        public static void AddConfUserData(string fileName)
+        public static void AddConfUserData(string fileName = FileWriter.stringNull)
         {
             if (fileName == FileWriter.stringNull)
             {
