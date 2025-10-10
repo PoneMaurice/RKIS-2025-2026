@@ -18,15 +18,117 @@ namespace Task
             switch (commandLine.commandOut)
             {
                 case "add":
-                    System.Console.WriteLine("add");
+                    if (commandLine.optionsOut != null)
+                    {
+                        if (commandLine.optionsOut[0] == "help")
+                        {
+
+                        }
+                        else if (commandLine.optionsOut[0] == "task")
+                        {
+
+                        }
+                        else if (commandLine.optionsOut[0] == "config")
+                        {
+
+                        }
+                        else if (commandLine.optionsOut[0] == "profile")
+                        {
+
+                        }
+                        else {}
+                    }
+                    else {}
                     break;
+                    
                 case "profile":
+                    if (commandLine.optionsOut != null)
+                    {
+                        if (commandLine.optionsOut[0] == "help")
+                        {
+
+                        }
+                        else if (commandLine.optionsOut[0] == "add")
+                        {
+
+                        }
+                    }
+                    else {}
                     break;
+
                 case "print":
+                    if (commandLine.optionsOut != null)
+                    {
+                        if (commandLine.optionsOut[0] == "help")
+                        {
+
+                        }
+                        else if (commandLine.optionsOut[0] == "task")
+                        {
+
+                        }
+                        else if (commandLine.optionsOut[0] == "config")
+                        {
+
+                        }
+                        else if (commandLine.optionsOut[0] == "profile")
+                        {
+
+                        }
+                        else {}
+                    }
+                    else {}
                     break;
+
                 case "search":
+                    if (commandLine.optionsOut != null)
+                    {
+                        if (commandLine.optionsOut[0] == "help")
+                        {
+
+                        }
+                        else if (commandLine.optionsOut[0] == "task")
+                        {
+
+                        }
+                        else if (commandLine.optionsOut[0] == "config")
+                        {
+
+                        }
+                        else if (commandLine.optionsOut[0] == "profile")
+                        {
+
+                        }
+                        else if (commandLine.optionsOut[0] == "numbering")
+                        {
+
+                        }
+                        else { }
+                    }
+                    else {}
                     break;
                 case "clear":
+                    if (commandLine.optionsOut != null)
+                    {
+                        if (commandLine.optionsOut[0] == "help")
+                        {
+
+                        }
+                        else if (commandLine.optionsOut[0] == "task")
+                        {
+
+                        }
+                        else if (commandLine.optionsOut[0] == "config")
+                        {
+
+                        }
+                        else if (commandLine.optionsOut[0] == "profile")
+                        {
+
+                        }
+                        else {}
+                    }
+                    else {}
                     break;
                 case "help":
                     break;

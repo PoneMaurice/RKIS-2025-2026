@@ -54,7 +54,7 @@ namespace Task
                                 {
                                     foreach (var option in command.Options)
                                     {
-                                        if (pathText == option.Short || pathText == option.Long)
+                                        if ((pathText == option.Short || pathText == option.Long)&&option.Name!=null)
                                         {
                                             if (!optionsLine.ToString().Contains(option.Name))
                                             {
