@@ -101,7 +101,7 @@ namespace Task
                     string? line;
                     while ((line = reader.ReadLine()) != null)
                     {
-                        string[] pathLine = line.Split(FormatRows.seporRows);
+                        string[] pathLine = line.Split(FormatRows.SeparRows);
                         if (pathLine.Length > positionInRow)
                         {
                             if (pathLine[positionInRow] == dataFile)

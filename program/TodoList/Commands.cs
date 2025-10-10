@@ -11,8 +11,8 @@ namespace Task
 {
     public class Commands
     {
-        const string TaskName = "tasks";
-        const string ProfileName = "Profile";
+        public const string TaskName = "tasks";
+        public const string ProfileName = "Profile";
         public string nameTask { get { return TaskName; } }
         const string StringChar = "s";
         const string IntegerChar = "i";
@@ -25,7 +25,7 @@ namespace Task
         static string[] TaskTypeData = { StringChar, StringChar, NowDateTime, DateAndTime };
         static string[] ProfileTitle = { "name", "soreName", "DOB", "nowDateAndTime" };
         static string[] ProfileDataType = { StringChar, StringChar, DateChar, NowDateTime };
-        const string PrefConfigFile = "_conf";
+        public const string PrefConfigFile = "_conf";
         public string InputDataType(string text)
         {
 
@@ -180,8 +180,8 @@ namespace Task
             FileWriter.AddRowInFile(TaskName, TaskTitle, TaskTypeData);
             try
             {
-                string[] titleRowString = file.GetLineFilePositionRow(0).Split(FormatRows.seporRows);
-                string[] rowString = file.GetLineFilePositionRow(file.GetLeghtFile() - 1).Split(FormatRows.seporRows);
+                string[] titleRowString = file.GetLineFilePositionRow(0).Split(FormatRows.SeparRows);
+                string[] rowString = file.GetLineFilePositionRow(file.GetLeghtFile() - 1).Split(FormatRows.SeparRows);
                 for (int i = 0; i < titleRowString.Length; ++i)
                 { Console.WriteLine($"{titleRowString[i]}: {rowString[i]}"); }
             }
@@ -190,9 +190,9 @@ namespace Task
                 Console.WriteLine("Возникла ошибка при записи в файл\n", ex.Message);
             }
         }
-        public static void AddConfUserData(string fileName = FileWriter.stringNull)
+        public static void AddConfUserData(string fileName = "")
         {
-            if (fileName == FileWriter.stringNull)
+            if (fileName == "")
             {
                 fileName = InputString("Введите название для файла с данными: ");
             }
@@ -225,7 +225,7 @@ namespace Task
                     else titleRow.AddInRow(intermediateResultString);
                 }
 
-                string[] titleRowArray = titleRow.Row.ToString().Split(FormatRows.seporRows);
+                string[] titleRowArray = titleRow.Row.ToString().Split(FormatRows.SeparRows);
 
                 Commands config = new();
                 foreach (string title in titleRowArray)
@@ -257,8 +257,12 @@ namespace Task
                 System.Console.WriteLine($"{searchLine1}\n{searchLine2}");
             }
         }
-        public static void AddUserData(string nameData)
+        public static void AddUserData(string nameData = "")
         {
+            if (nameData == "")
+            {
+                nameData = InputString("Введите название для файла с данными: ");
+            }
             FileWriter fileConf = new(nameData + PrefConfigFile);
             FileWriter file = new(nameData);
 
@@ -267,8 +271,8 @@ namespace Task
             {
                 string titleRow = fileConf.GetLineFilePositionRow(0);
                 string dataTypeRow = fileConf.GetLineFilePositionRow(1);
-                string[] titleRowArray = titleRow.Split(FormatRows.seporRows);
-                string[] dataTypeRowArray = dataTypeRow.Split(FormatRows.seporRows);
+                string[] titleRowArray = titleRow.Split(FormatRows.SeparRows);
+                string[] dataTypeRowArray = dataTypeRow.Split(FormatRows.SeparRows);
 
                 string row = GetRowOnTitleAndConfig(titleRowArray, dataTypeRowArray, nameData);
 
@@ -335,7 +339,7 @@ namespace Task
             string fileName = TaskName;
             FileWriter file = new(fileName);
 
-            string[] titleRowArray = file.GetLineFilePositionRow(0).Split(FormatRows.seporRows);
+            string[] titleRowArray = file.GetLineFilePositionRow(0).Split(FormatRows.SeparRows);
             Dictionary<int, bool> tableClear = new Dictionary<int, bool>();
 
             System.Console.WriteLine($"Выберете в каком столбце искать {text} (y/N): ");
@@ -358,7 +362,7 @@ namespace Task
 
             if (File.Exists(file.fullPath))
             {
-                string[] titleRowArray = file.GetLineFilePositionRow(0).Split(FormatRows.seporRows);
+                string[] titleRowArray = file.GetLineFilePositionRow(0).Split(FormatRows.SeparRows);
                 Dictionary<int, bool> tableClear = new Dictionary<int, bool>();
 
 
@@ -377,9 +381,9 @@ namespace Task
             }
             else System.Console.WriteLine(fileName + ": такого файла не существует.");
         }
-        public static void PrintData(string fileName)
+        public static void PrintData(string fileName = "")
         {
-            if (fileName == FileWriter.stringNull)
+            if (fileName == "")
                 fileName = InputString("Ведите название файла: ");
 
             FileWriter file = new(fileName);

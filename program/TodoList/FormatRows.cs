@@ -9,7 +9,7 @@ namespace Task
 {
     public class FormatRows
     {
-        public const string seporRows = "|";
+        public const string SeparRows = "|";
         public StringBuilder Row = new();
         int Num;
         Type type;
@@ -44,8 +44,8 @@ namespace Task
         public void AddInRow(string pathRow)
         {
             /*Форматирует массив данных под будущию таблицу csv*/
-            if (Row.ToString() == "") Row.Append(GetFirstObject() + seporRows + pathRow);
-            else Row.Append(seporRows + pathRow);
+            if (Row.ToString() == "") Row.Append(GetFirstObject() + SeparRows + pathRow);
+            else Row.Append(SeparRows + pathRow);
         }
         public void AddArrayInRow(string[] row)
         {
@@ -57,7 +57,7 @@ namespace Task
         public int GetLeghtRow()
         {
             if (Row.Length != 0)
-                return Row.ToString().Split(seporRows).Count();
+                return Row.ToString().Split(SeparRows).Count();
             return 0;
         }
         public static string GetNowDateTime()

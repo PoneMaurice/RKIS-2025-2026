@@ -22,23 +22,23 @@ namespace Task
                     {
                         if (commandLine.optionsOut[0] == "help")
                         {
-
+                            AddHelp();
                         }
                         else if (commandLine.optionsOut[0] == "task")
                         {
-
+                            Commands.AddTask();
                         }
                         else if (commandLine.optionsOut[0] == "config")
                         {
-
+                            Commands.AddConfUserData(commandLine.nextTextOut);
                         }
                         else if (commandLine.optionsOut[0] == "profile")
                         {
-
+                            Commands.AddProfile();
                         }
-                        else {}
+                        else {Commands.AddUserData(commandLine.nextTextOut);}
                     }
-                    else {}
+                    else {Commands.AddUserData(commandLine.nextTextOut);}
                     break;
                     
                 case "profile":
@@ -46,14 +46,14 @@ namespace Task
                     {
                         if (commandLine.optionsOut[0] == "help")
                         {
-
+                            ProfileHelp();
                         }
                         else if (commandLine.optionsOut[0] == "add")
                         {
-
+                            Commands.AddProfile();
                         }
                     }
-                    else {}
+                    else {} ///////////////////////////////////////////////////////////
                     break;
 
                 case "print":
@@ -61,23 +61,29 @@ namespace Task
                     {
                         if (commandLine.optionsOut[0] == "help")
                         {
-
+                            PrintHelp();
                         }
                         else if (commandLine.optionsOut[0] == "task")
                         {
-
+                            Commands.PrintData(Commands.TaskName);
                         }
                         else if (commandLine.optionsOut[0] == "config")
                         {
-
+                            string text;
+                            if (commandLine.nextTextOut == "")
+                            {
+                                text = Commands.InputString("Введите название файла: ");
+                            }
+                            else text = commandLine.nextTextOut;
+                            Commands.PrintData(text+Commands.PrefConfigFile);
                         }
                         else if (commandLine.optionsOut[0] == "profile")
                         {
-
+                            Commands.PrintData(Commands.ProfileName);
                         }
-                        else {}
+                        else {Commands.PrintData(commandLine.nextTextOut);}
                     }
-                    else {}
+                    else { Commands.PrintData(); }
                     break;
 
                 case "search":
@@ -85,7 +91,7 @@ namespace Task
                     {
                         if (commandLine.optionsOut[0] == "help")
                         {
-
+                            SearchHelp();
                         }
                         else if (commandLine.optionsOut[0] == "task")
                         {
@@ -126,13 +132,19 @@ namespace Task
                         {
 
                         }
-                        else {}
+                        else if (commandLine.optionsOut[0] == "console")
+                        {
+                            Console.Clear();
+                        }
+                        else { }
                     }
-                    else {}
+                    else { }
                     break;
                 case "help":
+                    Help();
                     break;
                 case "exit":
+                    Environment.Exit(0);
                     break;
             }
             
