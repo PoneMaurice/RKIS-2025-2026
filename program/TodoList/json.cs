@@ -28,9 +28,9 @@ namespace Task
         static string sex = Path.Join(huiBolshoy, nameFileJson);
         static string jsonString = File.ReadAllText(sex);
         static AllCommands? openJsonFile = JsonSerializer.Deserialize<AllCommands?>(jsonString);
-        public string? commandOut = null;
+        public string commandOut = "";
         public string[]? optionsOut = null;
-        public string? nextTextOut = null;
+        public string nextTextOut = "";
         public SearchCommandOnJson(string[] text)
         {
             StringBuilder optionsLine = new();
@@ -54,7 +54,7 @@ namespace Task
                                 {
                                     foreach (var option in command.Options)
                                     {
-                                        if ((pathText == option.Short || pathText == option.Long)&&option.Name!=null)
+                                        if ((pathText == option.Short || pathText == option.Long) && option.Name != null)
                                         {
                                             if (!optionsLine.ToString().Contains(option.Name))
                                             {
@@ -78,22 +78,28 @@ namespace Task
                                         optionInText = false;
                                         textLine.Append(pathText);
                                     }
-                                    else {textLine.Append(" "+pathText);}
-                                    
+                                    else { textLine.Append(" " + pathText); }
+
                                 }
                             }
                         }
                     }
                 }
-                optionsOut = optionsLine.ToString().Split("|");
+                if (optionsLine.ToString() != "")
+                {
+                    optionsOut = optionsLine.ToString().Split("|");
+                }
                 nextTextOut = textLine.ToString();
-                // System.Console.WriteLine("com: " + commandOut);
-                // System.Console.WriteLine("opt:");
-                // foreach (var option in optionsOut)
-                // {
-                //     System.Console.WriteLine("\t" + option);
-                // }
-                // System.Console.WriteLine("text: "+ nextTextOut);
+                System.Console.WriteLine("com: " + commandOut);
+                System.Console.WriteLine("opt:");
+                if (optionsOut != null)
+                {
+                    foreach (var option in optionsOut)
+                    {
+                        System.Console.WriteLine("\t" + option);
+                    }
+                }
+                System.Console.WriteLine("text: "+ nextTextOut);
             }
         }
     }
