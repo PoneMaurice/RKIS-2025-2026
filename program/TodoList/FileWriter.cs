@@ -33,6 +33,24 @@ namespace Task
             fullPath = Path.Join(fullPath, $"{nameFile}.csv");
             return fullPath;
         }
+        public static string GetPathToZhopa()
+        {
+            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string[] huis = baseDirectory.Split("/");
+            StringBuilder huiBolshoy = new();
+            foreach (string indexHui in huis)
+            {
+                if (indexHui != "bin")
+                {
+                    huiBolshoy.Append(indexHui + "/");
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return huiBolshoy.ToString();
+        }
         public string TitleRowWriter(string titleRow) // Function for writing rows in tasks titles - PoneMaurice
         {
             string fullPath = CreatePath(nameFile);

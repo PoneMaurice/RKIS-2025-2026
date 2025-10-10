@@ -24,7 +24,9 @@ namespace Task
     class SearchCommandOnJson
     {
         static string nameFileJson = "commands.json";
-        static string jsonString = File.ReadAllText(nameFileJson);
+        static string huiBolshoy = FileWriter.GetPathToZhopa();
+        static string sex = Path.Join(huiBolshoy, nameFileJson);
+        static string jsonString = File.ReadAllText(sex);
         static AllCommands? openJsonFile = JsonSerializer.Deserialize<AllCommands?>(jsonString);
         public string? commandOut = null;
         public string[]? optionsOut = null;
@@ -85,13 +87,13 @@ namespace Task
                 }
                 optionsOut = optionsLine.ToString().Split("|");
                 nextTextOut = textLine.ToString();
-                System.Console.WriteLine("com: " + commandOut);
-                System.Console.WriteLine("opt:");
-                foreach (var option in optionsOut)
-                {
-                    System.Console.WriteLine("\t" + option);
-                }
-                System.Console.WriteLine("text: "+ nextTextOut);
+                // System.Console.WriteLine("com: " + commandOut);
+                // System.Console.WriteLine("opt:");
+                // foreach (var option in optionsOut)
+                // {
+                //     System.Console.WriteLine("\t" + option);
+                // }
+                // System.Console.WriteLine("text: "+ nextTextOut);
             }
         }
     }
