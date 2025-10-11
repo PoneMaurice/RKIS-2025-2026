@@ -38,43 +38,11 @@
             ]
         },
         {
-            "Name": "sd",
-            "SpellingOptions": [
-                "sd",
-                "sdate",
-                "s date"
-            ]
-        },
-        {
-            "Name": "pd",
-            "SpellingOptions": [
-                "pd",
-                "pdate",
-                "p date"
-            ]
-        },
-        {
             "Name": "md",
             "SpellingOptions": [
                 "md",
                 "modedate",
                 "mode date"
-            ]
-        },
-        {
-            "Name": "st",
-            "SpellingOptions": [
-                "st",
-                "stime",
-                "s time"
-            ]
-        },
-        {
-            "Name": "pt",
-            "SpellingOptions": [
-                "pt",
-                "ptime",
-                "p tame"
             ]
         },
         {
@@ -86,23 +54,7 @@
             ]
         },
         {
-            "Name": "sdt",
-            "SpellingOptions": [
-                "sdt",
-                "sdatetime",
-                "s date time"
-            ]
-        },
-        {
-            "Name": "pdt",
-            "SpellingOptions": [
-                "pdt",
-                "pdatetime",
-                "p date time"
-            ]
-        },
-        {
-            "Name": "mdt",
+            "Name": "dt",
             "SpellingOptions": [
                 "mdt",
                 "modedatetime",
