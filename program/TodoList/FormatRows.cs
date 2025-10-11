@@ -7,22 +7,22 @@ using System.Text;
 
 namespace Task
 {
-    public class FormaterRows
+    public class FormatterRows
     {
         public StringBuilder Row = new();
         int Num;
         Type type;
-        
+
         public enum Type : int
         {
             title = 1,
             row = 2,
             dataType = 3
         }
-        public FormaterRows(string nameFile, Type typeOut = Type.row)
+        public FormatterRows(string nameFile, Type typeOut = Type.row)
         {
             FileWriter file = new(nameFile);
-            Num = file.GetLeghtFile();
+            Num = file.GetLengthFile();
             type = typeOut;
         }
         public string GetFirstObject()
@@ -51,7 +51,7 @@ namespace Task
                 AddInRow(path);
             }
         }
-        public int GetLeghtRow()
+        public int GetLengthRow()
         {
             if (Row.Length != 0)
                 return Row.ToString().Split(ConstProgram.SeparRows).Count();
@@ -72,7 +72,7 @@ namespace Task
         public const string DataTypeFirstObject = "counter";
         public const string PrefConfigFile = "_conf";
         public const string StringNull = "Null";
-        public readonly static string[] StringArrayNull = [StringNull];
+        public readonly static string[] StringArrayNull = new string[0];
         public const string Yes = "y";
     }
 }

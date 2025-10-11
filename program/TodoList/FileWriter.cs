@@ -92,8 +92,8 @@ namespace Task
         }
         public string GetLineFileDataOnPositionInRow(string dataFile, int positionInRow)
         {
-            /*Возвращает строку если ее элемент по заданой позиции 
-            соответствует введеным нами данным*/
+            /*Возвращает строку если ее элемент по заданной позиции 
+            соответствует введенным нами данным*/
             try
             {
                 using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
@@ -119,7 +119,7 @@ namespace Task
         public string GetLineFilePositionRow(int positionRow)
         {
             /*Возвращает строку если ее элемент по заданной позиции 
-            соответствует введеным нами данным*/
+            соответствует введенным нами данным*/
             try
             {
                 using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
@@ -165,7 +165,7 @@ namespace Task
             }
             return stringNull;
         }
-        public int GetLeghtFile()
+        public int GetLengthFile()
         {
             int numLine = 0;
             try
@@ -192,7 +192,7 @@ namespace Task
         static public void AddRowInFile(string nameFile, string[] titleRowArray, string[] dataTypeRowArray)
         {
             FileWriter file = new(nameFile);
-            FormaterRows titleRow = new(nameFile, FormaterRows.Type.title);
+            FormatterRows titleRow = new(nameFile, FormatterRows.Type.title);
             string row = Commands.GetRowOnTitleAndConfig(titleRowArray, dataTypeRowArray);
             titleRow.AddArrayInRow(titleRowArray);
             file.TitleRowWriter(titleRow.Row.ToString());

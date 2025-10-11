@@ -29,7 +29,7 @@ namespace Task
         static string jsonString = File.ReadAllText(sex);
         static AllCommands? openJsonFile = JsonSerializer.Deserialize<AllCommands?>(jsonString);
         public string commandOut = ConstProgram.StringNull;
-        public string[] optionsOut = new string[0];
+        public string[] optionsOut = ConstProgram.StringArrayNull;
         public string nextTextOut = ConstProgram.StringNull;
         public SearchCommandOnJson(string[] text)
         {
@@ -130,16 +130,16 @@ namespace Task
                 }
                 nextTextOut = textLine.ToString();
 
-                System.Console.WriteLine("com: " + commandOut);
-                System.Console.WriteLine("opt:");
-                if (optionsOut != null)
-                {
-                    foreach (var option in optionsOut)
-                    {
-                        System.Console.WriteLine("\t" + option);
-                    }
-                }
-                System.Console.WriteLine("text: " + nextTextOut);
+                // System.Console.WriteLine("com: " + commandOut); //test
+                // System.Console.WriteLine("opt:"); //test
+                // if (optionsOut != null) //test
+                // { //test
+                //     foreach (var option in optionsOut) //test
+                //     { //test
+                //         System.Console.WriteLine("\t" + option); //test
+                //     } //test
+                // } //test
+                // System.Console.WriteLine("text: " + nextTextOut); //test
             }
         }
         public bool SearchOption(string[] options)
@@ -153,7 +153,7 @@ namespace Task
                 {
                     foreach (var option in options)
                     {
-                        System.Console.WriteLine($"\t\n{option}\n");
+                        // System.Console.WriteLine($"\t\n{option}"); //test
                         if (optionsOut.Contains(option))
                         {
                             ++count;
@@ -162,8 +162,8 @@ namespace Task
                     }
                     if (count == length)
                     {
-                        System.Console.WriteLine("\tif (count == length)");
-                        System.Console.WriteLine($"\t{count} == {length}\n");
+                        // System.Console.WriteLine("\tif (count == length)"); //test
+                        // System.Console.WriteLine($"\t{count} == {length}\n"); //test
                         return true;
                     }
                 }

@@ -180,7 +180,7 @@ namespace Task
             try
             {
                 string[] titleRowString = file.GetLineFilePositionRow(0).Split(ConstProgram.SeparRows);
-                string[] rowString = file.GetLineFilePositionRow(file.GetLeghtFile() - 1).Split(ConstProgram.SeparRows);
+                string[] rowString = file.GetLineFilePositionRow(file.GetLengthFile() - 1).Split(ConstProgram.SeparRows);
                 for (int i = 0; i < titleRowString.Length; ++i)
                 { Console.WriteLine($"{titleRowString[i]}: {rowString[i]}"); }
             }
@@ -211,14 +211,14 @@ namespace Task
             }
             if (askFile == FileWriter.Yes || askFile == null)
             {
-                FormaterRows titleRow = new(fileName, FormaterRows.Type.title), dataTypeRow = new(fileName, FormaterRows.Type.dataType);
+                FormatterRows titleRow = new(fileName, FormatterRows.Type.title), dataTypeRow = new(fileName, FormatterRows.Type.dataType);
 
                 while (true)
                 {
                     string intermediateResultString =
                         InputString("Введите название пункта титульного оформления файла: ");
                     if (intermediateResultString == "exit" &&
-                    titleRow.GetLeghtRow() != 0) break;
+                    titleRow.GetLengthRow() != 0) break;
                     else if (intermediateResultString == "exit")
                         Console.WriteLine("В титульном оформлении должен быть хотя бы один пункт: ");
                     else titleRow.AddInRow(intermediateResultString);
@@ -285,7 +285,7 @@ namespace Task
         }
         public static string GetRowOnTitleAndConfig(string[] titleRowArray, string[] dataTypeRowArray, string nameData = TaskName)
         {
-            FormaterRows row = new(nameData);
+            FormatterRows row = new(nameData);
             for (int i = 0; i < titleRowArray.Length; i++)
             {
                 switch (dataTypeRowArray[i])
@@ -312,7 +312,7 @@ namespace Task
                         row.AddInRow(GetDateAndTime());
                         break;
                     case Commands.NowDateTime:
-                        row.AddInRow(FormaterRows.GetNowDateTime());
+                        row.AddInRow(FormatterRows.GetNowDateTime());
                         break;
                 }
             }
@@ -324,7 +324,7 @@ namespace Task
             {
                 string fileName = TaskName;
 
-                FormaterRows titleRow = new(fileName, FormaterRows.Type.title);
+                FormatterRows titleRow = new(fileName, FormatterRows.Type.title);
                 FileWriter file = new(fileName);
                 string[] titleRowArray = TaskTitle;
                 foreach (string pathTitleRow in titleRowArray)
