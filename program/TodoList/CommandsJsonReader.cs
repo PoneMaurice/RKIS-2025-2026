@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace Task
 {
-    class AllCommands
+    class CommandsJson
     {
         public Command[]? Commands { get; set; }
     }
@@ -23,11 +23,8 @@ namespace Task
 
     class SearchCommandOnJson
     {
-        static string nameFileJson = "commands.json";
-        static string huiBolshoy = FileWriter.GetPathToZhopa();
-        static string sex = Path.Join(huiBolshoy, nameFileJson);
-        static string jsonString = File.ReadAllText(sex);
-        static AllCommands? openJsonFile = JsonSerializer.Deserialize<AllCommands?>(jsonString);
+        static CommandsJson? openJsonFile = JsonSerializer.Deserialize<CommandsJson?>
+        (FileWriter.StringFromFileInMainFolder("Commands.json"));
         public string commandOut = ConstProgram.StringNull;
         public string[] optionsOut = ConstProgram.StringArrayNull;
         public string nextTextOut = ConstProgram.StringNull;

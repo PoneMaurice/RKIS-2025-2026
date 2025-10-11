@@ -4,8 +4,6 @@ namespace Task
 {
     public class FileWriter
     {
-        public const string stringNull = "NULL";
-        public const string Yes = "y";
         public string fullPath;
         public string nameFile;
         public FileWriter(string fileName)
@@ -50,6 +48,12 @@ namespace Task
                 }
             }
             return huiBolshoy.ToString();
+        }
+        public static string StringFromFileInMainFolder(string fileName)
+        {
+            string huiBolshoy = FileWriter.GetPathToZhopa();
+            string sex = Path.Join(huiBolshoy, fileName);
+            return File.ReadAllText(sex);
         }
         public string TitleRowWriter(string titleRow) // Function for writing rows in tasks titles - PoneMaurice
         {
@@ -114,7 +118,7 @@ namespace Task
             {
                 Console.WriteLine($"{ex}\n");
             }
-            return stringNull;
+            return ConstProgram.StringNull;
         }
         public string GetLineFilePositionRow(int positionRow)
         {
@@ -140,7 +144,7 @@ namespace Task
             {
                 System.Console.WriteLine("не найдено");
             }
-            return stringNull;
+            return ConstProgram.StringNull;
         }
         public string GetLineFileData(string dataFile)
         {
@@ -163,7 +167,7 @@ namespace Task
             {
                 Console.WriteLine($"{ex}\n");
             }
-            return stringNull;
+            return ConstProgram.StringNull;
         }
         public int GetLengthFile()
         {

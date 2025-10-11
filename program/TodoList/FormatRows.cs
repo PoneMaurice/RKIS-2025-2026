@@ -74,5 +74,12 @@ namespace Task
         public const string StringNull = "Null";
         public readonly static string[] StringArrayNull = new string[0];
         public const string Yes = "y";
+        public const string TaskName = "Tasks";
+        public const string ProfileName = "Profiles";
+        public static readonly string[] TaskTitle = { "nameTask", "description", "nowDateAndTime", "deadLine" };
+        public static readonly string[] TaskTypeData = { "s", "s", "ndt", "dt" };
+        public static readonly string[] ProfileTitle = { "name", "soreName", "DOB", "nowDateAndTime" };
+        public static readonly string[] ProfileDataType = { "s", "s", "d", "ndt" };
+
     }
 }

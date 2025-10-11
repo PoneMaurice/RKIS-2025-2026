@@ -62,7 +62,7 @@ namespace Task
                         }
                         else if (commandLine.SearchOption(["task"]))
                         {
-                            Commands.PrintData(Commands.TaskName);
+                            Commands.PrintData(ConstProgram.TaskName);
                         }
                         else if (commandLine.SearchOption(["config"]))
                         {
@@ -70,7 +70,7 @@ namespace Task
                         }
                         else if (commandLine.SearchOption(["profile"]))
                         {
-                            Commands.PrintData(Commands.ProfileName);
+                            Commands.PrintData(ConstProgram.ProfileName);
                         }
                         else if (commandLine.SearchOption(["captions"])){
                             Commands.WriteCaption();

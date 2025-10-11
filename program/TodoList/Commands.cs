@@ -11,9 +11,6 @@ namespace Task
 {
     public class Commands
     {
-        public const string TaskName = "tasks";
-        public const string ProfileName = "Profile";
-        public string nameTask { get { return TaskName; } }
         const string StringChar = "s";
         const string IntegerChar = "i";
         const string DoubleChar = "f";
@@ -21,10 +18,6 @@ namespace Task
         const string DateChar = "d";
         const string DateAndTime = "dt";
         const string NowDateTime = "ndt";
-        static string[] TaskTitle = { "nameTask", "description", "nowDateAndTime", "deadLine" };
-        static string[] TaskTypeData = { StringChar, StringChar, NowDateTime, DateAndTime };
-        static string[] ProfileTitle = { "name", "soreName", "DOB", "nowDateAndTime" };
-        static string[] ProfileDataType = { StringChar, StringChar, DateChar, NowDateTime };
         public string InputDataType(string text)
         {
 
@@ -67,8 +60,8 @@ namespace Task
             версия строки*/
             Console.Write(text);
             StringBuilder input = new();
-            input.Append((Console.ReadLine() ?? FileWriter.stringNull).Trim());
-            if (input.ToString() == "") input.Append(FileWriter.stringNull);
+            input.Append((Console.ReadLine() ?? ConstProgram.StringNull).Trim());
+            if (input.ToString() == "") input.Append(ConstProgram.StringNull);
             return input.ToString();
         }
         public static int InputIntegerWithMinMax(string text, int min, int max)
@@ -133,7 +126,7 @@ namespace Task
                 return yearMonthDay.ToShortDateString();
             }
             else Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'");
-            return FileWriter.stringNull;
+            return ConstProgram.StringNull;
         }
         private static string GetTime()
         {
@@ -161,13 +154,13 @@ namespace Task
             {
                 Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'");
             }
-            return FileWriter.stringNull;
+            return ConstProgram.StringNull;
         }
         public static void AddTask()
         {
             /*программа запрашивает у пользователя все необходимые ей данные
             и записывает их в файл tasks.csv с нужным форматированием*/
-            FileWriter.AddRowInFile(TaskName, TaskTitle, TaskTypeData);
+            FileWriter.AddRowInFile(ConstProgram.TaskName, ConstProgram.TaskTitle, ConstProgram.TaskTypeData);
         }
         public static void AddTaskAndPrint()
         {
@@ -175,8 +168,8 @@ namespace Task
             и записывает их в файл tasks.csv с нужным форматированием 
             после чего выводит сообщение о добовлении данных дублируя их 
             пользователю для проверки*/
-            FileWriter file = new(TaskName);
-            FileWriter.AddRowInFile(TaskName, TaskTitle, TaskTypeData);
+            FileWriter file = new(ConstProgram.TaskName);
+            FileWriter.AddRowInFile(ConstProgram.TaskName, ConstProgram.TaskTitle, ConstProgram.TaskTypeData);
             try
             {
                 string[] titleRowString = file.GetLineFilePositionRow(0).Split(ConstProgram.SeparRows);
@@ -200,8 +193,8 @@ namespace Task
 
             string fullPathConfig = file.CreatePath(fileName);
             string? askFile = null;
-            string searchLine1 = FileWriter.stringNull;
-            string searchLine2 = FileWriter.stringNull;
+            string searchLine1 = ConstProgram.StringNull;
+            string searchLine2 = ConstProgram.StringNull;
             if (File.Exists(fullPathConfig))
             {
                 searchLine1 = file.GetLineFilePositionRow(0);
@@ -209,7 +202,7 @@ namespace Task
                 Console.WriteLine($"{searchLine1}\n{searchLine2}");
                 askFile = InputString($"Вы точно уверены, что хотите перезаписать конфигурацию?(y/N): ");
             }
-            if (askFile == FileWriter.Yes || askFile == null)
+            if (askFile == ConstProgram.Yes || askFile == null)
             {
                 FormatterRows titleRow = new(fileName, FormatterRows.Type.title), dataTypeRow = new(fileName, FormatterRows.Type.dataType);
 
@@ -238,13 +231,13 @@ namespace Task
 
                 string lastTitleRow = file.GetLineFilePositionRow(0);
                 string lastDataTypeRow = file.GetLineFilePositionRow(1);
-                string askTitle = FileWriter.Yes;
-                string askDataType = FileWriter.Yes;
-                if (lastTitleRow != titleRow.Row.ToString() && lastTitleRow != FileWriter.stringNull)
+                string askTitle = ConstProgram.Yes;
+                string askDataType = ConstProgram.Yes;
+                if (lastTitleRow != titleRow.Row.ToString() && lastTitleRow != ConstProgram.StringNull)
                     askTitle = InputString($"Титульный лист отличается \nНыняшний: {titleRow.Row}\nПрошлый: {lastTitleRow}\nЗаменить?(y/N): ");
-                else if (lastDataTypeRow != dataTypeRow.Row.ToString() && lastDataTypeRow != FileWriter.stringNull)
+                else if (lastDataTypeRow != dataTypeRow.Row.ToString() && lastDataTypeRow != ConstProgram.StringNull)
                     askDataType = InputString($"Конфигурация уже имеется\nНынешняя: {dataTypeRow.Row}\nПрошлая: {lastDataTypeRow}\nЗаменить?(y/N): ");
-                if (askTitle == FileWriter.Yes || askDataType == FileWriter.Yes)
+                if (askTitle == ConstProgram.Yes || askDataType == ConstProgram.Yes)
                 {
                     file.WriteFile(titleRow.Row.ToString(), false);
                     file.WriteFile(dataTypeRow.Row.ToString(), true);
@@ -283,7 +276,7 @@ namespace Task
             }
             else Console.WriteLine($"Сначала создайте конфигурацию или проверьте правильность написания названия => '{nameData}'");
         }
-        public static string GetRowOnTitleAndConfig(string[] titleRowArray, string[] dataTypeRowArray, string nameData = TaskName)
+        public static string GetRowOnTitleAndConfig(string[] titleRowArray, string[] dataTypeRowArray, string nameData = ConstProgram.TaskName)
         {
             FormatterRows row = new(nameData);
             for (int i = 0; i < titleRowArray.Length; i++)
@@ -320,13 +313,13 @@ namespace Task
         }
         public static void ClearAllTasks()
         {
-            if (InputString("Вы уверены что хотите очистить весь файл task? (y/N): ") == FileWriter.Yes)
+            if (InputString("Вы уверены что хотите очистить весь файл task? (y/N): ") == ConstProgram.Yes)
             {
-                string fileName = TaskName;
+                string fileName = ConstProgram.TaskName;
 
                 FormatterRows titleRow = new(fileName, FormatterRows.Type.title);
                 FileWriter file = new(fileName);
-                string[] titleRowArray = TaskTitle;
+                string[] titleRowArray = ConstProgram.TaskTitle;
                 foreach (string pathTitleRow in titleRowArray)
                     titleRow.AddInRow(pathTitleRow);
                 file.WriteFile(titleRow.Row.ToString(), false);
@@ -335,7 +328,7 @@ namespace Task
         }
         public void ClearPartTask(string text) // недописан обязательно исправить
         {
-            string fileName = TaskName;
+            string fileName = ConstProgram.TaskName;
             FileWriter file = new(fileName);
 
             string[] titleRowArray = file.GetLineFilePositionRow(0).Split(ConstProgram.SeparRows);
@@ -344,16 +337,16 @@ namespace Task
             System.Console.WriteLine($"Выберете в каком столбце искать {text} (y/N): ");
             for (int i = 0; i < titleRowArray.Length; ++i)
             {
-                if (InputString($"{titleRowArray[i]}: ") == FileWriter.Yes)
+                if (InputString($"{titleRowArray[i]}: ") == ConstProgram.Yes)
                     tableClear.Add(i, true);
                 else tableClear.Add(i, false);
             }
         }
-        public static void SearchPartData(string fileName = FileWriter.stringNull, string text = FileWriter.stringNull)
+        public static void SearchPartData(string fileName = ConstProgram.StringNull, string text = ConstProgram.StringNull)
         {
-            if (fileName == FileWriter.stringNull)
+            if (fileName == ConstProgram.StringNull)
                 fileName = InputString("Ведите название файла: ");
-            if (text == FileWriter.stringNull)
+            if (text == ConstProgram.StringNull)
                 text = InputString("Поиск: ");
 
             FileWriter file = new(fileName);
@@ -368,7 +361,7 @@ namespace Task
                 System.Console.WriteLine($"Выберете в каком столбце искать {text} (y/N): ");
                 for (int i = 0; i < titleRowArray.Length; ++i)
                 {
-                    if (InputString($"{titleRowArray[i]}: ") == FileWriter.Yes)
+                    if (InputString($"{titleRowArray[i]}: ") == ConstProgram.Yes)
                         tableClear.Add(i, true);
                     else tableClear.Add(i, false);
                 }
@@ -407,7 +400,7 @@ namespace Task
         }
         public static void AddProfile()
         {
-            FileWriter.AddRowInFile(ProfileName, ProfileTitle, ProfileDataType);
+            FileWriter.AddRowInFile(ConstProgram.ProfileName, ConstProgram.ProfileTitle, ConstProgram.ProfileDataType);
         }
         public static void WriteCaption()
         {
