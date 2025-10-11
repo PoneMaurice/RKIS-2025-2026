@@ -25,6 +25,10 @@ namespace Task
                         {
                             Commands.AddTask();
                         }
+                        else if (commandLine.SearchOption(["task", "print"]))
+                        {
+                            Commands.AddTaskAndPrint();
+                        }
                         else if (commandLine.SearchOption(["config"]))
                         {
                             Commands.AddConfUserData(commandLine.nextTextOut);
@@ -33,7 +37,7 @@ namespace Task
                         {
                             Commands.AddProfile();
                         }
-                        else {Commands.AddUserData(commandLine.nextTextOut);}
+                        else { Commands.AddUserData(commandLine.nextTextOut); }
                     }
                     else {Commands.AddUserData(commandLine.nextTextOut);}
                     break;
@@ -50,7 +54,7 @@ namespace Task
                             Commands.AddProfile();
                         }
                     }
-                    else {} ///////////////////////////////////////////////////////////
+                    else {WriteToConsole.RainbowText("Эта функция ещё в разработке", ConsoleColor.Magenta);} ///////////////////////////////////////////////////////////
                     break;
 
                 case "print":
@@ -89,23 +93,19 @@ namespace Task
                         }
                         else if (commandLine.SearchOption(["task"]))
                         {
-
-                        }
-                        else if (commandLine.SearchOption(["config"]))
-                        {
-
+                            Commands.SearchPartData(ConstProgram.TaskName, commandLine.nextTextOut);
                         }
                         else if (commandLine.SearchOption(["profile"]))
                         {
-
+                            Commands.SearchPartData(ConstProgram.ProfileName, commandLine.nextTextOut);
                         }
                         else if (commandLine.SearchOption(["numbering"]))
                         {
-
+                            WriteToConsole.RainbowText("Эта функция ещё в разработке", ConsoleColor.Magenta); ///////////////////////////////////////////////////////////
                         }
-                        else { }
+                        else { Commands.SearchPartData(commandLine.nextTextOut); }
                     }
-                    else {Commands.SearchPartData();}
+                    else {Commands.SearchPartData(commandLine.nextTextOut);}
                     break;
 
                 case "clear":
@@ -113,28 +113,24 @@ namespace Task
                     {
                         if (commandLine.SearchOption(["help"]))
                         {
-
+                            WriteToConsole.RainbowText("Эта функция ещё в разработке", ConsoleColor.Magenta); ///////////////////////////////////////////////////////////
                         }
                         else if (commandLine.SearchOption(["task"]))
                         {
-
-                        }
-                        else if (commandLine.SearchOption(["config"]))
-                        {
-
+                            Commands.ClearAllFile(ConstProgram.TaskName);
                         }
                         else if (commandLine.SearchOption(["profile"]))
                         {
-
+                            Commands.ClearAllFile(ConstProgram.ProfileName);
                         }
                         else if (commandLine.SearchOption(["console"]))
                         {
-                            System.Console.WriteLine("CCCCCCClear");
+                            WriteToConsole.RainbowText("CCCCCCClear", ConsoleColor.Magenta);
                             Console.Clear();
                         }
-                        else { }
+                        else { Commands.ClearAllFile(commandLine.nextTextOut); }
                     }
-                    else { }
+                    else { Commands.ClearAllFile(commandLine.nextTextOut); }
                     break;
 
                 case "help":

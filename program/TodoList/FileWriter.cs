@@ -2,11 +2,11 @@
 using System.Text;
 namespace Task
 {
-    public class FileWriter
+    public class OpenFile
     {
         public string fullPath;
         public string nameFile;
-        public FileWriter(string fileName)
+        public OpenFile(string fileName)
         {
             nameFile = fileName;
             fullPath = CreatePath(nameFile);
@@ -51,47 +51,42 @@ namespace Task
         }
         public static string StringFromFileInMainFolder(string fileName)
         {
-            string huiBolshoy = FileWriter.GetPathToZhopa();
+            string huiBolshoy = OpenFile.GetPathToZhopa();
             string sex = Path.Join(huiBolshoy, fileName);
             return File.ReadAllText(sex);
         }
         public string TitleRowWriter(string titleRow) // Function for writing rows in tasks titles - PoneMaurice
         {
+            /*Создаёт титульное оформление в файле 
+            при условии что это новый файл*/
             string fullPath = CreatePath(nameFile);
             if (!File.Exists(fullPath))
                 using (var fs = new FileStream(fullPath, FileMode.CreateNew,
                 FileAccess.Write, FileShare.Read))
                 {
-                    using (var sw = new StreamWriter(fs, Encoding.UTF8))
+                    using (var sw = new System.IO.StreamWriter(fs, Encoding.UTF8))
                     {
                         sw.WriteLine(titleRow);
                     }
                 }
             return fullPath;
         }
-        public void WriteFile(string dataFile, bool noRewrite)
+        public void WriteFile(string dataFile, bool noRewrite = true)
         {
-            /*Запись в конец файла строки*/
+            /*Запись строки в конец файла при условии что 
+            аргумент "noRewrite" равен true, а иначе файл будет перезаписан*/
             try
             {
-                if (noRewrite)
+
+                using (System.IO.StreamWriter sw = new System.IO.StreamWriter(fullPath, noRewrite, Encoding.UTF8))
                 {
-                    using (StreamWriter sw = new StreamWriter(fullPath, true, Encoding.UTF8))
-                    {
-                        sw.WriteLine(dataFile);
-                    }
+                    sw.WriteLine(dataFile);
                 }
-                else
-                {
-                    using (StreamWriter sw = new StreamWriter(fullPath, false, Encoding.UTF8))
-                    {
-                        sw.WriteLine(dataFile);
-                    }
-                }
+
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"{ex}\n");
+                WriteToConsole.RainbowText("В мире произошло что то плохое", ConsoleColor.Red);
             }
         }
         public string GetLineFileDataOnPositionInRow(string dataFile, int positionInRow)
@@ -114,9 +109,10 @@ namespace Task
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"{ex}\n");
+                WriteToConsole.RainbowText("Разраб отдыхает, прошу понять", ConsoleColor.Red);
+                WriteToConsole.RainbowText("^если что там ошибка чтения файла", ConsoleColor.Red);
             }
             return ConstProgram.StringNull;
         }
@@ -142,7 +138,7 @@ namespace Task
             }
             catch (Exception)
             {
-                System.Console.WriteLine("не найдено");
+                WriteToConsole.RainbowText("не найдено, что именно я тоже не знаю", ConsoleColor.Red);
             }
             return ConstProgram.StringNull;
         }
@@ -195,12 +191,20 @@ namespace Task
         }
         static public void AddRowInFile(string nameFile, string[] titleRowArray, string[] dataTypeRowArray)
         {
-            FileWriter file = new(nameFile);
-            FormatterRows titleRow = new(nameFile, FormatterRows.Type.title);
-            string row = Commands.GetRowOnTitleAndConfig(titleRowArray, dataTypeRowArray);
-            titleRow.AddArrayInRow(titleRowArray);
-            file.TitleRowWriter(titleRow.Row.ToString());
-            file.WriteFile(row, true);
+            try
+            {
+                OpenFile file = new(nameFile);
+                FormatterRows titleRow = new(nameFile, FormatterRows.Type.title);
+                string row = Commands.GetRowOnTitleAndConfig(titleRowArray, dataTypeRowArray);
+                titleRow.AddArrayInRow(titleRowArray);
+                file.TitleRowWriter(titleRow.Row.ToString());
+                file.WriteFile(row);
+                WriteToConsole.RainbowText("Задание успешно записано", ConsoleColor.Green);
+            }
+            catch (Exception)
+            {
+                WriteToConsole.RainbowText("Произошла ошибка при записи файла", ConsoleColor.Red);
+            }
         }
     }
 }

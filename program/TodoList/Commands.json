@@ -20,8 +20,13 @@
                 },
                 {
                     "Name": "profile",
-                    "Long": "--pofile",
+                    "Long": "--profile",
                     "Short": "-p"
+                },
+                {
+                    "Name": "print",
+                    "Long": "--print",
+                    "Short": "-P"
                 }
             ]
         },
@@ -82,11 +87,6 @@
                     "Short": "-t"
                 },
                 {
-                    "Name": "config",
-                    "Long": "--config",
-                    "Short": "-c"
-                },
-                {
                     "Name": "profile",
                     "Long": "--profile",
                     "Short": "-p"
@@ -110,11 +110,6 @@
                     "Name": "task",
                     "Long": "--task",
                     "Short": "-t"
-                },
-                {
-                    "Name": "config",
-                    "Long": "--config",
-                    "Short": "-c"
                 },
                 {
                     "Name": "profile",

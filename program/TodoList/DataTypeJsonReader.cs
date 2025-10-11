@@ -14,7 +14,7 @@ namespace Task
     class SearchDataTypeOnJson
     {
         static DataTypeJson? openJsonFile = JsonSerializer.Deserialize<DataTypeJson?>
-        (FileWriter.StringFromFileInMainFolder("DataType.json"));
+        (OpenFile.StringFromFileInMainFolder("DataType.json"));
         public static string ConvertingInputValues(string inputValue)
         {
             if (inputValue != ConstProgram.StringNull && openJsonFile != null &&

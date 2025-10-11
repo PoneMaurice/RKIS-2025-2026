@@ -22,10 +22,7 @@ namespace Task
                 {
                     return res;
                 }
-                
-                Console.BackgroundColor = ConsoleColor.Red;
-                Console.WriteLine("Вы ввели неподдерживаемый тип данных");
-                Console.ResetColor();
+                WriteToConsole.RainbowText("Вы ввели неподдерживаемый тип данных", ConsoleColor.Red);
             }
         }
         public static string String(string text)
@@ -52,11 +49,14 @@ namespace Task
             while (true)
             {
                 input = String(text);
-                if (int.TryParse(input, out result) && 
+                if (int.TryParse(input, out result) &&
                 result >= min && result <= max)
                 {
                     return result;
                 }
+                WriteToConsole.RainbowText($"'{input}' должно являться целым числом,", ConsoleColor.Red);
+                WriteToConsole.RainbowText($"быть меньше или равно (<=) {min},", ConsoleColor.Red);
+                WriteToConsole.RainbowText($"быть больше или равно (>=) {max}.", ConsoleColor.Red);
             }
         }
         public static int Integer(string text)
@@ -69,6 +69,7 @@ namespace Task
                 {
                     return result;
                 }
+                WriteToConsole.RainbowText($"'{input}' должно являться целым числом.", ConsoleColor.Red);
             }
         }
         public static int PositiveInteger(string text)
@@ -81,6 +82,8 @@ namespace Task
                 {
                     return result;
                 }
+                WriteToConsole.RainbowText($"'{input}' должно являться целым числом,", ConsoleColor.Red);
+                WriteToConsole.RainbowText($"быть больше или равняться (>=) 0.", ConsoleColor.Red);
             }
         }
         public static float Float(string text)
@@ -93,6 +96,7 @@ namespace Task
                 {
                     return result;
                 }
+                WriteToConsole.RainbowText($"'{input}' должно являться десятичным числом.", ConsoleColor.Red);
             }
         }
         public static float PositiveFloat(string text)
@@ -105,6 +109,8 @@ namespace Task
                 {
                     return result;
                 }
+                WriteToConsole.RainbowText($"'{input}' должно являться десятичным числом,", ConsoleColor.Red);
+                WriteToConsole.RainbowText($"быть больше или равняться (>=) 0.", ConsoleColor.Red);
             }
         }
         public static string ManualDate()
@@ -119,6 +125,9 @@ namespace Task
                 {
                     return dateOnly.ToShortDateString();
                 }
+                WriteToConsole.RainbowText($"'{dateString}' не может быть преобразовано,", ConsoleColor.Red);
+                WriteToConsole.RainbowText($"пожалуйста повторите попытку опираясь на приведенный пример.", ConsoleColor.Red);
+
             }
         }
         public static string ManualTime()
@@ -133,6 +142,8 @@ namespace Task
                 {
                     return timeOnly.ToShortTimeString();
                 }
+                WriteToConsole.RainbowText($"'{timeString}' не может быть преобразовано,", ConsoleColor.Red);
+                WriteToConsole.RainbowText($"пожалуйста повторите попытку опираясь на приведенный пример.", ConsoleColor.Red);
             }
         }
         public static string PointByPointDate()
@@ -169,7 +180,7 @@ namespace Task
             {
                 dateAndTime = PointByPointDate() + " " + PointByPointTime();
             }
-            else Console.WriteLine("Вы не выбрали режим, все даты по default будут 'Null'");
+            else WriteToConsole.RainbowText("Вы не выбрали режим, все даты по default будут 'Null'", ConsoleColor.Yellow);
             return dateAndTime;
         }
         public static string Date()
@@ -189,7 +200,7 @@ namespace Task
             {
                 dateAndTime = PointByPointDate();
             }
-            else Console.WriteLine("Вы не выбрали режим, все даты по default будут 'Null'");
+            else WriteToConsole.RainbowText("Вы не выбрали режим, все даты по default будут 'Null'", ConsoleColor.Yellow);
             return dateAndTime;
         }
         public static string Time()
@@ -209,7 +220,7 @@ namespace Task
             {
                 dateAndTime = PointByPointTime();
             }
-            else Console.WriteLine("Вы не выбрали режим, все даты по default будут 'Null'");
+            else WriteToConsole.RainbowText("Вы не выбрали режим, все даты по default будут 'Null'", ConsoleColor.Yellow);
             return dateAndTime;
         }
         public static string NowDateTime()
@@ -218,6 +229,15 @@ namespace Task
             DateTime nowDate = DateTime.Now;
             return nowDate.ToShortDateString() +
                 " " + nowDate.ToShortTimeString();
+        }
+    }
+    public class WriteToConsole
+    {
+        public static void RainbowText(string textError, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(textError);
+            Console.ResetColor();
         }
     }
 }

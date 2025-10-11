@@ -21,7 +21,7 @@ namespace Task
         }
         public FormatterRows(string nameFile, Type typeOut = Type.row)
         {
-            FileWriter file = new(nameFile);
+            OpenFile file = new(nameFile);
             Num = file.GetLengthFile();
             type = typeOut;
         }

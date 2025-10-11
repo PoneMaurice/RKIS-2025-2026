@@ -24,7 +24,7 @@ namespace Task
     class SearchCommandOnJson
     {
         static CommandsJson? openJsonFile = JsonSerializer.Deserialize<CommandsJson?>
-        (FileWriter.StringFromFileInMainFolder("Commands.json"));
+        (OpenFile.StringFromFileInMainFolder("Commands.json"));
         public string commandOut = ConstProgram.StringNull;
         public string[] optionsOut = ConstProgram.StringArrayNull;
         public string nextTextOut = ConstProgram.StringNull;

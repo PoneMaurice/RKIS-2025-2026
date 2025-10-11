@@ -9,16 +9,16 @@ namespace Task
         {
             /*программа запрашивает у пользователя все необходимые ей данные
             и записывает их в файл tasks.csv с нужным форматированием*/
-            FileWriter.AddRowInFile(ConstProgram.TaskName, ConstProgram.TaskTitle, ConstProgram.TaskTypeData);
+            OpenFile.AddRowInFile(ConstProgram.TaskName, ConstProgram.TaskTitle, ConstProgram.TaskTypeData);
         }
         public static void AddTaskAndPrint()
         {
             /*программа запрашивает у пользователя все необходимые ей данные
             и записывает их в файл tasks.csv с нужным форматированием 
-            после чего выводит сообщение о добовлении данных дублируя их 
+            после чего выводит сообщение о добавлении данных дублируя их 
             пользователю для проверки*/
-            FileWriter file = new(ConstProgram.TaskName);
-            FileWriter.AddRowInFile(ConstProgram.TaskName, ConstProgram.TaskTitle, ConstProgram.TaskTypeData);
+            OpenFile file = new(ConstProgram.TaskName);
+            OpenFile.AddRowInFile(ConstProgram.TaskName, ConstProgram.TaskTitle, ConstProgram.TaskTypeData);
             try
             {
                 string[] titleRowString = file.GetLineFilePositionRow(0).Split(ConstProgram.SeparRows);
@@ -38,7 +38,7 @@ namespace Task
                 fileName = Input.String("Введите название для файла с данными: ");
             }
             fileName = fileName + ConstProgram.PrefConfigFile;
-            FileWriter file = new(fileName);
+            OpenFile file = new(fileName);
 
             string fullPathConfig = file.CreatePath(fileName);
             string? askFile = null;
@@ -88,7 +88,7 @@ namespace Task
                 if (askTitle == ConstProgram.Yes || askDataType == ConstProgram.Yes)
                 {
                     file.WriteFile(titleRow.Row.ToString(), false);
-                    file.WriteFile(dataTypeRow.Row.ToString(), true);
+                    file.WriteFile(dataTypeRow.Row.ToString());
                 }
             }
             else
@@ -103,8 +103,8 @@ namespace Task
             {
                 nameData = Input.String("Введите название для файла с данными: ");
             }
-            FileWriter fileConf = new(nameData + ConstProgram.PrefConfigFile);
-            FileWriter file = new(nameData);
+            OpenFile fileConf = new(nameData + ConstProgram.PrefConfigFile);
+            OpenFile file = new(nameData);
 
             string fullPathConfig = fileConf.CreatePath(nameData + ConstProgram.PrefConfigFile);
             if (File.Exists(fullPathConfig))
@@ -120,7 +120,7 @@ namespace Task
                 string testTitleRow = file.GetLineFilePositionRow(0);
                 if (testTitleRow != titleRow)
                     file.WriteFile(titleRow, false);
-                file.WriteFile(row, true);
+                file.WriteFile(row);
             }
             else Console.WriteLine($"Сначала создайте конфигурацию или проверьте правильность написания названия => '{nameData}'");
         }
@@ -167,25 +167,27 @@ namespace Task
             }
             return row.Row.ToString();
         }
-        public static void ClearAllTasks()
+        public static void ClearAllFile(string fileName = ConstProgram.StringNull)
         {
             if (Input.String("Вы уверены что хотите очистить весь файл task? (y/N): ") == ConstProgram.Yes)
             {
-                string fileName = ConstProgram.TaskName;
-
-                FormatterRows titleRow = new(fileName, FormatterRows.Type.title);
-                FileWriter file = new(fileName);
-                string[] titleRowArray = ConstProgram.TaskTitle;
-                foreach (string pathTitleRow in titleRowArray)
-                    titleRow.AddInRow(pathTitleRow);
-                file.WriteFile(titleRow.Row.ToString(), false);
+                if (fileName == ConstProgram.StringNull)
+                {
+                    fileName = Input.String("Введите название файла: ");
+                }
+                OpenFile file = new(fileName);
+                if (File.Exists(file.fullPath))
+                {
+                    file.WriteFile(file.GetLineFilePositionRow(0), false);
+                }
+                else WriteToConsole.RainbowText(fileName + ": такого файла не существует.", ConsoleColor.Red);
             }
-            else System.Console.WriteLine("Будте внимателны");
+            else System.Console.WriteLine("Буде внимательны");
         }
-        public void ClearPartTask(string text) // недописан обязательно исправить
+        public void ClearPartTask(string text) // недописанн обязательно исправить
         {
             string fileName = ConstProgram.TaskName;
-            FileWriter file = new(fileName);
+            OpenFile file = new(fileName);
 
             string[] titleRowArray = file.GetLineFilePositionRow(0).Split(ConstProgram.SeparRows);
             Dictionary<int, bool> tableClear = new Dictionary<int, bool>();
@@ -201,42 +203,43 @@ namespace Task
         public static void SearchPartData(string fileName = ConstProgram.StringNull, string text = ConstProgram.StringNull)
         {
             if (fileName == ConstProgram.StringNull)
+                {
                 fileName = Input.String("Ведите название файла: ");
+                }
             if (text == ConstProgram.StringNull)
+                {
                 text = Input.String("Поиск: ");
+                }
 
-            FileWriter file = new(fileName);
-
-
+            OpenFile file = new(fileName);
+            
             if (File.Exists(file.fullPath))
             {
                 string[] titleRowArray = file.GetLineFilePositionRow(0).Split(ConstProgram.SeparRows);
-                Dictionary<int, bool> tableClear = new Dictionary<int, bool>();
-
-
+                int[] tableClear = new int[titleRowArray.Length];
+                Array.Fill(tableClear, -1);
                 System.Console.WriteLine($"Выберете в каком столбце искать {text} (y/N): ");
                 for (int i = 0; i < titleRowArray.Length; ++i)
                 {
                     if (Input.String($"{titleRowArray[i]}: ") == ConstProgram.Yes)
-                        tableClear.Add(i, true);
-                    else tableClear.Add(i, false);
+                        tableClear[i] = i;
                 }
-                foreach (int i in tableClear.Keys)
+                foreach (int i in tableClear)
                 {
-                    if (tableClear[i])
+                    if (i != -1)
                         Console.WriteLine(file.GetLineFileDataOnPositionInRow(text, i));
                 }
             }
-            else System.Console.WriteLine(fileName + ": такого файла не существует.");
+            else WriteToConsole.RainbowText(fileName + ": такого файла не существует.", ConsoleColor.Red);
         }
-        public static void PrintData(string fileName = "")
+        public static void PrintData(string fileName = ConstProgram.StringNull)
         {
-            if (fileName == "")
+            if (fileName == ConstProgram.StringNull)
+            {
                 fileName = Input.String("Ведите название файла: ");
-            
-            
+            }
 
-            FileWriter file = new(fileName);
+            OpenFile file = new(fileName);
 
             try
             {
@@ -251,12 +254,12 @@ namespace Task
             }
             catch (Exception)
             {
-                Console.WriteLine($"Ошибка при чтении файла");
+                WriteToConsole.RainbowText("Произошла ошибка при чтении файла", ConsoleColor.Red);
             }
         }
         public static void AddProfile()
         {
-            FileWriter.AddRowInFile(ConstProgram.ProfileName, ConstProgram.ProfileTitle, ConstProgram.ProfileDataType);
+            OpenFile.AddRowInFile(ConstProgram.ProfileName, ConstProgram.ProfileTitle, ConstProgram.ProfileDataType);
         }
         public static void WriteCaption()
         {
