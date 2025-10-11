@@ -19,7 +19,7 @@ namespace Task
                     {
                         if (commandLine.SearchOption(["help"]))
                         {
-                            AddHelp();
+                            Commands.AddHelp();
                         }
                         else if (commandLine.SearchOption(["task"]))
                         {
@@ -43,7 +43,7 @@ namespace Task
                     {
                         if (commandLine.SearchOption(["help"]))
                         {
-                            ProfileHelp();
+                            Commands.ProfileHelp();
                         }
                         else if (commandLine.SearchOption(["add"]))
                         {
@@ -58,7 +58,7 @@ namespace Task
                     {
                         if (commandLine.SearchOption(["help"]))
                         {
-                            PrintHelp();
+                            Commands.PrintHelp();
                         }
                         else if (commandLine.SearchOption(["task"]))
                         {
@@ -85,7 +85,7 @@ namespace Task
                     {
                         if (commandLine.SearchOption(["help"]))
                         {
-                            SearchHelp();
+                            Commands.SearchHelp();
                         }
                         else if (commandLine.SearchOption(["task"]))
                         {
@@ -138,7 +138,7 @@ namespace Task
                     break;
 
                 case "help":
-                    Help();
+                    Commands.Help();
                     break;
 
                 case "exit":
@@ -146,45 +146,6 @@ namespace Task
                     break;
             }
             
-        }
-        public void ProfileHelp()
-        {
-            Console.WriteLine("Команда для работы с профилями;");
-            Console.WriteLine("При простом вызове, выводится первый добавленный пользователь: profile;");
-            Console.WriteLine("При использовании как аргумент с командой add - добавляется новый пользователь: add profile;");
-        }
-        public void Help()
-        {
-            Console.WriteLine("Данная программа позволяет пользователю создавать свой список заданий и контролировать их выполнение");
-            Console.WriteLine("help - Выводит помощь по программе и её командам например: add help");
-            Console.WriteLine("profile - Команда для работы с профилями");
-            Console.WriteLine("add - Добавляет запись по базовой конфигурации: add task;");
-            Console.WriteLine("Добавляет файл конфигурации: add config <File>;");
-            Console.WriteLine("Добавляет запись по заранее созданной конфигурации: add <File>;");
-            Console.WriteLine("clear - очищает выбранный файл");
-            Console.WriteLine("search - Ищет все идентичные строчки в файле");
-            Console.WriteLine("exit - Выход из программы либо из текущего действия");
-            Console.WriteLine("print - Выводит всё содержимое файла");
-        }
-        public void AddHelp()
-        {
-            Console.WriteLine("add - Добавляет записи(задания);");
-            Console.WriteLine("Добавляет запись по базовой конфигурации: add task;");
-            Console.WriteLine("Добавляет файл конфигурации: add config <File>;");
-            Console.WriteLine("Добавляет запись по заранее созданной конфигурации: add <File>;");
-            Console.WriteLine("Создаёт новый профиль: add profile;");
-            Console.WriteLine("При добавлении print в конце команды, выводится добавленный текст");
-        }
-        public void PrintHelp()
-        {
-            Console.WriteLine("print - Команда позволяющая получить содержимое файла;");
-            Console.WriteLine("Примеры: print task; print <File>;");
-            Console.WriteLine("Также может использоваться как аргумент в командах add task print/add <File> print,");
-            Console.WriteLine("после создания записи её содержимое будет выведено в консоль;");
-        }
-        public void SearchHelp()
-        {
-            Console.WriteLine("search - Ищет все идентичные строчки в файле;");
         }
     }
 }
