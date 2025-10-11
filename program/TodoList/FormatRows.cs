@@ -57,13 +57,6 @@ namespace Task
                 return Row.ToString().Split(ConstProgram.SeparRows).Count();
             return 0;
         }
-        public static string GetNowDateTime()
-        {
-            /*возвращает сегодняшнюю дату и время в нужном формате*/
-            DateTime nowDate = DateTime.Now;
-            return nowDate.ToShortDateString() +
-                " " + nowDate.ToShortTimeString();
-        }
     }
     public static class ConstProgram
     {

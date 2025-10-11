@@ -4,7 +4,6 @@
             "Name": "s",
             "SpellingOptions": [
                 "s",
-                "str",
                 "string"
             ]
         },
@@ -12,7 +11,6 @@
             "Name": "i",
             "SpellingOptions": [
                 "i",
-                "int",
                 "integer"
             ]
         },
@@ -20,7 +18,7 @@
             "Name": "pos_i",
             "SpellingOptions": [
                 "pos_i",
-                "positiv integer"
+                "positiveinteger"
             ]
         },
         {
@@ -34,39 +32,35 @@
             "Name": "pos_f",
             "SpellingOptions": [
                 "pos_f",
-                "positiv float"
+                "positivefloat"
             ]
         },
         {
-            "Name": "md",
+            "Name": "d",
             "SpellingOptions": [
-                "md",
-                "modedate",
-                "mode date"
+                "d",
+                "date"
             ]
         },
         {
-            "Name": "mt",
+            "Name": "t",
             "SpellingOptions": [
-                "mt",
-                "modetime",
-                "mode time"
+                "t",
+                "time"
             ]
         },
         {
             "Name": "dt",
             "SpellingOptions": [
-                "mdt",
-                "modedatetime",
-                "mode date time"
+                "dt",
+                "datetime"
             ]
         },
         {
             "Name": "ndt",
             "SpellingOptions": [
                 "ndt",
-                "nowdatetime",
-                "now date time"
+                "nowdatetime"
             ]
         }
     ]

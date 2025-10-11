@@ -10,7 +10,7 @@ namespace Task
     {
         public void GlobalCommand(string Text)
         {
-            string ask = Commands.InputString(Text);
+            string ask = Input.String(Text);
             SearchCommandOnJson commandLine = new(ask.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
             switch (commandLine.commandOut)
             {

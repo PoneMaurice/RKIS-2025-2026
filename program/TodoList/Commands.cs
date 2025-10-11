@@ -1,161 +1,10 @@
 // This is the main file, it contains cruical components of the program - PoneMaurice
-using System;
-using System.Data;
-using System.IO.Enumeration;
-using System.Net;
-using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Task
 {
     public class Commands
     {
-        const string StringChar = "s";
-        const string IntegerChar = "i";
-        const string DoubleChar = "f";
-        const string TimeChar = "t";
-        const string DateChar = "d";
-        const string DateAndTime = "dt";
-        const string NowDateTime = "ndt";
-        public string InputDataType(string text)
-        {
-
-            /*Выводит на экран текст и запрашивает у пользователя 
-            ввести тип данных и вводит его в бесконечный цикл 
-            вводимая пользователем строка проверяеться на наличие 
-            такого типа и если он есть возвращает его сокращение*/
-
-            string[,] DataTypePros =
-            {
-                {"string", StringChar}, {"str", StringChar}, {"s", StringChar},
-                {"integer", IntegerChar}, {"int", IntegerChar}, {"i", IntegerChar},
-                {"double", DoubleChar}, {"float", DoubleChar}, {"f", DoubleChar},
-                {"date", DateChar}, {"d", DateChar},
-                {"time", TimeChar}, {"t", TimeChar},
-                {"date and time", DateAndTime}, {"dt", DateAndTime}, {"datetime", DateAndTime},
-                {"now date time", NowDateTime}, {"ndt", NowDateTime}, {"nowdatetime", NowDateTime}
-            };
-            while (true)
-            {
-
-                string input = InputString(text);
-                int rows = DataTypePros.GetUpperBound(0) + 1;
-                for (int i = 0; i < rows; i++)
-                {
-                    if (DataTypePros[i, 0] == input)
-                    {
-                        return DataTypePros[i, 1].ToString();
-                    }
-                }
-                Console.WriteLine("Вы ввели неподдерживаемый тип данных");
-            }
-        }
-        public static string InputString(string text)
-        {
-            /*выводит текст пользователю и запрашивает 
-            ввести строковые данные, они проверяются на
-            наличие и если строка пуста то возвращаеться 
-            "NULL" если нет то возвращается обработаная 
-            версия строки*/
-            Console.Write(text);
-            StringBuilder input = new();
-            input.Append((Console.ReadLine() ?? ConstProgram.StringNull).Trim());
-            if (input.ToString() == "") input.Append(ConstProgram.StringNull);
-            return input.ToString();
-        }
-        public static int InputIntegerWithMinMax(string text, int min, int max)
-        {
-            /*Запрашивает у пользователя дату, проверяется
-            на миниммальное и максимальное допустимое значение,
-            а так же возвращает простые цифры с нулем.
-            Пример: 02, 00, 09 и тд.s*/
-            int result = -1; // сродникоду об ошибке
-            string input;
-            do
-            {
-                input = InputString(text);
-                int.TryParse(input, out result);
-            }
-            while (result < min || result > max); //условия выхода
-            return result;
-        }
-        public static int InputInteger(string text)
-        {
-            /*Перегрузка метода InputDate только без лимитов*/
-            int result = -1; // сродникоду об ошибке
-            do
-            {
-                string input = InputString(text);
-                int.TryParse(input, out result);
-            }
-            while (result <= 0);
-            return result;
-        }
-        private static string GetDateAndTime()
-        {
-            /*Запрашивает всю дату в двух вариантах опросом и 
-            когда пользователя спрашивают по пунктам, 
-            а так же если он не выберет какой-то из вариантов 
-            ввода даты то программа автоматически введет "NULL"*/
-            string dateAndTime = GetDate() + " " + GetTime();
-            return dateAndTime;
-        }
-        private static string GetDate()
-        {
-            /*Запрашивает всю дату в двух вариантах опросом и 
-            когда пользователя спрашивают по пунктам, 
-            а так же если он не выберет какой-то из вариантов 
-            ввода даты то программа автоматически введет "NULL"*/
-            System.Console.WriteLine("---Ввод даты---");
-            string modeDate = InputString($"Выберете метод ввода даты: (Стандартный('S'), Попунктный('P')): ");
-            modeDate = modeDate.ToLower();
-            if (modeDate == "s")
-            {
-                string exampleDate = DateTime.Now.ToShortDateString();
-                string dateString = InputString($"Введите дату (Пример {exampleDate}): ");
-                return dateString;
-            }
-            else if (modeDate == "p")
-            {
-                int year = InputInteger("Введите год: ");
-                int month = InputIntegerWithMinMax("Введите месяц: ", 1, 12);
-                int day = InputIntegerWithMinMax("Введите день: ", 1,
-                    DateTime.DaysInMonth(year, month));
-                DateOnly yearMonthDay = new(year, month, day);
-                return yearMonthDay.ToShortDateString();
-            }
-            else Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'");
-            return ConstProgram.StringNull;
-        }
-        private static string GetTime()
-        {
-            /*Запрашивает всю дату в двух вариантах опросом и 
-            когда пользователя спрашивают по пунктам, 
-            а так же если он не выберет какой-то из вариантов 
-            ввода даты то программа автоматически введет "NULL"*/
-            System.Console.WriteLine("---Ввод времени---");
-            string modeDate = InputString($"Выберете метод ввода даты: (Стандартный('S'), Попунктный('P')): ");
-            modeDate = modeDate.ToLower();
-            if (modeDate == "s")
-            {
-                string exampleDate = DateTime.Now.ToShortTimeString();
-                string dateString = InputString($"Введите время (Пример {exampleDate}): ");
-                return dateString;
-            }
-            else if (modeDate == "p")
-            {
-                int hour = InputIntegerWithMinMax("Введите час: ", 0, 23);
-                int minute = InputIntegerWithMinMax("Введите минуты: ", 0, 59);
-                TimeOnly hourAndMinute = new(hour, minute);
-                return hourAndMinute.ToShortTimeString();
-            }
-            else
-            {
-                Console.WriteLine("Вы не выбрали режим, все даты по default будут 'NULL'");
-            }
-            return ConstProgram.StringNull;
-        }
         public static void AddTask()
         {
             /*программа запрашивает у пользователя все необходимые ей данные
@@ -186,7 +35,7 @@ namespace Task
         {
             if (fileName == "")
             {
-                fileName = InputString("Введите название для файла с данными: ");
+                fileName = Input.String("Введите название для файла с данными: ");
             }
             fileName = fileName + ConstProgram.PrefConfigFile;
             FileWriter file = new(fileName);
@@ -200,7 +49,7 @@ namespace Task
                 searchLine1 = file.GetLineFilePositionRow(0);
                 searchLine2 = file.GetLineFilePositionRow(1);
                 Console.WriteLine($"{searchLine1}\n{searchLine2}");
-                askFile = InputString($"Вы точно уверены, что хотите перезаписать конфигурацию?(y/N): ");
+                askFile = Input.String($"Вы точно уверены, что хотите перезаписать конфигурацию?(y/N): ");
             }
             if (askFile == ConstProgram.Yes || askFile == null)
             {
@@ -209,7 +58,7 @@ namespace Task
                 while (true)
                 {
                     string intermediateResultString =
-                        InputString("Введите название пункта титульного оформления файла: ");
+                        Input.String("Введите название пункта титульного оформления файла: ");
                     if (intermediateResultString == "exit" &&
                     titleRow.GetLengthRow() != 0) break;
                     else if (intermediateResultString == "exit")
@@ -219,11 +68,10 @@ namespace Task
 
                 string[] titleRowArray = titleRow.Row.ToString().Split(ConstProgram.SeparRows);
 
-                Commands config = new();
                 foreach (string title in titleRowArray)
                 {
                     if (title == ConstProgram.TitleFirstObject) continue;
-                    else dataTypeRow.AddInRow(config.InputDataType($"Введите тип данных для строки {title}: "));
+                    else dataTypeRow.AddInRow(Input.DataType($"Введите тип данных для строки {title}: "));
                 }
 
                 file.TitleRowWriter(titleRow.Row.ToString());
@@ -234,9 +82,9 @@ namespace Task
                 string askTitle = ConstProgram.Yes;
                 string askDataType = ConstProgram.Yes;
                 if (lastTitleRow != titleRow.Row.ToString() && lastTitleRow != ConstProgram.StringNull)
-                    askTitle = InputString($"Титульный лист отличается \nНыняшний: {titleRow.Row}\nПрошлый: {lastTitleRow}\nЗаменить?(y/N): ");
+                    askTitle = Input.String($"Титульный лист отличается \nНыняшний: {titleRow.Row}\nПрошлый: {lastTitleRow}\nЗаменить?(y/N): ");
                 else if (lastDataTypeRow != dataTypeRow.Row.ToString() && lastDataTypeRow != ConstProgram.StringNull)
-                    askDataType = InputString($"Конфигурация уже имеется\nНынешняя: {dataTypeRow.Row}\nПрошлая: {lastDataTypeRow}\nЗаменить?(y/N): ");
+                    askDataType = Input.String($"Конфигурация уже имеется\nНынешняя: {dataTypeRow.Row}\nПрошлая: {lastDataTypeRow}\nЗаменить?(y/N): ");
                 if (askTitle == ConstProgram.Yes || askDataType == ConstProgram.Yes)
                 {
                     file.WriteFile(titleRow.Row.ToString(), false);
@@ -253,7 +101,7 @@ namespace Task
         {
             if (nameData == "")
             {
-                nameData = InputString("Введите название для файла с данными: ");
+                nameData = Input.String("Введите название для файла с данными: ");
             }
             FileWriter fileConf = new(nameData + ConstProgram.PrefConfigFile);
             FileWriter file = new(nameData);
@@ -283,37 +131,45 @@ namespace Task
             {
                 switch (dataTypeRowArray[i])
                 {
-                    case Commands.StringChar:
-                        row.AddInRow(InputString($"введите {titleRowArray[i]}: "));
+                    case "s":
+                        row.AddInRow(Input.String($"введите {titleRowArray[i]}: "));
                         break;
-                    case Commands.IntegerChar:
-                        row.AddInRow(InputInteger($"введите {titleRowArray[i]}: ").ToString());
+                    case "i":
+                        row.AddInRow(Input.Integer($"введите {titleRowArray[i]}: ").ToString());
                         break;
-                    case Commands.DoubleChar:
-                        row.AddInRow(InputInteger($"введите {titleRowArray[i]}: ").ToString());
+                    case "pos_i":
+                        row.AddInRow(Input.PositiveInteger($"введите {titleRowArray[i]}: ").ToString());
                         break;
-                    case Commands.DateChar:
+                    case "f":
+                        row.AddInRow(Input.Float($"введите {titleRowArray[i]}: ").ToString());
+                        break;
+                    case "pos_f":
+                        row.AddInRow(Input.PositiveFloat($"введите {titleRowArray[i]}: ").ToString());
+                        break;
+                    case "d":
                         Console.WriteLine($"---ввод {titleRowArray[i]}---");
-                        row.AddInRow(GetDate());
+                        row.AddInRow(Input.Date());
                         break;
-                    case Commands.TimeChar:
+                    case "t":
                         Console.WriteLine($"---ввод {titleRowArray[i]}---");
-                        row.AddInRow(GetTime());
+                        row.AddInRow(Input.Time());
                         break;
-                    case Commands.DateAndTime:
+                    case "dt":
                         Console.WriteLine($"---ввод {titleRowArray[i]}---");
-                        row.AddInRow(GetDateAndTime());
+                        row.AddInRow(Input.DateAndTime());
                         break;
-                    case Commands.NowDateTime:
-                        row.AddInRow(FormatterRows.GetNowDateTime());
+                    case "ndt":
+                        row.AddInRow(Input.NowDateTime());
                         break;
+                    
+                    
                 }
             }
             return row.Row.ToString();
         }
         public static void ClearAllTasks()
         {
-            if (InputString("Вы уверены что хотите очистить весь файл task? (y/N): ") == ConstProgram.Yes)
+            if (Input.String("Вы уверены что хотите очистить весь файл task? (y/N): ") == ConstProgram.Yes)
             {
                 string fileName = ConstProgram.TaskName;
 
@@ -337,7 +193,7 @@ namespace Task
             System.Console.WriteLine($"Выберете в каком столбце искать {text} (y/N): ");
             for (int i = 0; i < titleRowArray.Length; ++i)
             {
-                if (InputString($"{titleRowArray[i]}: ") == ConstProgram.Yes)
+                if (Input.String($"{titleRowArray[i]}: ") == ConstProgram.Yes)
                     tableClear.Add(i, true);
                 else tableClear.Add(i, false);
             }
@@ -345,9 +201,9 @@ namespace Task
         public static void SearchPartData(string fileName = ConstProgram.StringNull, string text = ConstProgram.StringNull)
         {
             if (fileName == ConstProgram.StringNull)
-                fileName = InputString("Ведите название файла: ");
+                fileName = Input.String("Ведите название файла: ");
             if (text == ConstProgram.StringNull)
-                text = InputString("Поиск: ");
+                text = Input.String("Поиск: ");
 
             FileWriter file = new(fileName);
 
@@ -361,7 +217,7 @@ namespace Task
                 System.Console.WriteLine($"Выберете в каком столбце искать {text} (y/N): ");
                 for (int i = 0; i < titleRowArray.Length; ++i)
                 {
-                    if (InputString($"{titleRowArray[i]}: ") == ConstProgram.Yes)
+                    if (Input.String($"{titleRowArray[i]}: ") == ConstProgram.Yes)
                         tableClear.Add(i, true);
                     else tableClear.Add(i, false);
                 }
@@ -376,7 +232,7 @@ namespace Task
         public static void PrintData(string fileName = "")
         {
             if (fileName == "")
-                fileName = InputString("Ведите название файла: ");
+                fileName = Input.String("Ведите название файла: ");
             
             
 

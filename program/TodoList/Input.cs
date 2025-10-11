@@ -4,7 +4,7 @@ namespace Task
 {
     static class Input
     {
-        public static string InputDataType(string text)
+        public static string DataType(string text)
         {
 
             /*Выводит на экран текст и запрашивает у пользователя 
@@ -22,6 +22,7 @@ namespace Task
                 {
                     return res;
                 }
+                
                 Console.BackgroundColor = ConsoleColor.Red;
                 Console.WriteLine("Вы ввели неподдерживаемый тип данных");
                 Console.ResetColor();
@@ -52,7 +53,7 @@ namespace Task
             {
                 input = String(text);
                 if (int.TryParse(input, out result) && 
-                (result < min || result > max))
+                result >= min && result <= max)
                 {
                     return result;
                 }
@@ -76,7 +77,7 @@ namespace Task
             while (true)
             {
                 string input = String(text);
-                if (int.TryParse(input, out result) && result <= 0)
+                if (int.TryParse(input, out result) && result >= 0)
                 {
                     return result;
                 }
@@ -100,7 +101,7 @@ namespace Task
             while (true)
             {
                 string input = String(text);
-                if (float.TryParse(input, out result) && result <= 0)
+                if (float.TryParse(input, out result) && result >= 0)
                 {
                     return result;
                 }
