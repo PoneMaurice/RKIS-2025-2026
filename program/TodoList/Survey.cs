@@ -8,31 +8,28 @@ namespace Task
 {
     public class Survey
     {
-        public static int counter = 0;
-        public string nowText = "";
-
-
-        public void GlobalCommand(string[] splitText)
+        public void GlobalCommand(string Text)
         {
-            SearchCommandOnJson commandLine = new(splitText);
+            string ask = Commands.InputString(Text);
+            SearchCommandOnJson commandLine = new(ask.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
             switch (commandLine.commandOut)
             {
                 case "add":
-                    if (commandLine.optionsOut != null)
+                    if (commandLine.optionsOut.Length > 0)
                     {
-                        if (commandLine.optionsOut[0] == "help")
+                        if (commandLine.SearchOption(["help"]))
                         {
                             AddHelp();
                         }
-                        else if (commandLine.optionsOut[0] == "task")
+                        else if (commandLine.SearchOption(["task"]))
                         {
                             Commands.AddTask();
                         }
-                        else if (commandLine.optionsOut[0] == "config")
+                        else if (commandLine.SearchOption(["config"]))
                         {
                             Commands.AddConfUserData(commandLine.nextTextOut);
                         }
-                        else if (commandLine.optionsOut[0] == "profile")
+                        else if (commandLine.SearchOption(["profile"]))
                         {
                             Commands.AddProfile();
                         }
@@ -42,13 +39,13 @@ namespace Task
                     break;
 
                 case "profile":
-                    if (commandLine.optionsOut != null)
+                    if (commandLine.optionsOut.Length > 0)
                     {
-                        if (commandLine.optionsOut[0] == "help")
+                        if (commandLine.SearchOption(["help"]))
                         {
                             ProfileHelp();
                         }
-                        else if (commandLine.optionsOut[0] == "add")
+                        else if (commandLine.SearchOption(["add"]))
                         {
                             Commands.AddProfile();
                         }
@@ -57,82 +54,80 @@ namespace Task
                     break;
 
                 case "print":
-                    if (commandLine.optionsOut != null)
+                    if (commandLine.optionsOut.Length > 0)
                     {
-                        if (commandLine.optionsOut[0] == "help")
+                        if (commandLine.SearchOption(["help"]))
                         {
                             PrintHelp();
                         }
-                        else if (commandLine.optionsOut[0] == "task")
+                        else if (commandLine.SearchOption(["task"]))
                         {
                             Commands.PrintData(Commands.TaskName);
                         }
-                        else if (commandLine.optionsOut[0] == "config")
+                        else if (commandLine.SearchOption(["config"]))
                         {
-                            string text;
-                            if (commandLine.nextTextOut == "")
-                            {
-                                text = Commands.InputString("Введите название файла: ");
-                            }
-                            else text = commandLine.nextTextOut;
-                            Commands.PrintData(text+Commands.PrefConfigFile);
+                            Commands.PrintData(commandLine.nextTextOut + ConstProgram.PrefConfigFile);
                         }
-                        else if (commandLine.optionsOut[0] == "profile")
+                        else if (commandLine.SearchOption(["profile"]))
                         {
                             Commands.PrintData(Commands.ProfileName);
                         }
-                        else {Commands.PrintData(commandLine.nextTextOut);}
+                        else if (commandLine.SearchOption(["captions"])){
+                            Commands.WriteCaption();
+                        } 
+                        else { Commands.PrintData(commandLine.nextTextOut); }
                     }
                     else { Commands.PrintData(commandLine.nextTextOut); }
                     break;
 
                 case "search":
-                    if (commandLine.optionsOut != null)
+                    if (commandLine.optionsOut.Length > 0)
                     {
-                        if (commandLine.optionsOut[0] == "help")
+                        if (commandLine.SearchOption(["help"]))
                         {
                             SearchHelp();
                         }
-                        else if (commandLine.optionsOut[0] == "task")
+                        else if (commandLine.SearchOption(["task"]))
                         {
 
                         }
-                        else if (commandLine.optionsOut[0] == "config")
+                        else if (commandLine.SearchOption(["config"]))
                         {
 
                         }
-                        else if (commandLine.optionsOut[0] == "profile")
+                        else if (commandLine.SearchOption(["profile"]))
                         {
 
                         }
-                        else if (commandLine.optionsOut[0] == "numbering")
+                        else if (commandLine.SearchOption(["numbering"]))
                         {
 
                         }
                         else { }
                     }
-                    else {}
+                    else {Commands.SearchPartData();}
                     break;
+
                 case "clear":
-                    if (commandLine.optionsOut != null)
+                    if (commandLine.optionsOut.Length > 0)
                     {
-                        if (commandLine.optionsOut[0] == "help")
+                        if (commandLine.SearchOption(["help"]))
                         {
 
                         }
-                        else if (commandLine.optionsOut[0] == "task")
+                        else if (commandLine.SearchOption(["task"]))
                         {
 
                         }
-                        else if (commandLine.optionsOut[0] == "config")
+                        else if (commandLine.SearchOption(["config"]))
                         {
 
                         }
-                        else if (commandLine.optionsOut[0] == "profile")
+                        else if (commandLine.SearchOption(["profile"]))
                         {
 
                         }
-                        else if (commandLine.optionsOut[0] == "console")
+                        else if (commandLine.SearchOption(["console"]))
                         {
                             System.Console.WriteLine("CCCCCCClear");
                             Console.Clear();
@@ -141,9 +136,11 @@ namespace Task
                     }
                     else { }
                     break;
+
                 case "help":
                     Help();
                     break;
+
                 case "exit":
                     Environment.Exit(0);
                     break;
@@ -152,97 +149,42 @@ namespace Task
         }
         public void ProfileHelp()
         {
-            StringBuilder text = new();
-            text.Append("Команда для работы с профилями;\n");
-            text.Append("При простом вызове, выводится первый добавленный пользователь: profile;\n");
-            text.Append("При использовании как аргумент с командой add - добавляется новый пользователь: add profile;\n");
-            Console.WriteLine(text.ToString());
-            // else Commands.PrintProfile();
+            Console.WriteLine("Команда для работы с профилями;");
+            Console.WriteLine("При простом вызове, выводится первый добавленный пользователь: profile;");
+            Console.WriteLine("При использовании как аргумент с командой add - добавляется новый пользователь: add profile;");
         }
         public void Help()
         {
-            StringBuilder text = new();
-            text.Append("Данная программа позволяет пользователю создавать свой список заданий и контролировать их выполнение\n");
-            text.Append("help - Выводит помощь по программе и её командам например: add help\n");
-            text.Append("profile - Команда для работы с профилями\n");
-            text.Append("add - Добавляет запись по базовой конфигурации: add task;\nДобавляет файл конфигурации: add config <File>;\nДобавляет запись по заранее созданной конфигурации: add <File>;\n");
-            text.Append("clear - очищает выбранный файл\n");
-            text.Append("search - Ищет все идентичные строчки в файле\n");
-            text.Append("exit - Выход из программы либо из текущего действия\n");
-            text.Append("print - Выводит всё содержимое файла\n");
-            Console.WriteLine(text.ToString());
+            Console.WriteLine("Данная программа позволяет пользователю создавать свой список заданий и контролировать их выполнение");
+            Console.WriteLine("help - Выводит помощь по программе и её командам например: add help");
+            Console.WriteLine("profile - Команда для работы с профилями");
+            Console.WriteLine("add - Добавляет запись по базовой конфигурации: add task;");
+            Console.WriteLine("Добавляет файл конфигурации: add config <File>;");
+            Console.WriteLine("Добавляет запись по заранее созданной конфигурации: add <File>;");
+            Console.WriteLine("clear - очищает выбранный файл");
+            Console.WriteLine("search - Ищет все идентичные строчки в файле");
+            Console.WriteLine("exit - Выход из программы либо из текущего действия");
+            Console.WriteLine("print - Выводит всё содержимое файла");
         }
         public void AddHelp()
         {
-            StringBuilder text = new();
-            text.Append("add - Добавляет записи(задания);\n");
-            text.Append("Добавляет запись по базовой конфигурации: add task;\n");
-            text.Append("Добавляет файл конфигурации: add config <File>;\n");
-            text.Append("Добавляет запись по заранее созданной конфигурации: add <File>;\n");
-            text.Append("Создаёт новый профиль: add profile;\n");
-            text.Append("При добавлении print в конце команды, выводится добавленный текст\n");
-            Console.WriteLine(text.ToString());
-            // else if (SearchExtension("task") && SearchExtension("print"))
-            //     global::Task.Commands.AddTaskAndPrint();
-            // else if (SearchExtension(1, "task")) global::Task.Commands.AddTask();
-            // else if (SearchExtension(1, "config")) global::Task.Commands.AddConfUserData(nowText);
-            // else if (SearchExtension(1, "profile")) global::Task.Commands.AddProfile();
-            // else global::Task.Commands.AddUserData(nowText);
-        }
-        public void Task()
-        {
-            Commands command = new();
-            StringBuilder text = new();
-            text.Append("task - Служебная команда для работы со стандартным конфигурационным файлом;\n");
-            text.Append("task - Используется как аргумент для таких команд как: add, clear, search, print;\n");
-            text.Append("add - Добавляет запись по базовой конфигурации: add task;\n");
-            text.Append("clear - Удаляет все записи из файла tasks: clear task;\n");
-            text.Append("search - Ищет все идентичные строчки в файле: search task;\n");
-            text.Append("print - Выводит всё содержимое файла: print task;\n");
-            // if (SearchExtension(1, "help")) Console.WriteLine(text.ToString());
-            // else if (SearchExtension(1, "clear") && nowText == FileWriter.stringNull)
-            //     global::Task.Commands.ClearAllTasks();
-            // else if (SearchExtension(1, "search")) command.SearchPartData(nowText, command.nameTask);
-            // else global::Task.Commands.PrintData(command.nameTask);
+            Console.WriteLine("add - Добавляет записи(задания);");
+            Console.WriteLine("Добавляет запись по базовой конфигурации: add task;");
+            Console.WriteLine("Добавляет файл конфигурации: add config <File>;");
+            Console.WriteLine("Добавляет запись по заранее созданной конфигурации: add <File>;");
+            Console.WriteLine("Создаёт новый профиль: add profile;");
+            Console.WriteLine("При добавлении print в конце команды, выводится добавленный текст");
         }
         public void PrintHelp()
         {
-            StringBuilder text = new();
-            text.Append("print - Команда позволяющая получить содержимое файла;\n");
-            text.Append("Примеры: print task; print <File>;\n");
-            text.Append("Также может использоваться как аргумент в командах add task print/add <File> print,\nпосле создания записи её содержимое будет выведено в консоль;\n");
-            Console.WriteLine(text.ToString());
-            // else global::Task.Commands.PrintData(nowText);
+            Console.WriteLine("print - Команда позволяющая получить содержимое файла;");
+            Console.WriteLine("Примеры: print task; print <File>;");
+            Console.WriteLine("Также может использоваться как аргумент в командах add task print/add <File> print,");
+            Console.WriteLine("после создания записи её содержимое будет выведено в консоль;");
         }
         public void SearchHelp()
         {
-            Commands command = new();
-            StringBuilder text = new();
-            text.Append("search - Ищет все идентичные строчки в файле;\n");
-            Console.WriteLine(text.ToString());
-            // else command.SearchPartData(FileWriter.stringNull, nowText);
-        }
-        public void ProceStr(string text)
-        {
-            string ask = global::Task.Commands.InputString(text);
-            string[] partsText = ask.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            GlobalCommand(partsText);
-        }
-        public static string AssociationString(string[] sepText)
-        {
-            StringBuilder text = new();
-            bool noneText = true;
-            for (int i = counter; i < sepText.Length; ++i)
-            {
-                if (noneText)
-                {
-                    text.Append(sepText[i]);
-                    noneText = false;
-                }
-                else text.Append($" {sepText[i]}");
-            }
-            if (text.ToString() == "") text.Append(FileWriter.stringNull);
-            return text.ToString();
+            Console.WriteLine("search - Ищет все идентичные строчки в файле;");
         }
     }
 }

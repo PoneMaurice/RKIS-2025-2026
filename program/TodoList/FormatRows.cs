@@ -7,22 +7,19 @@ using System.Text;
 
 namespace Task
 {
-    public class FormatRows
+    public class FormaterRows
     {
-        public const string SeparRows = "|";
         public StringBuilder Row = new();
         int Num;
         Type type;
-        public static string titleFirstObject = "numbering";
-        public static string dataTypeFirstObject = "counter";
-
+        
         public enum Type : int
         {
             title = 1,
             row = 2,
             dataType = 3
         }
-        public FormatRows(string nameFile, Type typeOut = Type.row)
+        public FormaterRows(string nameFile, Type typeOut = Type.row)
         {
             FileWriter file = new(nameFile);
             Num = file.GetLeghtFile();
@@ -35,17 +32,17 @@ namespace Task
                 case Type.row:
                     return Num.ToString();
                 case Type.title:
-                    return titleFirstObject;
+                    return ConstProgram.TitleFirstObject;
                 case Type.dataType:
-                    return dataTypeFirstObject;
+                    return ConstProgram.DataTypeFirstObject;
             }
             return Num.ToString();
         }
         public void AddInRow(string pathRow)
         {
             /*Форматирует массив данных под будущию таблицу csv*/
-            if (Row.ToString() == "") Row.Append(GetFirstObject() + SeparRows + pathRow);
-            else Row.Append(SeparRows + pathRow);
+            if (Row.ToString() == "") Row.Append(GetFirstObject() + ConstProgram.SeparRows + pathRow);
+            else Row.Append(ConstProgram.SeparRows + pathRow);
         }
         public void AddArrayInRow(string[] row)
         {
@@ -57,7 +54,7 @@ namespace Task
         public int GetLeghtRow()
         {
             if (Row.Length != 0)
-                return Row.ToString().Split(SeparRows).Count();
+                return Row.ToString().Split(ConstProgram.SeparRows).Count();
             return 0;
         }
         public static string GetNowDateTime()
@@ -67,5 +64,15 @@ namespace Task
             return nowDate.ToShortDateString() +
                 " " + nowDate.ToShortTimeString();
         }
+    }
+    public static class ConstProgram
+    {
+        public const string SeparRows = "|";
+        public const string TitleFirstObject = "numbering";
+        public const string DataTypeFirstObject = "counter";
+        public const string PrefConfigFile = "_conf";
+        public const string StringNull = "Null";
+        public readonly static string[] StringArrayNull = [StringNull];
+        public const string Yes = "y";
     }
 }

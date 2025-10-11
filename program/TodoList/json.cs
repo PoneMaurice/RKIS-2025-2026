@@ -28,9 +28,9 @@ namespace Task
         static string sex = Path.Join(huiBolshoy, nameFileJson);
         static string jsonString = File.ReadAllText(sex);
         static AllCommands? openJsonFile = JsonSerializer.Deserialize<AllCommands?>(jsonString);
-        public string commandOut = "";
-        public string[]? optionsOut = null;
-        public string nextTextOut = "";
+        public string commandOut = ConstProgram.StringNull;
+        public string[] optionsOut = new string[0];
+        public string nextTextOut = ConstProgram.StringNull;
         public SearchCommandOnJson(string[] text)
         {
             StringBuilder optionsLine = new();
@@ -45,37 +45,75 @@ namespace Task
                         commandOut = command.Name;
                         if (command.Options != null)
                         {
-                            Range startTextToEnd = 1..text.Length;
-                            bool optionInText = true;
-                            foreach (var pathText in text[startTextToEnd])
+                            Range withoutFirstString = 1..text.Length;
+                            bool isOptions = true;
+                            foreach (var pathText in text[withoutFirstString])
                             {
-                                bool notOption = true;
-                                if (optionInText)
+                                bool inNotOption = true;
+                                if (isOptions)
                                 {
                                     foreach (var option in command.Options)
                                     {
-                                        if ((pathText == option.Short || pathText == option.Long) && option.Name != null)
+                                        if (option.Name != null)
                                         {
-                                            if (!optionsLine.ToString().Contains(option.Name))
+                                            if (pathText.Length >= 3 && pathText[0..2] == "--")
                                             {
-                                                if (optionsLine.ToString() == "")
+                                                if (!optionsLine.ToString().Contains(option.Name) && pathText == option.Long)
                                                 {
-                                                    optionsLine.Append(option.Name);
-                                                }
-                                                else
-                                                {
-                                                    optionsLine.Append("|" + option.Name);
+                                                    if (optionsLine.Length == 0)
+                                                    {
+                                                        optionsLine.Append(option.Name);
+                                                    }
+                                                    else
+                                                    {
+                                                        optionsLine.Append(ConstProgram.SeparRows + option.Name);
+                                                    }
+                                                    inNotOption = false;
                                                 }
                                             }
-                                            notOption = false;
+                                            else if (pathText.Length == 2 && pathText[0] == '-')
+                                            {
+                                                if (!optionsLine.ToString().Contains(option.Name) && pathText == option.Short)
+                                                {
+                                                    if (optionsLine.Length == 0)
+                                                    {
+                                                        optionsLine.Append(option.Name);
+                                                    }
+                                                    else
+                                                    {
+                                                        optionsLine.Append(ConstProgram.SeparRows + option.Name);
+                                                    }
+                                                    inNotOption = false;
+                                                }
+                                            }
+                                            else if (pathText.Length > 2 && pathText[0] == '-')
+                                            {
+                                                foreach (var subOption in command.Options)
+                                                {
+                                                    if (subOption.Name != null && subOption.Short != null &&
+                                                    pathText[1..pathText.Length].Contains(subOption.Short[1..subOption.Short.Length]) &&
+                                                    !optionsLine.ToString().Contains(subOption.Name))
+                                                    {
+                                                        if (optionsLine.Length == 0)
+                                                        {
+                                                            optionsLine.Append(subOption.Name);
+                                                        }
+                                                        else
+                                                        {
+                                                            optionsLine.Append(ConstProgram.SeparRows + subOption.Name);
+                                                        }
+                                                        inNotOption = false;
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
-                                if (notOption)
+                                if (inNotOption)
                                 {
                                     if (textLine.ToString() == "")
                                     {
-                                        optionInText = false;
+                                        isOptions = false;
                                         textLine.Append(pathText);
                                     }
                                     else { textLine.Append(" " + pathText); }
@@ -83,6 +121,7 @@ namespace Task
                                 }
                             }
                         }
+                        break;
                     }
                 }
                 if (optionsLine.ToString() != "")
@@ -90,17 +129,46 @@ namespace Task
                     optionsOut = optionsLine.ToString().Split("|");
                 }
                 nextTextOut = textLine.ToString();
-                // System.Console.WriteLine("com: " + commandOut);
-                // System.Console.WriteLine("opt:");
-                // if (optionsOut != null)
-                // {
-                //     foreach (var option in optionsOut)
-                //     {
-                //         System.Console.WriteLine("\t" + option);
-                //     }
-                // }
-                // System.Console.WriteLine("text: "+ nextTextOut);
+
+                System.Console.WriteLine("com: " + commandOut);
+                System.Console.WriteLine("opt:");
+                if (optionsOut != null)
+                {
+                    foreach (var option in optionsOut)
+                    {
+                        System.Console.WriteLine("\t" + option);
+                    }
+                }
+                System.Console.WriteLine("text: " + nextTextOut);
             }
+        }
+        public bool SearchOption(string[] options)
+        {
+            if (optionsOut != ConstProgram.StringArrayNull &&
+            optionsOut != null)
+            {
+                int count = 0;
+                int length = options.Length;
+                if (optionsOut.Length == length)
+                {
+                    foreach (var option in options)
+                    {
+                        System.Console.WriteLine($"\t\n{option}\n");
+                        if (optionsOut.Contains(option))
+                        {
+                            ++count;
+                        }
+                        else return false;
+                    }
+                    if (count == length)
+                    {
+                        System.Console.WriteLine("\tif (count == length)");
+                        System.Console.WriteLine($"\t{count} == {length}\n");
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }

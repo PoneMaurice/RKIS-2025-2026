@@ -101,7 +101,7 @@ namespace Task
                     string? line;
                     while ((line = reader.ReadLine()) != null)
                     {
-                        string[] pathLine = line.Split(FormatRows.SeparRows);
+                        string[] pathLine = line.Split(ConstProgram.SeparRows);
                         if (pathLine.Length > positionInRow)
                         {
                             if (pathLine[positionInRow] == dataFile)
@@ -192,7 +192,7 @@ namespace Task
         static public void AddRowInFile(string nameFile, string[] titleRowArray, string[] dataTypeRowArray)
         {
             FileWriter file = new(nameFile);
-            FormatRows titleRow = new(nameFile, FormatRows.Type.title);
+            FormaterRows titleRow = new(nameFile, FormaterRows.Type.title);
             string row = Commands.GetRowOnTitleAndConfig(titleRowArray, dataTypeRowArray);
             titleRow.AddArrayInRow(titleRowArray);
             file.TitleRowWriter(titleRow.Row.ToString());

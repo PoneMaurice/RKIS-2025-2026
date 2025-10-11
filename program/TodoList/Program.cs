@@ -7,17 +7,15 @@ namespace Task
         public static void Main()
         {
             int cycle = 0;
+            Survey survey = new();
             Console.Clear();
             do
             {
-                var sur = new Survey();
                 if (cycle == 0)
                 {
-                    var cap = new Captions();
-                    cap.WriteCaption();
-                    // Commands.PrintProfile();
+                    //Commands.PrintProfile();
                 }
-                sur.ProceStr("-- ");
+                survey.GlobalCommand("-- ");
                 ++cycle;
             }
             while (true);
