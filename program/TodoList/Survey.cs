@@ -117,9 +117,17 @@ namespace Task
                         }
                         else if (commandLine.SearchOption(["task"]))
                         {
+                            Commands.ClearRow(ConstProgram.TaskName, commandLine.nextTextOut);
+                        }
+                        else if (commandLine.SearchOption(["task", "all"]))
+                        {
                             Commands.ClearAllFile(ConstProgram.TaskName);
                         }
                         else if (commandLine.SearchOption(["profile"]))
+                        {
+                            Commands.ClearRow(ConstProgram.ProfileName, commandLine.nextTextOut);
+                        }
+                        else if (commandLine.SearchOption(["profile", "all"]))
                         {
                             Commands.ClearAllFile(ConstProgram.ProfileName);
                         }
@@ -128,9 +136,13 @@ namespace Task
                             WriteToConsole.RainbowText("CCCCCCClear", ConsoleColor.Magenta);
                             Console.Clear();
                         }
-                        else { Commands.ClearAllFile(commandLine.nextTextOut); }
+                        else if (commandLine.SearchOption(["all"]))
+                        {
+                            Commands.ClearAllFile(commandLine.nextTextOut);
+                        }
+                        else { Commands.ClearRow(commandLine.nextTextOut);}
                     }
-                    else { Commands.ClearAllFile(commandLine.nextTextOut); }
+                    else { Commands.ClearRow(commandLine.nextTextOut); }
                     break;
 
                 case "help":

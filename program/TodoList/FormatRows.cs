@@ -44,7 +44,7 @@ namespace Task
             if (Row.ToString() == "") Row.Append(GetFirstObject() + ConstProgram.SeparRows + pathRow);
             else Row.Append(ConstProgram.SeparRows + pathRow);
         }
-        public void AddArrayInRow(string[] row)
+        public void AddInRow(string[] row)
         {
             foreach (string path in row)
             {
@@ -64,7 +64,7 @@ namespace Task
         public const string TitleFirstObject = "numbering";
         public const string DataTypeFirstObject = "counter";
         public const string PrefConfigFile = "_conf";
-        public const string StringNull = "Null";
+        public const string StringNull = "";
         public readonly static string[] StringArrayNull = new string[0];
         public const string Yes = "y";
         public const string TaskName = "Tasks";

@@ -32,11 +32,17 @@ namespace Task
             наличие и если строка пуста то возвращаеться 
             "NULL" если нет то возвращается обработаная 
             версия строки*/
-            Console.Write(text);
             StringBuilder input = new();
-            input.Append((Console.ReadLine() ?? ConstProgram.StringNull).Trim());
-            if (input.ToString() == "") input.Append(ConstProgram.StringNull);
-            return input.ToString();
+            while (true)
+            {
+                Console.Write(text);
+                input.Append((Console.ReadLine() ?? "").Trim());
+                if (input.ToString() != "")
+                {
+                    return input.ToString();
+                }
+                WriteToConsole.RainbowText("Строка не должна быть пустой", ConsoleColor.Red);
+            }
         }
         public static int IntegerWithMinMax(string text, int min, int max)
         {

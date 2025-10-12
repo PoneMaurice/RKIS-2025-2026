@@ -1,4 +1,5 @@
 // This file contains everything related to generating and reading paths, files - PoneMaurice
+using System.Formats.Asn1;
 using System.Text;
 namespace Task
 {
@@ -189,14 +190,14 @@ namespace Task
             }
             return numLine;
         }
-        static public void AddRowInFile(string nameFile, string[] titleRowArray, string[] dataTypeRowArray)
+        public static void AddRowInFile(string nameFile, string[] titleRowArray, string[] dataTypeRowArray)
         {
             try
             {
                 OpenFile file = new(nameFile);
                 FormatterRows titleRow = new(nameFile, FormatterRows.Type.title);
-                string row = Commands.GetRowOnTitleAndConfig(titleRowArray, dataTypeRowArray);
-                titleRow.AddArrayInRow(titleRowArray);
+                string row = Commands.GetRowOnTitleAndConfig(titleRowArray, dataTypeRowArray, ConstProgram.TaskName);
+                titleRow.AddInRow(titleRowArray);
                 file.TitleRowWriter(titleRow.Row.ToString());
                 file.WriteFile(row);
                 WriteToConsole.RainbowText("Задание успешно записано", ConsoleColor.Green);
@@ -204,6 +205,107 @@ namespace Task
             catch (Exception)
             {
                 WriteToConsole.RainbowText("Произошла ошибка при записи файла", ConsoleColor.Red);
+            }
+        }
+        public void RecordingData(string[] rows)
+        {
+            OpenFile file = new(nameFile);
+            string titleRow = rows[0];
+            file.WriteFile(titleRow, false);
+            foreach (string row in rows[1..])
+            {
+                file.WriteFile(row);
+            }
+        }
+        public void EditingRow(string requiredData, string modifiedData, int indexColumn, int numberOfIterations = 1) // не тестилась
+        {
+            string data = File.ReadAllText(fullPath);
+            string[] rows = data.Split("\n");
+            bool searchWasSuccessful = false;
+            int counter = 0;
+            if (rows.Length > indexColumn)
+            {
+                for (int i = 1; i < rows.Length; ++i)
+                {
+                    string[] partsText = rows[i].Split(ConstProgram.SeparRows);
+                    if (partsText[indexColumn] == requiredData)
+                    {
+                        FormatterRows buildRow = new(nameFile);
+                        partsText[indexColumn] = modifiedData;
+                        buildRow.AddInRow(partsText);
+                        rows[i] = buildRow.Row.ToString();
+                        searchWasSuccessful = true;
+                        ++counter;
+                        if (counter >= numberOfIterations)
+                        {
+                            break;
+                        }
+                    }
+                }
+                if (searchWasSuccessful)
+                {
+                    RecordingData(rows);
+                    if (counter == 1)
+                    {
+                        WriteToConsole.RainbowText($"Строка была успешно перезаписана", ConsoleColor.Green);
+                    }
+                    else
+                    {
+                        WriteToConsole.RainbowText($"Было перезаписано '{counter}' строк", ConsoleColor.Green);
+                    }
+                }
+                else
+                {
+                    WriteToConsole.RainbowText($"В файле нет объекта соответствующего '{requiredData}'", ConsoleColor.Yellow);
+                }
+            }
+            else
+            {
+                WriteToConsole.RainbowText($"Index слишком большой максимальное значение {rows.Count()}", ConsoleColor.Red);
+            }
+        }
+        public void ClearRow(string requiredData, int indexColumn, int numberOfIterations = 1)
+        {
+            string data = File.ReadAllText(fullPath);
+            List<string> rows = data.Split("\n").ToList();
+            bool searchWasSuccessful = false;
+            int counter = 0;
+            if (rows.Count() > indexColumn)
+            {
+                for (int i = 1; i < rows.Count(); ++i)
+                {
+                    string[] partsText = rows[i].Split(ConstProgram.SeparRows);
+                    if (partsText[indexColumn] == requiredData)
+                    {
+                        searchWasSuccessful = true;
+                        ++counter;
+                        rows.RemoveAt(i);
+                        if (counter >= numberOfIterations)
+                        {
+                            break;
+                        }
+                    }
+                }
+                if (searchWasSuccessful)
+                {
+                    RecordingData(rows.ToArray());
+                    if (counter == 1)
+                    {
+                        WriteToConsole.RainbowText($"Строка была успешно удалена", ConsoleColor.Green);
+                    }
+                    else
+                    {
+                        WriteToConsole.RainbowText($"Было удалено {counter} строк", ConsoleColor.Green);
+                    }
+                }
+                else
+                {
+                    WriteToConsole.RainbowText($"В файле нет объекта соответствующего '{requiredData}'", ConsoleColor.Yellow);
+                }
+            }
+            else
+            {
+                WriteToConsole.RainbowText($"Index слишком большой максимальное значение {rows.Count()}", ConsoleColor.Red);
             }
         }
     }

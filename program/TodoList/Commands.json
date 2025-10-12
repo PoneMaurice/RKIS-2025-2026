@@ -120,6 +120,16 @@
                     "Name": "console",
                     "Long": "--console",
                     "Short": "-C"
+                },
+                {
+                    "Name": "all",
+                    "Long": "--all",
+                    "Short": "-a"
+                },
+                {
+                    "Name": "numbering",
+                    "Long": "--numbering",
+                    "Short": "-n"
                 }
             ]
         },

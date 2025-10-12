@@ -33,7 +33,7 @@ namespace Task
         }
         public static void AddConfUserData(string fileName = "")
         {
-            if (fileName == "")
+            if (fileName == ConstProgram.StringNull)
             {
                 fileName = Input.String("Введите название для файла с данными: ");
             }
@@ -62,7 +62,11 @@ namespace Task
                     if (intermediateResultString == "exit" &&
                     titleRow.GetLengthRow() != 0) break;
                     else if (intermediateResultString == "exit")
-                        Console.WriteLine("В титульном оформлении должен быть хотя бы один пункт: ");
+                        WriteToConsole.RainbowText("В титульном оформлении должен быть хотя бы один пункт: ", ConsoleColor.Red);
+                    else if (titleRow.Row.ToString().Split(ConstProgram.SeparRows).Contains(intermediateResultString))
+                    {
+                        WriteToConsole.RainbowText("Объекты титульного оформления не должны повторятся", ConsoleColor.Red);
+                    }
                     else titleRow.AddInRow(intermediateResultString);
                 }
 
@@ -124,7 +128,7 @@ namespace Task
             }
             else Console.WriteLine($"Сначала создайте конфигурацию или проверьте правильность написания названия => '{nameData}'");
         }
-        public static string GetRowOnTitleAndConfig(string[] titleRowArray, string[] dataTypeRowArray, string nameData = ConstProgram.TaskName)
+        public static string GetRowOnTitleAndConfig(string[] titleRowArray, string[] dataTypeRowArray, string nameData)
         {
             FormatterRows row = new(nameData);
             for (int i = 0; i < titleRowArray.Length; i++)
@@ -184,20 +188,36 @@ namespace Task
             }
             else System.Console.WriteLine("Буде внимательны");
         }
-        public void ClearPartTask(string text) // недописанн обязательно исправить
+        public static void ClearRow(string fileName, string requiredData = ConstProgram.StringNull)
         {
-            string fileName = ConstProgram.TaskName;
-            OpenFile file = new(fileName);
-
-            string[] titleRowArray = file.GetLineFilePositionRow(0).Split(ConstProgram.SeparRows);
-            Dictionary<int, bool> tableClear = new Dictionary<int, bool>();
-
-            System.Console.WriteLine($"Выберете в каком столбце искать {text} (y/N): ");
-            for (int i = 0; i < titleRowArray.Length; ++i)
+            if (fileName == ConstProgram.StringNull)
             {
-                if (Input.String($"{titleRowArray[i]}: ") == ConstProgram.Yes)
-                    tableClear.Add(i, true);
-                else tableClear.Add(i, false);
+                fileName = Input.String("Введите название файла: ");
+            }
+            if (requiredData == ConstProgram.StringNull)
+            {
+                requiredData = Input.String("Поиск: ");
+            }
+
+            OpenFile file = new(fileName);
+            if (File.Exists(file.fullPath))
+            {
+                string[] partsTitleRow = file.GetLineFilePositionRow(0).Split(ConstProgram.SeparRows);
+                Console.WriteLine("Выберите в каком столбце проводить поиски");
+                for (int i = 0; i < partsTitleRow.Length; ++i)
+                {
+                    Console.Write($"{partsTitleRow[i]} [ {i} ]");
+                    if (i != partsTitleRow.Length - 1)
+                    {
+                        Console.Write(", ");
+                    }
+                    else
+                    {
+                        Console.Write(":\n");
+                    }
+                }
+                int indexColumn = Input.IntegerWithMinMax("Ответ: ", 0, partsTitleRow.Length - 1);
+                file.ClearRow(requiredData, indexColumn);
             }
         }
         public static void SearchPartData(string fileName = ConstProgram.StringNull, string text = ConstProgram.StringNull)
@@ -266,8 +286,8 @@ namespace Task
             /*спрашивает и выводит текст субтитров созданный 
             методом CompText*/
             System.Console.WriteLine("За работу ответственны:");
-            System.Console.WriteLine("\tШевченко Э. - README, исходный код, некоторые аспекты git;");
-            System.Console.WriteLine("\tТитов М. - github, .gitignore, некоторый части исходного кода;");
+            System.Console.WriteLine("\tШевченко Э. - README, исходный код;");
+            System.Console.WriteLine("\tТитов М. - github, некоторый аспекты исходного кода, help команды;");
         }
         public static void ProfileHelp()
         {
