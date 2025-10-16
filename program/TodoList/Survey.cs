@@ -8,10 +8,14 @@ namespace Task
 {
     public class Survey
     {
+        public SearchCommandOnJson? commandLineGlobal;
+        
         public void GlobalCommand(string Text)
         {
             string ask = Input.String(Text);
             SearchCommandOnJson commandLine = new(ask.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+            commandLineGlobal = commandLine;
+            
             switch (commandLine.commandOut)
             {
                 case "add":

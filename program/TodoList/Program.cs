@@ -7,8 +7,8 @@ namespace Task
         public static void Main()
         {
             int cycle = 0;
-            Survey survey = new();
             Console.Clear();
+            Survey survey = new();
             do
             {
                 if (cycle == 0)

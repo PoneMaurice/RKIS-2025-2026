@@ -11,7 +11,7 @@ namespace Task
         public OpenFile(string fileName)
         {
             nameFile = fileName;
-            fullPath = CreatePath() + ".csv";
+            fullPath = CreatePath();
         }
         public string CreatePath() // Function for creating file path - PoneMaurice
         {
@@ -30,12 +30,12 @@ namespace Task
                 fullPath = Path.Join(homePath, winDataPath); // Если платформа Win32NT, то мы соединяем homePath и winDataPath
             DirectoryInfo? directory = new DirectoryInfo(fullPath); // Инициализируем объект класса для создания директории
             if (!directory.Exists) Directory.CreateDirectory(fullPath); // Если директория не существует, то мы её создаём по пути fullPath
-            fullPath = Path.Join(fullPath, nameFile);
+            fullPath = Path.Join(fullPath, nameFile + ".csv");
             return fullPath;
         }
         public string CreatePathToConfig()
         {
-            return CreatePath() + ConstProgram.PrefConfigFile + ".csv";
+            return CreatePath()[0..^4] + ".csv";
         }
         public static string GetPathToZhopa()
         {
@@ -217,9 +217,12 @@ namespace Task
             OpenFile file = new(nameFile);
             string titleRow = rows[0];
             file.WriteFile(titleRow, false);
-            foreach (string row in rows[1..])
+            for (int i = 1; i < rows.Count(); ++i)
             {
-                file.WriteFile(row);
+                if (rows[i] != "" || rows[i] != ConstProgram.StringNull)
+                {
+                    file.WriteFile(rows[i]);
+                }
             }
         }
         public void EditingRow(string requiredData, string modifiedData, int indexColumn, int numberOfIterations = 1) // не тестилась
@@ -293,15 +296,7 @@ namespace Task
                 }
                 if (searchWasSuccessful)
                 {
-                    List<string> newRows  = new();
-                    for (int i = 0; i < rows.Count(); ++i)
-                    {
-                        if (rows[i] != "" || rows[i] != ConstProgram.StringNull)
-                        {
-                            newRows.Add(rows[i]);
-                        }
-                    }
-                    RecordingData(newRows.ToArray());
+                    RecordingData(rows.ToArray());
                     if (counter == 1)
                     {
                         WriteToConsole.RainbowText($"Строка была успешно удалена", ConsoleColor.Green);

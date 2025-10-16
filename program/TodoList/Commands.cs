@@ -138,11 +138,11 @@ namespace Task
             }
             else System.Console.WriteLine("Буде внимательны");
         }
-        public static int WriteColumn(OpenFile file)
+        public static int WriteColumn(OpenFile file, int start = 0)
         {
             string[] partsTitleRow = file.GetLineFilePositionRow(0).Split(ConstProgram.SeparRows);
             Console.WriteLine("Выберите в каком столбце проводить поиски");
-            for (int i = 0; i < partsTitleRow.Length; ++i)
+            for (int i = start; i < partsTitleRow.Length; ++i)
             {
                 Console.Write($"{partsTitleRow[i]} [ {i} ]");
                 if (i != partsTitleRow.Length - 1)
@@ -154,7 +154,7 @@ namespace Task
                     Console.Write(":\n");
                 }
             }
-            return Input.IntegerWithMinMax("Ответ: ", 0, partsTitleRow.Length - 1);
+            return Input.IntegerWithMinMax("Ответ: ", start, partsTitleRow.Length - 1);
         }
         public static void ClearRow(string fileName, string requiredData = ConstProgram.StringNull)
         {
@@ -177,7 +177,7 @@ namespace Task
             {
                 Input.IfNull("Поиск: ", ref requiredData);
                 string modifiedData = Input.String($"Введите на что {requiredData} поменять: ");
-                file.EditingRow(requiredData, modifiedData, WriteColumn(file));
+                file.EditingRow(requiredData, modifiedData, WriteColumn(file, 1)); // 1 означает что мы пропускаем из вывода numbering
             }
             else { WriteToConsole.RainbowText("Такого файла не существует: ", ConsoleColor.Yellow); }
         }
@@ -190,21 +190,7 @@ namespace Task
             if (File.Exists(file.fullPath))
             {
                 Input.IfNull("Поиск: ", ref text);
-
-                string[] titleRowArray = file.GetLineFilePositionRow(0).Split(ConstProgram.SeparRows);
-                int[] tableClear = new int[titleRowArray.Length];
-                Array.Fill(tableClear, -1);
-                System.Console.WriteLine($"Выберете в каком столбце искать {text} (y/N): ");
-                for (int i = 0; i < titleRowArray.Length; ++i)
-                {
-                    if (Input.String($"{titleRowArray[i]}: ") == ConstProgram.Yes)
-                        tableClear[i] = i;
-                }
-                foreach (int i in tableClear)
-                {
-                    if (i != -1)
-                        Console.WriteLine(file.GetLineFileDataOnPositionInRow(text, i));
-                }
+                Console.WriteLine(file.GetLineFileDataOnPositionInRow(text, WriteColumn(file)));
             }
             else WriteToConsole.RainbowText(fileName + ": такого файла не существует.", ConsoleColor.Red);
         }

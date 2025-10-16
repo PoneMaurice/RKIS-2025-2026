@@ -21,7 +21,7 @@ namespace Task
         public string? Short { get; set; } = null;
     }
 
-    class SearchCommandOnJson
+    public class SearchCommandOnJson
     {
         static CommandsJson? openJsonFile = JsonSerializer.Deserialize<CommandsJson?>
         (OpenFile.StringFromFileInMainFolder("Commands.json"));
