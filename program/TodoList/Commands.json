@@ -134,6 +134,21 @@
             ]
         },
         {
+            "Name": "edit",
+            "Options": [
+                {
+                    "Name": "help",
+                    "Long": "--help",
+                    "Short": "-h"
+                },
+                {
+                    "Name": "task",
+                    "Long": "--task",
+                    "Short": "-t"
+                }
+            ]
+        },
+        {
             "Name": "help"
         },
         {

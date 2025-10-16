@@ -139,7 +139,7 @@ namespace Task
                 // System.Console.WriteLine("text: " + nextTextOut); //test
             }
         }
-        public bool SearchOption(string[] options)
+        public bool SearchOption(params string[] options)
         {
             if (optionsOut != ConstProgram.StringArrayNull &&
             optionsOut != null)

@@ -33,22 +33,19 @@ namespace Task
         }
         public static void AddConfUserData(string fileName = "")
         {
-            if (fileName == ConstProgram.StringNull)
-            {
-                fileName = Input.String("Введите название для файла с данными: ");
-            }
+            Input.IfNull("Введите название для файла с данными: ", ref fileName);
+
             fileName = fileName + ConstProgram.PrefConfigFile;
             OpenFile file = new(fileName);
 
-            string fullPathConfig = file.CreatePath(fileName);
+            string fullPathConfig = file.CreatePath();
             string? askFile = null;
             string searchLine1 = ConstProgram.StringNull;
             string searchLine2 = ConstProgram.StringNull;
             if (File.Exists(fullPathConfig))
             {
-                searchLine1 = file.GetLineFilePositionRow(0);
-                searchLine2 = file.GetLineFilePositionRow(1);
-                Console.WriteLine($"{searchLine1}\n{searchLine2}");
+                file.GetConfigFile(out string[] rowsConfig);
+                Console.WriteLine($"{rowsConfig[0]}\n{rowsConfig[1]}");
                 askFile = Input.String($"Вы точно уверены, что хотите перезаписать конфигурацию?(y/N): ");
             }
             if (askFile == ConstProgram.Yes || askFile == null)
@@ -101,16 +98,14 @@ namespace Task
                 System.Console.WriteLine($"{searchLine1}\n{searchLine2}");
             }
         }
-        public static void AddUserData(string nameData = "")
+        public static void AddUserData(string fileName = "")
         {
-            if (nameData == "")
-            {
-                nameData = Input.String("Введите название для файла с данными: ");
-            }
-            OpenFile fileConf = new(nameData + ConstProgram.PrefConfigFile);
-            OpenFile file = new(nameData);
+            Input.IfNull("Введите название для файла с данными: ", ref fileName);
 
-            string fullPathConfig = fileConf.CreatePath(nameData + ConstProgram.PrefConfigFile);
+            OpenFile fileConf = new(fileName + ConstProgram.PrefConfigFile);
+            OpenFile file = new(fileName);
+
+            string fullPathConfig = fileConf.CreatePathToConfig();
             if (File.Exists(fullPathConfig))
             {
                 string titleRow = fileConf.GetLineFilePositionRow(0);
@@ -118,7 +113,7 @@ namespace Task
                 string[] titleRowArray = titleRow.Split(ConstProgram.SeparRows);
                 string[] dataTypeRowArray = dataTypeRow.Split(ConstProgram.SeparRows);
 
-                string row = GetRowOnTitleAndConfig(titleRowArray, dataTypeRowArray, nameData);
+                string row = Input.RowOnTitleAndConfig(titleRowArray, dataTypeRowArray, fileName);
 
                 file.TitleRowWriter(titleRow);
                 string testTitleRow = file.GetLineFilePositionRow(0);
@@ -126,59 +121,14 @@ namespace Task
                     file.WriteFile(titleRow, false);
                 file.WriteFile(row);
             }
-            else Console.WriteLine($"Сначала создайте конфигурацию или проверьте правильность написания названия => '{nameData}'");
+            else Console.WriteLine($"Сначала создайте конфигурацию или проверьте правильность написания названия => '{fileName}'");
         }
-        public static string GetRowOnTitleAndConfig(string[] titleRowArray, string[] dataTypeRowArray, string nameData)
-        {
-            FormatterRows row = new(nameData);
-            for (int i = 0; i < titleRowArray.Length; i++)
-            {
-                switch (dataTypeRowArray[i])
-                {
-                    case "s":
-                        row.AddInRow(Input.String($"введите {titleRowArray[i]}: "));
-                        break;
-                    case "i":
-                        row.AddInRow(Input.Integer($"введите {titleRowArray[i]}: ").ToString());
-                        break;
-                    case "pos_i":
-                        row.AddInRow(Input.PositiveInteger($"введите {titleRowArray[i]}: ").ToString());
-                        break;
-                    case "f":
-                        row.AddInRow(Input.Float($"введите {titleRowArray[i]}: ").ToString());
-                        break;
-                    case "pos_f":
-                        row.AddInRow(Input.PositiveFloat($"введите {titleRowArray[i]}: ").ToString());
-                        break;
-                    case "d":
-                        Console.WriteLine($"---ввод {titleRowArray[i]}---");
-                        row.AddInRow(Input.Date());
-                        break;
-                    case "t":
-                        Console.WriteLine($"---ввод {titleRowArray[i]}---");
-                        row.AddInRow(Input.Time());
-                        break;
-                    case "dt":
-                        Console.WriteLine($"---ввод {titleRowArray[i]}---");
-                        row.AddInRow(Input.DateAndTime());
-                        break;
-                    case "ndt":
-                        row.AddInRow(Input.NowDateTime());
-                        break;
-                    
-                    
-                }
-            }
-            return row.Row.ToString();
-        }
+
         public static void ClearAllFile(string fileName = ConstProgram.StringNull)
         {
-            if (Input.String("Вы уверены что хотите очистить весь файл task? (y/N): ") == ConstProgram.Yes)
+            Input.IfNull("Введите название файла: ", ref fileName);
+            if (Input.String($"Вы уверены что хотите очистить весь файл {fileName}? (y/N): ") == ConstProgram.Yes)
             {
-                if (fileName == ConstProgram.StringNull)
-                {
-                    fileName = Input.String("Введите название файла: ");
-                }
                 OpenFile file = new(fileName);
                 if (File.Exists(file.fullPath))
                 {
@@ -188,53 +138,59 @@ namespace Task
             }
             else System.Console.WriteLine("Буде внимательны");
         }
+        public static int WriteColumn(OpenFile file)
+        {
+            string[] partsTitleRow = file.GetLineFilePositionRow(0).Split(ConstProgram.SeparRows);
+            Console.WriteLine("Выберите в каком столбце проводить поиски");
+            for (int i = 0; i < partsTitleRow.Length; ++i)
+            {
+                Console.Write($"{partsTitleRow[i]} [ {i} ]");
+                if (i != partsTitleRow.Length - 1)
+                {
+                    Console.Write(", ");
+                }
+                else
+                {
+                    Console.Write(":\n");
+                }
+            }
+            return Input.IntegerWithMinMax("Ответ: ", 0, partsTitleRow.Length - 1);
+        }
         public static void ClearRow(string fileName, string requiredData = ConstProgram.StringNull)
         {
-            if (fileName == ConstProgram.StringNull)
-            {
-                fileName = Input.String("Введите название файла: ");
-            }
-            if (requiredData == ConstProgram.StringNull)
-            {
-                requiredData = Input.String("Поиск: ");
-            }
+            Input.IfNull("Введите название файла: ", ref fileName);
 
             OpenFile file = new(fileName);
             if (File.Exists(file.fullPath))
             {
-                string[] partsTitleRow = file.GetLineFilePositionRow(0).Split(ConstProgram.SeparRows);
-                Console.WriteLine("Выберите в каком столбце проводить поиски");
-                for (int i = 0; i < partsTitleRow.Length; ++i)
-                {
-                    Console.Write($"{partsTitleRow[i]} [ {i} ]");
-                    if (i != partsTitleRow.Length - 1)
-                    {
-                        Console.Write(", ");
-                    }
-                    else
-                    {
-                        Console.Write(":\n");
-                    }
-                }
-                int indexColumn = Input.IntegerWithMinMax("Ответ: ", 0, partsTitleRow.Length - 1);
-                file.ClearRow(requiredData, indexColumn);
+                Input.IfNull("Поиск: ", ref requiredData);
+                file.ClearRow(requiredData, WriteColumn(file));
             }
+            else { WriteToConsole.RainbowText("Такого файла не существует: ", ConsoleColor.Yellow);  }
+        }
+        public static void EditRow(string fileName, string requiredData = ConstProgram.StringNull)
+        {
+            Input.IfNull("Введите название файла: ", ref fileName);
+
+            OpenFile file = new(fileName);
+            if (File.Exists(file.fullPath))
+            {
+                Input.IfNull("Поиск: ", ref requiredData);
+                string modifiedData = Input.String($"Введите на что {requiredData} поменять: ");
+                file.EditingRow(requiredData, modifiedData, WriteColumn(file));
+            }
+            else { WriteToConsole.RainbowText("Такого файла не существует: ", ConsoleColor.Yellow); }
         }
         public static void SearchPartData(string fileName = ConstProgram.StringNull, string text = ConstProgram.StringNull)
         {
-            if (fileName == ConstProgram.StringNull)
-                {
-                fileName = Input.String("Ведите название файла: ");
-                }
-            if (text == ConstProgram.StringNull)
-                {
-                text = Input.String("Поиск: ");
-                }
+            Input.IfNull("Ведите название файла: ", ref fileName);
 
             OpenFile file = new(fileName);
-            
+
             if (File.Exists(file.fullPath))
             {
+                Input.IfNull("Поиск: ", ref text);
+
                 string[] titleRowArray = file.GetLineFilePositionRow(0).Split(ConstProgram.SeparRows);
                 int[] tableClear = new int[titleRowArray.Length];
                 Array.Fill(tableClear, -1);
@@ -254,10 +210,7 @@ namespace Task
         }
         public static void PrintData(string fileName = ConstProgram.StringNull)
         {
-            if (fileName == ConstProgram.StringNull)
-            {
-                fileName = Input.String("Ведите название файла: ");
-            }
+            Input.IfNull("Ведите название файла: ", ref fileName);
 
             OpenFile file = new(fileName);
 

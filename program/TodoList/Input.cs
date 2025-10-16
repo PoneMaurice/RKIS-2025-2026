@@ -236,12 +236,62 @@ namespace Task
             return nowDate.ToShortDateString() +
                 " " + nowDate.ToShortTimeString();
         }
+        public static void IfNull(string writeText, ref string text)
+        {
+            if (text == "Null" || text == "" || text == ConstProgram.StringNull)
+            {
+                text = String(writeText);
+            }
+        }
+        public static string RowOnTitleAndConfig(string[] titleRowArray, string[] dataTypeRowArray, string nameData)
+        {
+            FormatterRows row = new(nameData);
+            for (int i = 0; i < titleRowArray.Length; i++)
+            {
+                switch (dataTypeRowArray[i])
+                {
+                    case "s":
+                        row.AddInRow(Input.String($"введите {titleRowArray[i]} (string): "));
+                        break;
+                    case "i":
+                        row.AddInRow(Input.Integer($"введите {titleRowArray[i]} (int): ").ToString());
+                        break;
+                    case "pos_i":
+                        row.AddInRow(Input.PositiveInteger($"введите {titleRowArray[i]} (pos. int): ").ToString());
+                        break;
+                    case "f":
+                        row.AddInRow(Input.Float($"введите {titleRowArray[i]} (float): ").ToString());
+                        break;
+                    case "pos_f":
+                        row.AddInRow(Input.PositiveFloat($"введите {titleRowArray[i]} (pos. float): ").ToString());
+                        break;
+                    case "d":
+                        Console.WriteLine($"---ввод {titleRowArray[i]}---");
+                        row.AddInRow(Input.Date());
+                        break;
+                    case "t":
+                        Console.WriteLine($"---ввод {titleRowArray[i]}---");
+                        row.AddInRow(Input.Time());
+                        break;
+                    case "dt":
+                        Console.WriteLine($"---ввод {titleRowArray[i]}---");
+                        row.AddInRow(Input.DateAndTime());
+                        break;
+                    case "ndt":
+                        row.AddInRow(Input.NowDateTime());
+                        break;
+                    
+                    
+                }
+            }
+            return row.Row.ToString();
+        }
     }
     public class WriteToConsole
     {
-        public static void RainbowText(string textError, ConsoleColor color)
+        public static void RainbowText(string textError, ConsoleColor colorText)
         {
-            Console.ForegroundColor = color;
+            Console.ForegroundColor = colorText;
             Console.WriteLine(textError);
             Console.ResetColor();
         }

@@ -17,23 +17,23 @@ namespace Task
                 case "add":
                     if (commandLine.optionsOut.Length > 0)
                     {
-                        if (commandLine.SearchOption(["help"]))
+                        if (commandLine.SearchOption("help"))
                         {
                             Commands.AddHelp();
                         }
-                        else if (commandLine.SearchOption(["task"]))
+                        else if (commandLine.SearchOption("task"))
                         {
                             Commands.AddTask();
                         }
-                        else if (commandLine.SearchOption(["task", "print"]))
+                        else if (commandLine.SearchOption("task", "print"))
                         {
                             Commands.AddTaskAndPrint();
                         }
-                        else if (commandLine.SearchOption(["config"]))
+                        else if (commandLine.SearchOption("config"))
                         {
                             Commands.AddConfUserData(commandLine.nextTextOut);
                         }
-                        else if (commandLine.SearchOption(["profile"]))
+                        else if (commandLine.SearchOption("profile"))
                         {
                             Commands.AddProfile();
                         }
@@ -45,11 +45,11 @@ namespace Task
                 case "profile":
                     if (commandLine.optionsOut.Length > 0)
                     {
-                        if (commandLine.SearchOption(["help"]))
+                        if (commandLine.SearchOption("help"))
                         {
                             Commands.ProfileHelp();
                         }
-                        else if (commandLine.SearchOption(["add"]))
+                        else if (commandLine.SearchOption("add"))
                         {
                             Commands.AddProfile();
                         }
@@ -60,23 +60,23 @@ namespace Task
                 case "print":
                     if (commandLine.optionsOut.Length > 0)
                     {
-                        if (commandLine.SearchOption(["help"]))
+                        if (commandLine.SearchOption("help"))
                         {
                             Commands.PrintHelp();
                         }
-                        else if (commandLine.SearchOption(["task"]))
+                        else if (commandLine.SearchOption("task"))
                         {
                             Commands.PrintData(ConstProgram.TaskName);
                         }
-                        else if (commandLine.SearchOption(["config"]))
+                        else if (commandLine.SearchOption("config"))
                         {
                             Commands.PrintData(commandLine.nextTextOut + ConstProgram.PrefConfigFile);
                         }
-                        else if (commandLine.SearchOption(["profile"]))
+                        else if (commandLine.SearchOption("profile"))
                         {
                             Commands.PrintData(ConstProgram.ProfileName);
                         }
-                        else if (commandLine.SearchOption(["captions"])){
+                        else if (commandLine.SearchOption("captions")){
                             Commands.WriteCaption();
                         } 
                         else { Commands.PrintData(commandLine.nextTextOut); }
@@ -87,19 +87,19 @@ namespace Task
                 case "search":
                     if (commandLine.optionsOut.Length > 0)
                     {
-                        if (commandLine.SearchOption(["help"]))
+                        if (commandLine.SearchOption("help"))
                         {
                             Commands.SearchHelp();
                         }
-                        else if (commandLine.SearchOption(["task"]))
+                        else if (commandLine.SearchOption("task"))
                         {
                             Commands.SearchPartData(ConstProgram.TaskName, commandLine.nextTextOut);
                         }
-                        else if (commandLine.SearchOption(["profile"]))
+                        else if (commandLine.SearchOption("profile"))
                         {
                             Commands.SearchPartData(ConstProgram.ProfileName, commandLine.nextTextOut);
                         }
-                        else if (commandLine.SearchOption(["numbering"]))
+                        else if (commandLine.SearchOption("numbering"))
                         {
                             WriteToConsole.RainbowText("Эта функция ещё в разработке", ConsoleColor.Magenta); ///////////////////////////////////////////////////////////
                         }
@@ -111,32 +111,32 @@ namespace Task
                 case "clear":
                     if (commandLine.optionsOut.Length > 0)
                     {
-                        if (commandLine.SearchOption(["help"]))
+                        if (commandLine.SearchOption("help"))
                         {
                             WriteToConsole.RainbowText("Эта функция ещё в разработке", ConsoleColor.Magenta); ///////////////////////////////////////////////////////////
                         }
-                        else if (commandLine.SearchOption(["task"]))
+                        else if (commandLine.SearchOption("task"))
                         {
                             Commands.ClearRow(ConstProgram.TaskName, commandLine.nextTextOut);
                         }
-                        else if (commandLine.SearchOption(["task", "all"]))
+                        else if (commandLine.SearchOption("task", "all"))
                         {
                             Commands.ClearAllFile(ConstProgram.TaskName);
                         }
-                        else if (commandLine.SearchOption(["profile"]))
+                        else if (commandLine.SearchOption("profile"))
                         {
                             Commands.ClearRow(ConstProgram.ProfileName, commandLine.nextTextOut);
                         }
-                        else if (commandLine.SearchOption(["profile", "all"]))
+                        else if (commandLine.SearchOption("profile", "all"))
                         {
                             Commands.ClearAllFile(ConstProgram.ProfileName);
                         }
-                        else if (commandLine.SearchOption(["console"]))
+                        else if (commandLine.SearchOption("console"))
                         {
                             WriteToConsole.RainbowText("CCCCCCClear", ConsoleColor.Magenta);
                             Console.Clear();
                         }
-                        else if (commandLine.SearchOption(["all"]))
+                        else if (commandLine.SearchOption("all"))
                         {
                             Commands.ClearAllFile(commandLine.nextTextOut);
                         }
@@ -145,6 +145,22 @@ namespace Task
                     else { Commands.ClearRow(commandLine.nextTextOut); }
                     break;
 
+                case "edit":
+                    if (commandLine.optionsOut.Length > 0)
+                    {
+                        if (commandLine.SearchOption("help"))
+                        {
+                            WriteToConsole.RainbowText("Эта функция ещё в разработке", ConsoleColor.Magenta); ///////////////////////////////////////////////////////////
+                        }
+                        else if (commandLine.SearchOption("task"))
+                        {
+                            Commands.EditRow(ConstProgram.TaskName);
+                        }
+                        else { Commands.EditRow(commandLine.nextTextOut); }
+                    }
+                    else { Commands.EditRow(commandLine.nextTextOut); }
+                    break;
+                
                 case "help":
                     Commands.Help();
                     break;

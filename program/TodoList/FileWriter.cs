@@ -1,4 +1,5 @@
 // This file contains everything related to generating and reading paths, files - PoneMaurice
+using System.Dynamic;
 using System.Formats.Asn1;
 using System.Text;
 namespace Task
@@ -10,9 +11,9 @@ namespace Task
         public OpenFile(string fileName)
         {
             nameFile = fileName;
-            fullPath = CreatePath(nameFile);
+            fullPath = CreatePath() + ".csv";
         }
-        public string CreatePath(string nameFile) // Function for creating file path - PoneMaurice
+        public string CreatePath() // Function for creating file path - PoneMaurice
         {
             /*Создание актульного пути под каждый нужный файл находящийся в деректории с конфигами*/
             string dataPath = "/.config/RKIS-TodoList/"; // Расположение файла для UNIX и MacOSX
@@ -29,8 +30,12 @@ namespace Task
                 fullPath = Path.Join(homePath, winDataPath); // Если платформа Win32NT, то мы соединяем homePath и winDataPath
             DirectoryInfo? directory = new DirectoryInfo(fullPath); // Инициализируем объект класса для создания директории
             if (!directory.Exists) Directory.CreateDirectory(fullPath); // Если директория не существует, то мы её создаём по пути fullPath
-            fullPath = Path.Join(fullPath, $"{nameFile}.csv");
+            fullPath = Path.Join(fullPath, nameFile);
             return fullPath;
+        }
+        public string CreatePathToConfig()
+        {
+            return CreatePath() + ConstProgram.PrefConfigFile + ".csv";
         }
         public static string GetPathToZhopa()
         {
@@ -60,7 +65,7 @@ namespace Task
         {
             /*Создаёт титульное оформление в файле 
             при условии что это новый файл*/
-            string fullPath = CreatePath(nameFile);
+            string fullPath = CreatePath();
             if (!File.Exists(fullPath))
                 using (var fs = new FileStream(fullPath, FileMode.CreateNew,
                 FileAccess.Write, FileShare.Read))
@@ -196,7 +201,7 @@ namespace Task
             {
                 OpenFile file = new(nameFile);
                 FormatterRows titleRow = new(nameFile, FormatterRows.Type.title);
-                string row = Commands.GetRowOnTitleAndConfig(titleRowArray, dataTypeRowArray, ConstProgram.TaskName);
+                string row = Input.RowOnTitleAndConfig(titleRowArray, dataTypeRowArray, ConstProgram.TaskName);
                 titleRow.AddInRow(titleRowArray);
                 file.TitleRowWriter(titleRow.Row.ToString());
                 file.WriteFile(row);
@@ -288,7 +293,15 @@ namespace Task
                 }
                 if (searchWasSuccessful)
                 {
-                    RecordingData(rows.ToArray());
+                    List<string> newRows  = new();
+                    for (int i = 0; i < rows.Count(); ++i)
+                    {
+                        if (rows[i] != "" || rows[i] != ConstProgram.StringNull)
+                        {
+                            newRows.Add(rows[i]);
+                        }
+                    }
+                    RecordingData(newRows.ToArray());
                     if (counter == 1)
                     {
                         WriteToConsole.RainbowText($"Строка была успешно удалена", ConsoleColor.Green);
@@ -307,6 +320,15 @@ namespace Task
             {
                 WriteToConsole.RainbowText($"Index слишком большой максимальное значение {rows.Count()}", ConsoleColor.Red);
             }
+        }
+        public void GetConfigFile(out string[] configFile)
+        {
+            string pathToConfig = CreatePathToConfig();
+            if (File.Exists(pathToConfig))
+            {
+                configFile = File.ReadAllText(pathToConfig).Split("\n");
+            }
+            else configFile = ConstProgram.StringArrayNull;
         }
     }
 }
