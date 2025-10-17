@@ -158,11 +158,19 @@ namespace Task
                         }
                         else if (commandLine.SearchOption("task"))
                         {
-                            Commands.EditRow(ConstProgram.TaskName);
+                            Commands.EditRow(ConstProgram.TaskName, commandLine.nextTextOut);
                         }
                         else if (commandLine.SearchOption("task", "index"))
                         {
                             Commands.FixingIndexing(ConstProgram.TaskName);
+                        }
+                        else if (commandLine.SearchOption("task", "bool"))
+                        {
+                            Commands.EditBoolRow(ConstProgram.TaskName, commandLine.nextTextOut);
+                        }
+                        else if (commandLine.SearchOption("bool"))
+                        {
+                            Commands.EditBoolRow(commandLine.nextTextOut);
                         }
                         else if (commandLine.SearchOption("index"))
                         {

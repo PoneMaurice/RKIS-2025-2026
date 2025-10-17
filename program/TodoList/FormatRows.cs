@@ -25,11 +25,11 @@ namespace Task
             switch (type)
             {
                 case TypeEnum.row:
-                    return Num.ToString() + ConstProgram.SeparRows;
+                    return Num.ToString() + ConstProgram.SeparRows + ConstProgram.RowBoolDefault + ConstProgram.SeparRows;
                 case TypeEnum.title:
-                    return ConstProgram.TitleFirstObject + ConstProgram.SeparRows;
+                    return ConstProgram.TitleNumbingObject + ConstProgram.SeparRows + ConstProgram.TitleBoolObject + ConstProgram.SeparRows;
                 case TypeEnum.dataType:
-                    return ConstProgram.DataTypeFirstObject + ConstProgram.SeparRows;
+                    return ConstProgram.DataTypeNumbingObject + ConstProgram.SeparRows + ConstProgram.DataTypeBoolObject + ConstProgram.SeparRows;
                 case TypeEnum.old:
                     return "";
             }
@@ -65,9 +65,13 @@ namespace Task
     public static class ConstProgram
     {
         public const string SeparRows = "|";
-        public const string TitleFirstObject = "numbering";
-        public const string DataTypeFirstObject = "counter";
+        public const string TitleNumbingObject = "numbering";
+        public const string DataTypeNumbingObject = "counter";
+        public const string TitleBoolObject = "Bool";
+        public const string DataTypeBoolObject = "bool";
+        public const string RowBoolDefault = "False";
         public const string PrefConfigFile = "_conf";
+        public const string PrefTemporaryFile = "_temp";
         public readonly static string[] StringArrayNull = new string[0];
         public const string TaskName = "Tasks";
         public const string ProfileName = "Profiles";

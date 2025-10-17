@@ -72,7 +72,7 @@ namespace Task
 
                 foreach (string title in titleRowArray)
                 {
-                    if (title == ConstProgram.TitleFirstObject) continue;
+                    if (title == ConstProgram.TitleNumbingObject) continue;
                     else dataTypeRow.AddInRow(Input.DataType($"Введите тип данных для строки {title}: "));
                 }
 
@@ -178,7 +178,20 @@ namespace Task
             {
                 Input.IfNull("Поиск: ", ref requiredData);
                 string modifiedData = Input.String($"Введите на что {requiredData} поменять: ");
-                file.EditingRow(requiredData, modifiedData, WriteColumn(file, 1)); // 1 означает что мы пропускаем из вывода numbering
+                file.EditingRow(requiredData, modifiedData, WriteColumn(file, 2)); // 2 означает что мы пропускаем из вывода numbering и Bool
+            }
+            else { WriteToConsole.RainbowText("Такого файла не существует: ", ConsoleColor.Yellow); }
+        }
+        public static void EditBoolRow(string fileName, string requiredData = "")
+        {
+            Input.IfNull("Введите название файла: ", ref fileName);
+
+            OpenFile file = new(fileName);
+            if (File.Exists(file.fullPath))
+            {
+                Input.IfNull("Поиск: ", ref requiredData);
+                string modifiedData = Input.Bool($"Введите на что {requiredData} поменять(true/false): ").ToString();
+                file.EditingRow(requiredData, modifiedData, WriteColumn(file), indexColumnWrite:1); // 1 в indexColumnWrite это bool строка таска
             }
             else { WriteToConsole.RainbowText("Такого файла не существует: ", ConsoleColor.Yellow); }
         }

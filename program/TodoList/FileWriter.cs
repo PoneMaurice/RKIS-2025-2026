@@ -202,22 +202,33 @@ namespace Task
             {
                 try
                 {
+                    OpenFile tempFile = new(nameFile + ConstProgram.PrefTemporaryFile);
                     using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
                     {
                         string? line;
                         int numLine = 1;
                         string titleRow = reader.ReadLine() ?? "";
-                        WriteFile(titleRow, false);
+                        tempFile.WriteFile(titleRow, false);
                         while ((line = reader.ReadLine()) != null)
                         {
                             List<string> partLine = line.Split(ConstProgram.SeparRows).ToList();
                             partLine[0] = numLine.ToString();
                             FormatterRows newLine = new FormatterRows(nameFile, FormatterRows.TypeEnum.old);
                             newLine.AddInRow(partLine.ToArray());
-                            WriteFile(newLine.Row.ToString());
+                            tempFile.WriteFile(newLine.Row.ToString());
                             ++numLine;
                         }
                     }
+                    using (StreamReader reader = new StreamReader(tempFile.fullPath, Encoding.UTF8))
+                    {
+                        string? line;
+                        WriteFile(reader.ReadLine() ?? "", false);
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            WriteFile(line);
+                        }
+                    }
+                    File.Delete(tempFile.fullPath);
                 }
                 catch (Exception)
                 {
@@ -256,39 +267,52 @@ namespace Task
                 }
             }
         }
-        public void EditingRow(string requiredData, string modifiedData, int indexColumn, int numberOfIterations = 1)
+        public void EditingRow(string requiredData, string modifiedData, int indexColumn,
+        int numberOfIterations = 1, int indexColumnWrite = -1)
         {
+            if (indexColumnWrite == -1){ indexColumnWrite = indexColumn; }
             int counter = 0;
             if (File.Exists(fullPath))
             {
                 try
                 {
+                    OpenFile tempFile = new(nameFile + ConstProgram.PrefTemporaryFile);
                     using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
                     {
                         string? line;
                         string titleRow = reader.ReadLine() ?? "";
                         if (indexColumn < titleRow.Split(ConstProgram.SeparRows).Length)
                         {
-                            WriteFile(titleRow, false);
+                            tempFile.WriteFile(titleRow, false);
                             while ((line = reader.ReadLine()) != null)
                             {
                                 List<string> partLine = line.Split(ConstProgram.SeparRows).ToList();
 
                                 if (counter < numberOfIterations && partLine[indexColumn] == requiredData)
                                 {
-                                    partLine[indexColumn] = modifiedData;
+                                    partLine[indexColumnWrite] = modifiedData;
                                     FormatterRows newLine = new FormatterRows(nameFile, FormatterRows.TypeEnum.old);
                                     newLine.AddInRow(partLine.ToArray());
-                                    WriteFile(newLine.Row.ToString());
+                                    tempFile.WriteFile(newLine.Row.ToString());
                                     ++counter;
                                 }
-                                else { WriteFile(line); }
+                                else { tempFile.WriteFile(line); }
                             }
                             WriteToConsole.RainbowText($"Было перезаписано '{counter}' строк", ConsoleColor.Green);
                         }
                         else { WriteToConsole.RainbowText($"Index слишком большой максимальное значение.", ConsoleColor.Red); }
 
                     }
+                    using (StreamReader reader = new StreamReader(tempFile.fullPath, Encoding.UTF8))
+                    {
+                        string? line;
+                        WriteFile(reader.ReadLine() ?? "", false);
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            WriteFile(line);
+                        }
+                    }
+                    File.Delete(tempFile.fullPath);
                 }
                 catch (Exception)
                 {
@@ -304,13 +328,14 @@ namespace Task
             {
                 try
                 {
+                    OpenFile tempFile = new(nameFile + ConstProgram.PrefTemporaryFile);
                     using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
                     {
                         string? line;
                         string titleRow = reader.ReadLine() ?? "";
                         if (indexColumn < titleRow.Split(ConstProgram.SeparRows).Length)
                         {
-                            WriteFile(titleRow, false);
+                            tempFile.WriteFile(titleRow, false);
                             while ((line = reader.ReadLine()) != null)
                             {
                                 List<string> partLine = line.Split(ConstProgram.SeparRows).ToList();
@@ -319,14 +344,23 @@ namespace Task
                                 {
                                     ++counter;
                                 }
-                                else { WriteFile(line); }
+                                else { tempFile.WriteFile(line); }
                             }
                             ReIndexFile();
                             WriteToConsole.RainbowText($"Было перезаписано '{counter}' строк", ConsoleColor.Green);
                         }
                         else { WriteToConsole.RainbowText($"Index слишком большой максимальное значение.", ConsoleColor.Red); }
-
                     }
+                    using (StreamReader reader = new StreamReader(tempFile.fullPath, Encoding.UTF8))
+                    {
+                        string? line;
+                        WriteFile(reader.ReadLine() ?? "", false);
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            WriteFile(line);
+                        }
+                    }
+                    File.Delete(tempFile.fullPath);
                 }
                 catch (Exception)
                 {

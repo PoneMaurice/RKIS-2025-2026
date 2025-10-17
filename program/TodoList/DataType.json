@@ -62,6 +62,13 @@
                 "ndt",
                 "nowdatetime"
             ]
+        },
+        {
+            "Name": "b",
+            "SpellingOptions": [
+                "b",
+                "bool"
+            ]
         }
     ]
 }

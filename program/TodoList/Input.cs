@@ -280,7 +280,9 @@ namespace Task
                     case "ndt":
                         row.AddInRow(Input.NowDateTime());
                         break;
-
+                    case "b":
+                        row.AddInRow(Input.Bool($"введите {titleRowArray[i]} (string): ").ToString());
+                        break;
 
                 }
             }

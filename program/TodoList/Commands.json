@@ -150,6 +150,11 @@
                     "Name": "index",
                     "Long": "--index",
                     "Short": "-i"
+                },
+                {
+                    "Name": "bool",
+                    "Long": "--bool",
+                    "Short": "-b"
                 }
             ]
         },
