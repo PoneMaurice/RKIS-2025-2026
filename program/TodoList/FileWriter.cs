@@ -1,4 +1,5 @@
 // This file contains everything related to generating and reading paths, files - PoneMaurice
+using System.ComponentModel.DataAnnotations;
 using System.Dynamic;
 using System.Formats.Asn1;
 using System.Security;
@@ -96,22 +97,34 @@ namespace Task
                 WriteToConsole.RainbowText("В мире произошло что то плохое", ConsoleColor.Red);
             }
         }
-        public string GetLineFileDataOnPositionInRow(string dataFile, int positionInRow)
+        public string[] GetLineFileDataOnPositionInRow(string dataFile, int positionInRow, int count = 1)
         {
             /*Возвращает строку если ее элемент по заданной позиции 
             соответствует введенным нами данным*/
+            List<string> searchLine = new();
             try
             {
                 using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
                 {
                     string? line;
-                    while ((line = reader.ReadLine()) != null)
+                    int counter = 0;
+                    string[] titleRow = (reader.ReadLine() ?? "").Split(ConstProgram.SeparRows);
+                    
+                    if (titleRow.Length > positionInRow)
                     {
-                        string[] pathLine = line.Split(ConstProgram.SeparRows);
-                        if (pathLine.Length > positionInRow)
+                        while ((line = reader.ReadLine()) != null)
                         {
-                            if (pathLine[positionInRow] == dataFile)
-                                return line;
+                            string[] pathLine = line.Split(ConstProgram.SeparRows);
+
+                            if (counter < count && pathLine[positionInRow] == dataFile)
+                            {
+                                searchLine.Add(line);
+                                ++counter;
+                            }
+                            else if (counter == count)
+                            {
+                                break;
+                            }
                         }
                     }
                 }
@@ -121,7 +134,7 @@ namespace Task
                 WriteToConsole.RainbowText("Разраб отдыхает, прошу понять", ConsoleColor.Red);
                 WriteToConsole.RainbowText("^если что там ошибка чтения файла", ConsoleColor.Red);
             }
-            return "";
+            return searchLine.ToArray();
         }
         public string GetLineFilePositionRow(int positionRow)
         {
@@ -196,6 +209,7 @@ namespace Task
             }
             return numLine;
         }
+
         public string ReIndexFile(bool Message = false)
         {
             if (File.Exists(fullPath))
@@ -244,7 +258,7 @@ namespace Task
             {
                 OpenFile file = new(nameFile);
                 FormatterRows titleRow = new(nameFile, FormatterRows.TypeEnum.title);
-                string row = Input.RowOnTitleAndConfig(titleRowArray, dataTypeRowArray, ConstProgram.TaskName);
+                string row = Input.RowOnTitleAndConfig(titleRowArray, dataTypeRowArray, nameFile);
                 titleRow.AddInRow(titleRowArray);
                 file.TitleRowWriter(titleRow.Row.ToString());
                 file.WriteFile(row);
@@ -270,7 +284,12 @@ namespace Task
         public void EditingRow(string requiredData, string modifiedData, int indexColumn,
         int numberOfIterations = 1, int indexColumnWrite = -1)
         {
-            if (indexColumnWrite == -1){ indexColumnWrite = indexColumn; }
+            if (indexColumnWrite == -1) { indexColumnWrite = indexColumn; }
+            bool maxCounter = false;
+            if (numberOfIterations == -1)
+            {
+                maxCounter = true;
+            }
             int counter = 0;
             if (File.Exists(fullPath))
             {
@@ -287,8 +306,7 @@ namespace Task
                             while ((line = reader.ReadLine()) != null)
                             {
                                 List<string> partLine = line.Split(ConstProgram.SeparRows).ToList();
-
-                                if (counter < numberOfIterations && partLine[indexColumn] == requiredData)
+                                if ((counter < numberOfIterations || maxCounter) && partLine[indexColumn] == requiredData)
                                 {
                                     partLine[indexColumnWrite] = modifiedData;
                                     FormatterRows newLine = new FormatterRows(nameFile, FormatterRows.TypeEnum.old);

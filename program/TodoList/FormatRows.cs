@@ -44,7 +44,7 @@ namespace Task
 
         public void AddInRow(string pathRow)
         {
-            /*Форматирует массив данных под будущию таблицу csv*/
+            /*Форматирует массив данных под будущую таблицу csv*/
             if (Row.ToString().Length == 0) Row.Append(GetFirstObject() + pathRow);
             else Row.Append(ConstProgram.SeparRows + pathRow);
         }

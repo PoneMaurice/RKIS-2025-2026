@@ -9,13 +9,11 @@ namespace Task
     public class Survey
     {
         public SearchCommandOnJson? commandLineGlobal;
-        
         public void GlobalCommand(string Text)
         {
             string ask = Input.String(Text);
             SearchCommandOnJson commandLine = new(ask.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
             commandLineGlobal = commandLine;
-            
             switch (commandLine.commandOut)
             {
                 case "add":
@@ -57,8 +55,16 @@ namespace Task
                         {
                             Commands.AddProfile();
                         }
+                        else if (commandLine.SearchOption("change"))
+                        {
+                            Commands.UseActiveProfile();
+                        }
+                        else if (commandLine.SearchOption("index"))
+                        {
+                            Commands.FixingIndexing(ConstProgram.ProfileName);
+                        }
                     }
-                    else {WriteToConsole.RainbowText("Эта функция ещё в разработке", ConsoleColor.Magenta);} ///////////////////////////////////////////////////////////
+                    else {Console.WriteLine(Commands.SearchActiveProfile());}
                     break;
 
                 case "print":

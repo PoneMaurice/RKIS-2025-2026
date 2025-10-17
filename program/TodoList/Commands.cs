@@ -1,5 +1,6 @@
 // This is the main file, it contains cruical components of the program - PoneMaurice
 using System.Net;
+using System.Security.AccessControl;
 using System.Text;
 
 namespace Task
@@ -167,7 +168,7 @@ namespace Task
                 Input.IfNull("Поиск: ", ref requiredData);
                 file.ClearRow(requiredData, WriteColumn(file));
             }
-            else { WriteToConsole.RainbowText("Такого файла не существует: ", ConsoleColor.Yellow);  }
+            else { WriteToConsole.RainbowText("Такого файла не существует: ", ConsoleColor.Yellow); }
         }
         public static void EditRow(string fileName, string requiredData = "")
         {
@@ -248,6 +249,31 @@ namespace Task
                 profile.EditingRow(false.ToString(), true.ToString(), 1);
             }
         }
+        public static string SearchActiveProfile()
+        {
+            OpenFile profile = new(ConstProgram.ProfileName);
+            string[] activeProfile = profile.GetLineFileDataOnPositionInRow(true.ToString(), 1);
+            if (activeProfile.Length == 0 || activeProfile.Length > 1)
+            {
+                UseActiveProfile();
+            }
+            return profile.GetLineFileDataOnPositionInRow(true.ToString(), 1)[0];
+        }
+        public static void UseActiveProfile()
+        {
+            OpenFile profile = new(ConstProgram.ProfileName);
+
+            if (File.Exists(profile.fullPath))
+            {
+                profile.EditingRow(true.ToString(), false.ToString(), 1, -1);
+                string requiredData = "";
+                Input.IfNull("Поиск: ", ref requiredData);
+                string modifiedData = true.ToString();
+                profile.EditingRow(requiredData, modifiedData, WriteColumn(profile), indexColumnWrite:1); // 1 в indexColumnWrite это bool строка таска
+            }
+            else { AddFirstProfile(); }
+        }
+
         public static void FixingIndexing(string fileName)
         {
             Input.IfNull("Введите название файла: ", ref fileName);

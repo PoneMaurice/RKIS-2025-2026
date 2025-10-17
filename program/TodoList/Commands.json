@@ -42,6 +42,16 @@
                     "Name": "add",
                     "Long": "--add",
                     "Short": "-a"
+                },
+                {
+                    "Name": "change",
+                    "Long": "--change",
+                    "Short": "-c"
+                },
+                {
+                    "Name": "index",
+                    "Long": "--index",
+                    "Short": "-i"
                 }
             ]
         },
