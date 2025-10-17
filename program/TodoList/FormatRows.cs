@@ -77,8 +77,8 @@ namespace Task
         public const string ProfileName = "Profiles";
         public static readonly string[] TaskTitle = { "nameTask", "description", "nowDateAndTime", "deadLine" };
         public static readonly string[] TaskTypeData = { "s", "s", "ndt", "dt" };
-        public static readonly string[] ProfileTitle = { "name", "soreName", "DOB", "nowDateAndTime" };
-        public static readonly string[] ProfileDataType = { "s", "s", "d", "ndt" };
-
+        public static readonly string[] ProfileTitle = { "name", "DOB", "nowDateAndTime" };
+        public static readonly string[] ProfileDataType = { "s", "d", "ndt" };
+        public static readonly string[] AdminProfile = { "guest", "None", Input.NowDateTime()};
     }
 }

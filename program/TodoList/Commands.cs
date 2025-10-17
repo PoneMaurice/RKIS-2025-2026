@@ -234,6 +234,20 @@ namespace Task
         {
             OpenFile.AddRowInFile(ConstProgram.ProfileName, ConstProgram.ProfileTitle, ConstProgram.ProfileDataType);
         }
+        public static void AddFirstProfile()
+        {
+            OpenFile profile = new(ConstProgram.ProfileName);
+            FormatterRows titleRow = new(ConstProgram.ProfileName, FormatterRows.TypeEnum.title);
+            titleRow.AddInRow(ConstProgram.ProfileTitle);
+            profile.TitleRowWriter(titleRow.Row.ToString());
+            if (profile.GetLengthFile() == 1)
+            {
+                FormatterRows rowAdmin = new(ConstProgram.ProfileName);
+                rowAdmin.AddInRow(ConstProgram.AdminProfile);
+                profile.WriteFile(rowAdmin.Row.ToString());
+                profile.EditingRow(false.ToString(), true.ToString(), 1);
+            }
+        }
         public static void FixingIndexing(string fileName)
         {
             Input.IfNull("Введите название файла: ", ref fileName);

@@ -13,7 +13,7 @@ namespace Task
             {
                 if (cycle == 0)
                 {
-                    //Commands.PrintProfile();
+                    Commands.AddFirstProfile();
                 }
                 survey.GlobalCommand("-- ");
                 ++cycle;
