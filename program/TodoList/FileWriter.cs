@@ -198,27 +198,33 @@ namespace Task
         }
         public string ReIndexFile(bool Message = false)
         {
-            try
+            if (File.Exists(fullPath))
             {
-                using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
+                try
                 {
-                    string? line;
-                    int numLine = 0;
-                    while ((line = reader.ReadLine()) != null)
+                    using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
                     {
-                        List<string> partLine = line.Split(ConstProgram.SeparRows).ToList();
-                        if (numLine != 0 && partLine[0] != numLine.ToString())
+                        string? line;
+                        int numLine = 1;
+                        string titleRow = reader.ReadLine() ?? "";
+                        WriteFile(titleRow, false);
+                        while ((line = reader.ReadLine()) != null)
                         {
-                            EditingRow(partLine[0], numLine.ToString(), 0, writeMessage: Message);
+                            List<string> partLine = line.Split(ConstProgram.SeparRows).ToList();
+                            partLine[0] = numLine.ToString();
+                            FormatterRows newLine = new FormatterRows(nameFile, FormatterRows.TypeEnum.old);
+                            newLine.AddInRow(partLine.ToArray());
+                            WriteFile(newLine.Row.ToString());
+                            ++numLine;
                         }
-                        ++numLine;
                     }
                 }
+                catch (Exception)
+                {
+                    WriteToConsole.RainbowText("не найдено, что именно я тоже не знаю", ConsoleColor.Red);
+                }
             }
-            catch (Exception)
-            {
-                WriteToConsole.RainbowText("не найдено, что именно я тоже не знаю", ConsoleColor.Red);
-            }
+            else {WriteToConsole.RainbowText($"Файл под названием {nameFile}, не найден.", ConsoleColor.Red);}
             return "";
         }
         public static void AddRowInFile(string nameFile, string[] titleRowArray, string[] dataTypeRowArray)
