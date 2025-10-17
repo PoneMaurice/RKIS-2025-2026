@@ -1,6 +1,7 @@
 // This file contains everything related to generating and reading paths, files - PoneMaurice
 using System.Dynamic;
 using System.Formats.Asn1;
+using System.Security;
 using System.Text;
 namespace Task
 {
@@ -195,12 +196,37 @@ namespace Task
             }
             return numLine;
         }
+        public string ReIndexFile(bool Message = false)
+        {
+            try
+            {
+                using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
+                {
+                    string? line;
+                    int numLine = 0;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        List<string> partLine = line.Split(ConstProgram.SeparRows).ToList();
+                        if (numLine != 0 && partLine[0] != numLine.ToString())
+                        {
+                            EditingRow(partLine[0], numLine.ToString(), 0, writeMessage: Message);
+                        }
+                        ++numLine;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                WriteToConsole.RainbowText("не найдено, что именно я тоже не знаю", ConsoleColor.Red);
+            }
+            return ConstProgram.StringNull;
+        }
         public static void AddRowInFile(string nameFile, string[] titleRowArray, string[] dataTypeRowArray)
         {
             try
             {
                 OpenFile file = new(nameFile);
-                FormatterRows titleRow = new(nameFile, FormatterRows.Type.title);
+                FormatterRows titleRow = new(nameFile, FormatterRows.TypeEnum.title);
                 string row = Input.RowOnTitleAndConfig(titleRowArray, dataTypeRowArray, ConstProgram.TaskName);
                 titleRow.AddInRow(titleRowArray);
                 file.TitleRowWriter(titleRow.Row.ToString());
@@ -214,18 +240,17 @@ namespace Task
         }
         public void RecordingData(string[] rows)
         {
-            OpenFile file = new(nameFile);
             string titleRow = rows[0];
-            file.WriteFile(titleRow, false);
-            for (int i = 1; i < rows.Count(); ++i)
+            WriteFile(titleRow, false);
+            for (int i = 1; i < rows.Count(); ++i) // i = 1 что бы не дублировалось титульное оформление
             {
                 if (rows[i] != "" || rows[i] != ConstProgram.StringNull)
                 {
-                    file.WriteFile(rows[i]);
+                    WriteFile(rows[i]);
                 }
             }
         }
-        public void EditingRow(string requiredData, string modifiedData, int indexColumn, int numberOfIterations = 1) // не тестилась
+        public void EditingRow(string requiredData, string modifiedData, int indexColumn, int numberOfIterations = 1, bool writeMessage = true)
         {
             string data = File.ReadAllText(fullPath);
             string[] rows = data.Split("\n");
@@ -236,9 +261,9 @@ namespace Task
                 for (int i = 1; i < rows.Length; ++i)
                 {
                     string[] partsText = rows[i].Split(ConstProgram.SeparRows);
-                    if (partsText[indexColumn] == requiredData)
+                    if (indexColumn < partsText.Length && partsText[indexColumn] == requiredData)
                     {
-                        FormatterRows buildRow = new(nameFile);
+                        FormatterRows buildRow = new(nameFile, FormatterRows.TypeEnum.old);
                         partsText[indexColumn] = modifiedData;
                         buildRow.AddInRow(partsText);
                         rows[i] = buildRow.Row.ToString();
@@ -253,21 +278,21 @@ namespace Task
                 if (searchWasSuccessful)
                 {
                     RecordingData(rows);
-                    if (counter == 1)
+                    if (writeMessage && counter == 1)
                     {
                         WriteToConsole.RainbowText($"Строка была успешно перезаписана", ConsoleColor.Green);
                     }
-                    else
+                    else if (writeMessage)
                     {
                         WriteToConsole.RainbowText($"Было перезаписано '{counter}' строк", ConsoleColor.Green);
                     }
                 }
-                else
+                else if (writeMessage)
                 {
                     WriteToConsole.RainbowText($"В файле нет объекта соответствующего '{requiredData}'", ConsoleColor.Yellow);
                 }
             }
-            else
+            else if (writeMessage)
             {
                 WriteToConsole.RainbowText($"Index слишком большой максимальное значение {rows.Count()}", ConsoleColor.Red);
             }
@@ -283,7 +308,7 @@ namespace Task
                 for (int i = 1; i < rows.Count(); ++i)
                 {
                     string[] partsText = rows[i].Split(ConstProgram.SeparRows);
-                    if (partsText[indexColumn] == requiredData)
+                    if (indexColumn < partsText.Length && partsText[indexColumn] == requiredData)
                     {
                         searchWasSuccessful = true;
                         ++counter;
@@ -297,6 +322,7 @@ namespace Task
                 if (searchWasSuccessful)
                 {
                     RecordingData(rows.ToArray());
+                    ReIndexFile();
                     if (counter == 1)
                     {
                         WriteToConsole.RainbowText($"Строка была успешно удалена", ConsoleColor.Green);

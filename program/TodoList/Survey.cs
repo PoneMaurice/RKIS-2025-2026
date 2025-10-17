@@ -160,6 +160,14 @@ namespace Task
                         {
                             Commands.EditRow(ConstProgram.TaskName);
                         }
+                        else if (commandLine.SearchOption("task", "index"))
+                        {
+                            Commands.FixingIndexing(ConstProgram.TaskName);
+                        }
+                        else if (commandLine.SearchOption("index"))
+                        {
+                            Commands.FixingIndexing(commandLine.nextTextOut);
+                        }
                         else { Commands.EditRow(commandLine.nextTextOut); }
                     }
                     else { Commands.EditRow(commandLine.nextTextOut); }

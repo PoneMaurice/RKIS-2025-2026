@@ -145,6 +145,11 @@
                     "Name": "task",
                     "Long": "--task",
                     "Short": "-t"
+                },
+                {
+                    "Name": "index",
+                    "Long": "--index",
+                    "Short": "-i"
                 }
             ]
         },

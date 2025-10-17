@@ -1,4 +1,5 @@
 // This is the main file, it contains cruical components of the program - PoneMaurice
+using System.Net;
 using System.Text;
 
 namespace Task
@@ -50,7 +51,7 @@ namespace Task
             }
             if (askFile == ConstProgram.Yes || askFile == null)
             {
-                FormatterRows titleRow = new(fileName, FormatterRows.Type.title), dataTypeRow = new(fileName, FormatterRows.Type.dataType);
+                FormatterRows titleRow = new(fileName, FormatterRows.TypeEnum.title), dataTypeRow = new(fileName, FormatterRows.TypeEnum.dataType);
 
                 while (true)
                 {
@@ -219,6 +220,12 @@ namespace Task
         public static void AddProfile()
         {
             OpenFile.AddRowInFile(ConstProgram.ProfileName, ConstProgram.ProfileTitle, ConstProgram.ProfileDataType);
+        }
+        public static void FixingIndexing(string fileName)
+        {
+            Input.IfNull("Введите название файла: ", ref fileName);
+            OpenFile file = new(fileName);
+            file.ReIndexFile(true);
         }
         public static void WriteCaption()
         {

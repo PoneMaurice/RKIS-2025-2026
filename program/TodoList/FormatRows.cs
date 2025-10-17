@@ -11,37 +11,41 @@ namespace Task
     {
         public StringBuilder Row = new();
         int Num;
-        Type type;
+        TypeEnum type;
 
-        public enum Type : int
+        public enum TypeEnum
         {
-            title = 1,
-            row = 2,
-            dataType = 3
-        }
-        public FormatterRows(string nameFile, Type typeOut = Type.row)
-        {
-            OpenFile file = new(nameFile);
-            Num = file.GetLengthFile();
-            type = typeOut;
+            title,
+            row,
+            dataType,
+            old
         }
         public string GetFirstObject()
         {
             switch (type)
             {
-                case Type.row:
-                    return Num.ToString();
-                case Type.title:
-                    return ConstProgram.TitleFirstObject;
-                case Type.dataType:
-                    return ConstProgram.DataTypeFirstObject;
+                case TypeEnum.row:
+                    return Num.ToString() + ConstProgram.SeparRows;
+                case TypeEnum.title:
+                    return ConstProgram.TitleFirstObject + ConstProgram.SeparRows;
+                case TypeEnum.dataType:
+                    return ConstProgram.DataTypeFirstObject + ConstProgram.SeparRows;
+                case TypeEnum.old:
+                    return "";
             }
             return Num.ToString();
         }
+        public FormatterRows(string nameFile, TypeEnum typeOut = TypeEnum.row)
+        {
+            OpenFile file = new(nameFile);
+            Num = file.GetLengthFile();
+            type = typeOut;
+        }
+
         public void AddInRow(string pathRow)
         {
             /*Форматирует массив данных под будущию таблицу csv*/
-            if (Row.ToString() == "") Row.Append(GetFirstObject() + ConstProgram.SeparRows + pathRow);
+            if (Row.ToString() == "") Row.Append(GetFirstObject() + pathRow);
             else Row.Append(ConstProgram.SeparRows + pathRow);
         }
         public void AddInRow(string[] row)
