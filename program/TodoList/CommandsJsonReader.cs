@@ -25,9 +25,9 @@ namespace Task
     {
         static CommandsJson? openJsonFile = JsonSerializer.Deserialize<CommandsJson?>
         (OpenFile.StringFromFileInMainFolder("Commands.json"));
-        public string commandOut = ConstProgram.StringNull;
+        public string commandOut = "";
         public string[] optionsOut = ConstProgram.StringArrayNull;
-        public string nextTextOut = ConstProgram.StringNull;
+        public string nextTextOut = "";
         public SearchCommandOnJson(string[] text)
         {
             StringBuilder optionsLine = new();
@@ -108,7 +108,7 @@ namespace Task
                                 }
                                 if (inNotOption)
                                 {
-                                    if (textLine.ToString() == "")
+                                    if (textLine.ToString().Length == 0)
                                     {
                                         isOptions = false;
                                         textLine.Append(pathText);
@@ -121,7 +121,7 @@ namespace Task
                         break;
                     }
                 }
-                if (optionsLine.ToString() != "")
+                if (optionsLine.ToString().Length != 0)
                 {
                     optionsOut = optionsLine.ToString().Split("|");
                 }

@@ -45,7 +45,7 @@ namespace Task
         public void AddInRow(string pathRow)
         {
             /*Форматирует массив данных под будущию таблицу csv*/
-            if (Row.ToString() == "") Row.Append(GetFirstObject() + pathRow);
+            if (Row.ToString().Length == 0) Row.Append(GetFirstObject() + pathRow);
             else Row.Append(ConstProgram.SeparRows + pathRow);
         }
         public void AddInRow(string[] row)
@@ -68,9 +68,7 @@ namespace Task
         public const string TitleFirstObject = "numbering";
         public const string DataTypeFirstObject = "counter";
         public const string PrefConfigFile = "_conf";
-        public const string StringNull = "";
         public readonly static string[] StringArrayNull = new string[0];
-        public const string Yes = "y";
         public const string TaskName = "Tasks";
         public const string ProfileName = "Profiles";
         public static readonly string[] TaskTitle = { "nameTask", "description", "nowDateAndTime", "deadLine" };

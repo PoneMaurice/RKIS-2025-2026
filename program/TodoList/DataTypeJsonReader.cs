@@ -17,19 +17,19 @@ namespace Task
         (OpenFile.StringFromFileInMainFolder("DataType.json"));
         public static string ConvertingInputValues(string inputValue)
         {
-            if (inputValue != ConstProgram.StringNull && openJsonFile != null &&
+            if (inputValue.Length != 0 && openJsonFile != null &&
             openJsonFile.DataTypes.Length > 0)
             {
                 foreach (var DataType in openJsonFile.DataTypes)
                 {
-                    if (DataType.Name != "" && DataType.SpellingOptions.Length > 0 &&
+                    if (DataType.Name.Length != 0 && DataType.SpellingOptions.Length > 0 &&
                     DataType.SpellingOptions.Contains(inputValue))
                     {
                         return DataType.Name;
                     }
                 }
             }
-            return ConstProgram.StringNull;
+            return "";
         }
     }
 }

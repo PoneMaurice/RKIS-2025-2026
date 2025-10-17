@@ -121,7 +121,7 @@ namespace Task
                 WriteToConsole.RainbowText("Разраб отдыхает, прошу понять", ConsoleColor.Red);
                 WriteToConsole.RainbowText("^если что там ошибка чтения файла", ConsoleColor.Red);
             }
-            return ConstProgram.StringNull;
+            return "";
         }
         public string GetLineFilePositionRow(int positionRow)
         {
@@ -147,7 +147,7 @@ namespace Task
             {
                 WriteToConsole.RainbowText("не найдено, что именно я тоже не знаю", ConsoleColor.Red);
             }
-            return ConstProgram.StringNull;
+            return "";
         }
         public string GetLineFileData(string dataFile)
         {
@@ -170,7 +170,7 @@ namespace Task
             {
                 Console.WriteLine($"{ex}\n");
             }
-            return ConstProgram.StringNull;
+            return "";
         }
         public int GetLengthFile()
         {
@@ -219,7 +219,7 @@ namespace Task
             {
                 WriteToConsole.RainbowText("не найдено, что именно я тоже не знаю", ConsoleColor.Red);
             }
-            return ConstProgram.StringNull;
+            return "";
         }
         public static void AddRowInFile(string nameFile, string[] titleRowArray, string[] dataTypeRowArray)
         {
@@ -244,7 +244,7 @@ namespace Task
             WriteFile(titleRow, false);
             for (int i = 1; i < rows.Count(); ++i) // i = 1 что бы не дублировалось титульное оформление
             {
-                if (rows[i] != "" || rows[i] != ConstProgram.StringNull)
+                if (rows[i].Length != 0)
                 {
                     WriteFile(rows[i]);
                 }

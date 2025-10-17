@@ -18,7 +18,7 @@ namespace Task
 
                 string input = String(text);
                 string res = SearchDataTypeOnJson.ConvertingInputValues(input);
-                if (res != ConstProgram.StringNull)
+                if (res.Length != 0)
                 {
                     return res;
                 }
@@ -37,7 +37,7 @@ namespace Task
             {
                 Console.Write(text);
                 input.Append((Console.ReadLine() ?? "").Trim());
-                if (input.ToString() != "")
+                if (input.ToString().Length != 0)
                 {
                     return input.ToString();
                 }
@@ -177,7 +177,7 @@ namespace Task
             ввода даты то программа автоматически введет "NULL"*/
             System.Console.WriteLine("---Ввод даты и времени---");
             string modeDate = String($"Выберете метод ввода даты: (Ручной('M'), Попунктный('P')): ");
-            string dateAndTime = ConstProgram.StringNull;
+            string dateAndTime = "";
             if (modeDate == "m")
             {
                 dateAndTime = ManualDate() + " " + ManualTime();
@@ -197,7 +197,7 @@ namespace Task
             ввода даты то программа автоматически введет "NULL"*/
             System.Console.WriteLine("---Ввод даты---");
             string modeDate = String($"Выберете метод ввода даты: (Ручной('M'), Попунктный('P')): ");
-            string dateAndTime = ConstProgram.StringNull;
+            string dateAndTime = "";
             if (modeDate == "m")
             {
                 dateAndTime = ManualDate();
@@ -217,7 +217,7 @@ namespace Task
             ввода даты то программа автоматически введет "NULL"*/
             System.Console.WriteLine("---Ввод времени---");
             string modeDate = String($"Выберете метод ввода даты: (Ручной('M'), Попунктный('P')): ");
-            string dateAndTime = ConstProgram.StringNull;
+            string dateAndTime = "";
             if (modeDate == "m")
             {
                 dateAndTime = ManualTime();
@@ -238,7 +238,7 @@ namespace Task
         }
         public static void IfNull(string writeText, ref string text)
         {
-            if (text == "Null" || text == "" || text == ConstProgram.StringNull)
+            if (text == null || text.Length == 0)
             {
                 text = String(writeText);
             }
@@ -280,11 +280,21 @@ namespace Task
                     case "ndt":
                         row.AddInRow(Input.NowDateTime());
                         break;
-                    
-                    
+
+
                 }
             }
             return row.Row.ToString();
+        }
+        public static bool Bool(string text)
+        {
+            string input = String(text).ToLower();
+            if (input == "t" || input == "true" ||
+                input == "y" || input == "yes")
+            {
+                return true;
+            }
+            else return false;
         }
     }
     public class WriteToConsole

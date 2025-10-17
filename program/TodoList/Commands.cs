@@ -40,16 +40,16 @@ namespace Task
             OpenFile file = new(fileName);
 
             string fullPathConfig = file.CreatePath();
-            string? askFile = null;
-            string searchLine1 = ConstProgram.StringNull;
-            string searchLine2 = ConstProgram.StringNull;
+            bool askFile = true;
+            string searchLine1 = "";
+            string searchLine2 = "";
             if (File.Exists(fullPathConfig))
             {
                 file.GetConfigFile(out string[] rowsConfig);
                 Console.WriteLine($"{rowsConfig[0]}\n{rowsConfig[1]}");
-                askFile = Input.String($"Вы точно уверены, что хотите перезаписать конфигурацию?(y/N): ");
+                askFile = Input.Bool($"Вы точно уверены, что хотите перезаписать конфигурацию?(y/N): ");
             }
-            if (askFile == ConstProgram.Yes || askFile == null)
+            if (askFile)
             {
                 FormatterRows titleRow = new(fileName, FormatterRows.TypeEnum.title), dataTypeRow = new(fileName, FormatterRows.TypeEnum.dataType);
 
@@ -81,13 +81,13 @@ namespace Task
 
                 string lastTitleRow = file.GetLineFilePositionRow(0);
                 string lastDataTypeRow = file.GetLineFilePositionRow(1);
-                string askTitle = ConstProgram.Yes;
-                string askDataType = ConstProgram.Yes;
-                if (lastTitleRow != titleRow.Row.ToString() && lastTitleRow != ConstProgram.StringNull)
-                    askTitle = Input.String($"Титульный лист отличается \nНыняшний: {titleRow.Row}\nПрошлый: {lastTitleRow}\nЗаменить?(y/N): ");
-                else if (lastDataTypeRow != dataTypeRow.Row.ToString() && lastDataTypeRow != ConstProgram.StringNull)
-                    askDataType = Input.String($"Конфигурация уже имеется\nНынешняя: {dataTypeRow.Row}\nПрошлая: {lastDataTypeRow}\nЗаменить?(y/N): ");
-                if (askTitle == ConstProgram.Yes || askDataType == ConstProgram.Yes)
+                bool askTitle = true;
+                bool askDataType = true;
+                if (lastTitleRow != titleRow.Row.ToString() && lastTitleRow.Length != 0)
+                    askTitle = Input.Bool($"Титульный лист отличается \nНыняшний: {titleRow.Row}\nПрошлый: {lastTitleRow}\nЗаменить?(y/N): ");
+                else if (lastDataTypeRow != dataTypeRow.Row.ToString() && lastDataTypeRow.Length != 0)
+                    askDataType = Input.Bool($"Конфигурация уже имеется\nНынешняя: {dataTypeRow.Row}\nПрошлая: {lastDataTypeRow}\nЗаменить?(y/N): ");
+                if (askTitle || askDataType)
                 {
                     file.WriteFile(titleRow.Row.ToString(), false);
                     file.WriteFile(dataTypeRow.Row.ToString());
@@ -125,10 +125,10 @@ namespace Task
             else Console.WriteLine($"Сначала создайте конфигурацию или проверьте правильность написания названия => '{fileName}'");
         }
 
-        public static void ClearAllFile(string fileName = ConstProgram.StringNull)
+        public static void ClearAllFile(string fileName = "")
         {
             Input.IfNull("Введите название файла: ", ref fileName);
-            if (Input.String($"Вы уверены что хотите очистить весь файл {fileName}? (y/N): ") == ConstProgram.Yes)
+            if (Input.Bool($"Вы уверены что хотите очистить весь файл {fileName}? (y/N): "))
             {
                 OpenFile file = new(fileName);
                 if (File.Exists(file.fullPath))
@@ -157,7 +157,7 @@ namespace Task
             }
             return Input.IntegerWithMinMax("Ответ: ", start, partsTitleRow.Length - 1);
         }
-        public static void ClearRow(string fileName, string requiredData = ConstProgram.StringNull)
+        public static void ClearRow(string fileName, string requiredData = "")
         {
             Input.IfNull("Введите название файла: ", ref fileName);
 
@@ -169,7 +169,7 @@ namespace Task
             }
             else { WriteToConsole.RainbowText("Такого файла не существует: ", ConsoleColor.Yellow);  }
         }
-        public static void EditRow(string fileName, string requiredData = ConstProgram.StringNull)
+        public static void EditRow(string fileName, string requiredData = "")
         {
             Input.IfNull("Введите название файла: ", ref fileName);
 
@@ -182,7 +182,7 @@ namespace Task
             }
             else { WriteToConsole.RainbowText("Такого файла не существует: ", ConsoleColor.Yellow); }
         }
-        public static void SearchPartData(string fileName = ConstProgram.StringNull, string text = ConstProgram.StringNull)
+        public static void SearchPartData(string fileName = "", string text = "")
         {
             Input.IfNull("Ведите название файла: ", ref fileName);
 
@@ -195,7 +195,7 @@ namespace Task
             }
             else WriteToConsole.RainbowText(fileName + ": такого файла не существует.", ConsoleColor.Red);
         }
-        public static void PrintData(string fileName = ConstProgram.StringNull)
+        public static void PrintData(string fileName = "")
         {
             Input.IfNull("Ведите название файла: ", ref fileName);
 
