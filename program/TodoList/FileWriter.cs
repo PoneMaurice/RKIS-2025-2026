@@ -256,52 +256,67 @@ namespace Task
                 }
             }
         }
-        public void EditingRow(string requiredData, string modifiedData, int indexColumn, int numberOfIterations = 1, bool writeMessage = true)
+        public void EditingRow(string requiredData, string modifiedData, int indexColumn, int numberOfIterations = 1)
         {
-            string data = File.ReadAllText(fullPath);
-            string[] rows = data.Split("\n");
-            bool searchWasSuccessful = false;
             int counter = 0;
-            if (rows.Length > indexColumn)
+            if (File.Exists(fullPath))
             {
-                for (int i = 1; i < rows.Length; ++i)
+                try
                 {
-                    string[] partsText = rows[i].Split(ConstProgram.SeparRows);
-                    if (indexColumn < partsText.Length && partsText[indexColumn] == requiredData)
+                    using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
                     {
-                        FormatterRows buildRow = new(nameFile, FormatterRows.TypeEnum.old);
-                        partsText[indexColumn] = modifiedData;
-                        buildRow.AddInRow(partsText);
-                        rows[i] = buildRow.Row.ToString();
-                        searchWasSuccessful = true;
-                        ++counter;
-                        if (counter >= numberOfIterations)
+                        string? line;
+                        string titleRow = reader.ReadLine() ?? "";
+                        int numLine = 1;
+                        if (indexColumn < titleRow.Split(ConstProgram.SeparRows).Length)
                         {
-                            break;
+                            WriteFile(titleRow, false);
+                            while ((line = reader.ReadLine()) != null)
+                            {
+                                List<string> partLine = line.Split(ConstProgram.SeparRows).ToList();
+                                if (counter < numberOfIterations)
+                                {
+                                    if (partLine[indexColumn] == requiredData)
+                                    {
+                                        partLine[indexColumn] = modifiedData;
+                                        ++counter;
+                                    }
+                                }
+                                FormatterRows newLine = new FormatterRows(nameFile, FormatterRows.TypeEnum.old);
+                                newLine.AddInRow(partLine.ToArray());
+                                WriteFile(newLine.Row.ToString());
+                                ++numLine;
+                            }
+                            WriteToConsole.RainbowText($"Было перезаписано '{counter}' строк", ConsoleColor.Green);
                         }
+                        else {WriteToConsole.RainbowText($"Index слишком большой максимальное значение.", ConsoleColor.Red);}
+                        
                     }
                 }
-                if (searchWasSuccessful)
+                catch (Exception)
                 {
-                    RecordingData(rows);
-                    if (writeMessage && counter == 1)
-                    {
-                        WriteToConsole.RainbowText($"Строка была успешно перезаписана", ConsoleColor.Green);
-                    }
-                    else if (writeMessage)
-                    {
-                        WriteToConsole.RainbowText($"Было перезаписано '{counter}' строк", ConsoleColor.Green);
-                    }
-                }
-                else if (writeMessage)
-                {
-                    WriteToConsole.RainbowText($"В файле нет объекта соответствующего '{requiredData}'", ConsoleColor.Yellow);
+                    WriteToConsole.RainbowText("не найдено, что именно я тоже не знаю", ConsoleColor.Red);
                 }
             }
-            else if (writeMessage)
-            {
-                WriteToConsole.RainbowText($"Index слишком большой максимальное значение {rows.Count()}", ConsoleColor.Red);
-            }
+            else {WriteToConsole.RainbowText($"Файл под названием {nameFile}, не найден.", ConsoleColor.Red);}
+            //         if (writeMessage && counter == 1)
+            //         {
+            //             WriteToConsole.RainbowText($"Строка была успешно перезаписана", ConsoleColor.Green);
+            //         }
+            //         else if (writeMessage)
+            //         {
+            //             WriteToConsole.RainbowText($"Было перезаписано '{counter}' строк", ConsoleColor.Green);
+            //         }
+            //     }
+            //     else if (writeMessage)
+            //     {
+            //         WriteToConsole.RainbowText($"В файле нет объекта соответствующего '{requiredData}'", ConsoleColor.Yellow);
+            //     }
+            // }
+            // else if (writeMessage)
+            // {
+            //     WriteToConsole.RainbowText($"Index слишком большой максимальное значение {rows.Count()}", ConsoleColor.Red);
+            // }
         }
         public void ClearRow(string requiredData, int indexColumn, int numberOfIterations = 1)
         {
