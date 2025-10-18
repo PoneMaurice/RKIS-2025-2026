@@ -2,6 +2,7 @@
 using System.Net;
 using System.Security.AccessControl;
 using System.Text;
+using Spectre.Console;
 namespace Task
 {
     public class Commands
@@ -10,14 +11,14 @@ namespace Task
         {
             /*программа запрашивает у пользователя все необходимые ей данные
             и записывает их в файл tasks.csv с нужным форматированием*/
-            OpenFile.AddRowInFile(ConstProgram.TaskName, ConstProgram.TaskTitle, ConstProgram.TaskTypeData);
+            OpenFile.AddRowInFile(Const.TaskName, Const.TaskTitle, Const.TaskTypeData);
         }
         public static void MultiAddTask()
         {
             int num = 0;
             while (true)
             {
-                OpenFile.AddRowInFile(ConstProgram.TaskName, ConstProgram.TaskTitle, ConstProgram.TaskTypeData);
+                OpenFile.AddRowInFile(Const.TaskName, Const.TaskTitle, Const.TaskTypeData);
                 num++;
                 if (!Input.Bool($"{num} задание добавлено, желаете продолжить(y/N)?: "))
                 {
@@ -31,12 +32,12 @@ namespace Task
             и записывает их в файл tasks.csv с нужным форматированием 
             после чего выводит сообщение о добавлении данных дублируя их 
             пользователю для проверки*/
-            OpenFile file = new(ConstProgram.TaskName);
-            OpenFile.AddRowInFile(ConstProgram.TaskName, ConstProgram.TaskTitle, ConstProgram.TaskTypeData);
+            OpenFile file = new(Const.TaskName);
+            OpenFile.AddRowInFile(Const.TaskName, Const.TaskTitle, Const.TaskTypeData);
             try
             {
-                string[] titleRowString = file.GetLineFilePositionRow(0).Split(ConstProgram.SeparRows);
-                string[] rowString = file.GetLineFilePositionRow(file.GetLengthFile() - 1).Split(ConstProgram.SeparRows);
+                string[] titleRowString = file.GetLineFilePositionRow(0).Split(Const.SeparRows);
+                string[] rowString = file.GetLineFilePositionRow(file.GetLengthFile() - 1).Split(Const.SeparRows);
                 for (int i = 0; i < titleRowString.Length; ++i)
                 { Console.WriteLine($"{titleRowString[i]}: {rowString[i]}"); }
             }
@@ -48,7 +49,7 @@ namespace Task
         public static void AddConfUserData(string fileName = "")
         {
             Input.IfNull("Введите название для файла с данными: ", ref fileName);
-            fileName = fileName + ConstProgram.PrefConfigFile;
+            fileName = fileName + Const.PrefConfigFile;
             OpenFile file = new(fileName);
             string fullPathConfig = file.CreatePath();
             bool askFile = true;
@@ -71,17 +72,17 @@ namespace Task
                     titleRow.GetLengthRow() != 0) break;
                     else if (intermediateResultString == "exit")
                         WriteToConsole.RainbowText("В титульном оформлении должен быть хотя бы один пункт: ", ConsoleColor.Red);
-                    else if (titleRow.Row.ToString().Split(ConstProgram.SeparRows).Contains(intermediateResultString))
+                    else if (titleRow.Row.ToString().Split(Const.SeparRows).Contains(intermediateResultString))
                     {
                         WriteToConsole.RainbowText("Объекты титульного оформления не должны повторятся", ConsoleColor.Red);
                     }
                     else titleRow.AddInRow(intermediateResultString);
                 }
-                string[] titleRowArray = titleRow.Row.ToString().Split(ConstProgram.SeparRows);
+                string[] titleRowArray = titleRow.Row.ToString().Split(Const.SeparRows);
                 foreach (string title in titleRowArray)
                 {
-                    if (title == ConstProgram.TitleNumbingObject ||
-                    title == ConstProgram.TitleBoolObject) continue;
+                    if (title == Const.TitleNumbingObject ||
+                    title == Const.TitleBoolObject) continue;
                     else dataTypeRow.AddInRow(Input.DataType($"Введите тип данных для строки {title}: "));
                 }
                 file.TitleRowWriter(titleRow.Row.ToString());
@@ -109,15 +110,15 @@ namespace Task
         public static void AddUserData(string fileName = "")
         {
             Input.IfNull("Введите название для файла с данными: ", ref fileName);
-            OpenFile fileConf = new(fileName + ConstProgram.PrefConfigFile);
+            OpenFile fileConf = new(fileName + Const.PrefConfigFile);
             OpenFile file = new(fileName);
             string fullPathConfig = fileConf.CreatePathToConfig();
             if (File.Exists(fullPathConfig))
             {
                 string titleRow = fileConf.GetLineFilePositionRow(0);
                 string dataTypeRow = fileConf.GetLineFilePositionRow(1);
-                string[] titleRowArray = titleRow.Split(ConstProgram.SeparRows);
-                string[] dataTypeRowArray = dataTypeRow.Split(ConstProgram.SeparRows);
+                string[] titleRowArray = titleRow.Split(Const.SeparRows);
+                string[] dataTypeRowArray = dataTypeRow.Split(Const.SeparRows);
                 string row = Input.RowOnTitleAndConfig(titleRowArray, dataTypeRowArray, fileName);
                 file.TitleRowWriter(titleRow);
                 string testTitleRow = file.GetLineFilePositionRow(0);
@@ -143,7 +144,7 @@ namespace Task
         }
         public static int WriteColumn(OpenFile file, int start = 0)
         {
-            string[] partsTitleRow = file.GetLineFilePositionRow(0).Split(ConstProgram.SeparRows);
+            string[] partsTitleRow = file.GetLineFilePositionRow(0).Split(Const.SeparRows);
             Console.WriteLine("Выберите в каком столбце проводить поиски");
             for (int i = start; i < partsTitleRow.Length; ++i)
             {
@@ -214,10 +215,18 @@ namespace Task
                 using (StreamReader reader = new StreamReader(file.fullPath, Encoding.UTF8))
                 {
                     string? line;
+                    string[] titleRowArray = (reader.ReadLine() ?? "").Split(Const.SeparRows);
+                    var table = new Table();
+                    table.Title(fileName);
+                    foreach (string titleRow in titleRowArray)
+                    {
+                        table.AddColumns(titleRow);
+                    }
                     while ((line = reader.ReadLine()) != null)
                     {
-                        Console.WriteLine(line);
+                        table.AddRow(line.Split(Const.SeparRows));
                     }
+                    AnsiConsole.Write(table);
                 }
             }
             catch (Exception)
@@ -227,25 +236,25 @@ namespace Task
         }
         public static void AddProfile()
         {
-            OpenFile.AddRowInFile(ConstProgram.ProfileName, ConstProgram.ProfileTitle, ConstProgram.ProfileDataType);
+            OpenFile.AddRowInFile(Const.ProfileName, Const.ProfileTitle, Const.ProfileDataType);
         }
         public static void AddFirstProfile()
         {
-            OpenFile profile = new(ConstProgram.ProfileName);
-            FormatterRows titleRow = new(ConstProgram.ProfileName, FormatterRows.TypeEnum.title);
-            titleRow.AddInRow(ConstProgram.ProfileTitle);
+            OpenFile profile = new(Const.ProfileName);
+            FormatterRows titleRow = new(Const.ProfileName, FormatterRows.TypeEnum.title);
+            titleRow.AddInRow(Const.ProfileTitle);
             profile.TitleRowWriter(titleRow.Row.ToString());
             if (profile.GetLengthFile() == 1)
             {
-                FormatterRows rowAdmin = new(ConstProgram.ProfileName);
-                rowAdmin.AddInRow(ConstProgram.AdminProfile);
+                FormatterRows rowAdmin = new(Const.ProfileName);
+                rowAdmin.AddInRow(Const.AdminProfile);
                 profile.WriteFile(rowAdmin.Row.ToString());
                 profile.EditingRow(false.ToString(), true.ToString(), 1);
             }
         }
         public static string SearchActiveProfile()
         {
-            OpenFile profile = new(ConstProgram.ProfileName);
+            OpenFile profile = new(Const.ProfileName);
             string[] activeProfile = profile.GetLineFileDataOnPositionInRow(true.ToString(), 1);
             if (activeProfile.Length == 0 || activeProfile.Length > 1)
             {
@@ -255,7 +264,7 @@ namespace Task
         }
         public static void UseActiveProfile()
         {
-            OpenFile profile = new(ConstProgram.ProfileName);
+            OpenFile profile = new(Const.ProfileName);
             if (File.Exists(profile.fullPath))
             {
                 profile.EditingRow(true.ToString(), false.ToString(), 1, -1);
@@ -272,9 +281,9 @@ namespace Task
             {
                 if (Survey.commandLineGlobal != null)
                 {
-                    OpenFile file = new(ConstProgram.LogName);
-                    string titleRow = string.Join("|", ConstProgram.LogTitle);
-                    string row = string.Join("|", [SearchActiveProfile().Split(ConstProgram.SeparRows)[2],
+                    OpenFile file = new(Const.LogName);
+                    string titleRow = string.Join("|", Const.LogTitle);
+                    string row = string.Join("|", [SearchActiveProfile().Split(Const.SeparRows)[2],
                     Input.NowDateTime(), Survey.commandLineGlobal.commandOut,
                     string.Join(",", Survey.commandLineGlobal.optionsOut),
                     Survey.commandLineGlobal.nextTextOut]);

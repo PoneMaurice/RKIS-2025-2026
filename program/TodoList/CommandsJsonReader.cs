@@ -24,7 +24,7 @@ namespace Task
         static CommandsJson? openJsonFile = JsonSerializer.Deserialize<CommandsJson?>
         (OpenFile.StringFromFileInMainFolder("Commands.json"));
         public string commandOut = "";
-        public string[] optionsOut = ConstProgram.StringArrayNull;
+        public string[] optionsOut = Const.StringArrayNull;
         public string nextTextOut = "";
         public SearchCommandOnJson(string[] text)
         {
@@ -61,7 +61,7 @@ namespace Task
                                                     }
                                                     else
                                                     {
-                                                        optionsLine.Append(ConstProgram.SeparRows + option.Name);
+                                                        optionsLine.Append(Const.SeparRows + option.Name);
                                                     }
                                                     inNotOption = false;
                                                 }
@@ -76,7 +76,7 @@ namespace Task
                                                     }
                                                     else
                                                     {
-                                                        optionsLine.Append(ConstProgram.SeparRows + option.Name);
+                                                        optionsLine.Append(Const.SeparRows + option.Name);
                                                     }
                                                     inNotOption = false;
                                                 }
@@ -95,7 +95,7 @@ namespace Task
                                                         }
                                                         else
                                                         {
-                                                            optionsLine.Append(ConstProgram.SeparRows + subOption.Name);
+                                                            optionsLine.Append(Const.SeparRows + subOption.Name);
                                                         }
                                                         inNotOption = false;
                                                     }
@@ -137,7 +137,7 @@ namespace Task
         }
         public bool SearchOption(params string[] options)
         {
-            if (optionsOut != ConstProgram.StringArrayNull &&
+            if (optionsOut != Const.StringArrayNull &&
             optionsOut != null)
             {
                 int count = 0;

@@ -23,13 +23,13 @@ namespace Task
             switch (type)
             {
                 case TypeEnum.row:
-                    res = [Num.ToString(), ConstProgram.RowBoolDefault];
+                    res = [Num.ToString(), Const.RowBoolDefault];
                     break;
                 case TypeEnum.title:
-                    res = [ConstProgram.TitleNumbingObject, ConstProgram.TitleBoolObject];
+                    res = [Const.TitleNumbingObject, Const.TitleBoolObject];
                     break;
                 case TypeEnum.dataType:
-                    res = [ConstProgram.DataTypeNumbingObject, ConstProgram.DataTypeBoolObject];
+                    res = [Const.DataTypeNumbingObject, Const.DataTypeBoolObject];
                     break;
                 case TypeEnum.old:
                     break;
@@ -47,20 +47,20 @@ namespace Task
         {
             /*Форматирует массив данных под будущую таблицу csv*/
             if (Row.ToString().Length == 0) Row.Append(pathRow);
-            else Row.Append(ConstProgram.SeparRows + pathRow);
+            else Row.Append(Const.SeparRows + pathRow);
         }
         public void AddInRow(string[] row)
         {
-            AddInRow(string.Join(ConstProgram.SeparRows, row));
+            AddInRow(string.Join(Const.SeparRows, row));
         }
         public int GetLengthRow()
         {
             if (Row.Length != 0)
-                return Row.ToString().Split(ConstProgram.SeparRows).Count();
+                return Row.ToString().Split(Const.SeparRows).Count();
             return 0;
         }
     }
-    public static class ConstProgram
+    public static class Const
     {
         public const string SeparRows = "|";
         public const string TitleNumbingObject = "numbering";

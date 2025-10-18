@@ -53,17 +53,13 @@ namespace Task
                         {
                             Commands.ProfileHelp();
                         }
-                        else if (commandLine.SearchOption("add"))
-                        {
-                            Commands.AddProfile();
-                        }
                         else if (commandLine.SearchOption("change"))
                         {
                             Commands.UseActiveProfile();
                         }
                         else if (commandLine.SearchOption("index"))
                         {
-                            Commands.FixingIndexing(ConstProgram.ProfileName);
+                            Commands.FixingIndexing(Const.ProfileName);
                         }
                     }
                     else {Console.WriteLine(Commands.SearchActiveProfile());}
@@ -77,15 +73,15 @@ namespace Task
                         }
                         else if (commandLine.SearchOption("task"))
                         {
-                            Commands.PrintData(ConstProgram.TaskName);
+                            Commands.PrintData(Const.TaskName);
                         }
                         else if (commandLine.SearchOption("config"))
                         {
-                            Commands.PrintData(commandLine.nextTextOut + ConstProgram.PrefConfigFile);
+                            Commands.PrintData(commandLine.nextTextOut + Const.PrefConfigFile);
                         }
                         else if (commandLine.SearchOption("profile"))
                         {
-                            Commands.PrintData(ConstProgram.ProfileName);
+                            Commands.PrintData(Const.ProfileName);
                         }
                         else if (commandLine.SearchOption("captions")){
                             Commands.WriteCaption();
@@ -103,11 +99,11 @@ namespace Task
                         }
                         else if (commandLine.SearchOption("task"))
                         {
-                            Commands.SearchPartData(ConstProgram.TaskName, commandLine.nextTextOut);
+                            Commands.SearchPartData(Const.TaskName, commandLine.nextTextOut);
                         }
                         else if (commandLine.SearchOption("profile"))
                         {
-                            Commands.SearchPartData(ConstProgram.ProfileName, commandLine.nextTextOut);
+                            Commands.SearchPartData(Const.ProfileName, commandLine.nextTextOut);
                         }
                         else if (commandLine.SearchOption("numbering"))
                         {
@@ -126,19 +122,19 @@ namespace Task
                         }
                         else if (commandLine.SearchOption("task"))
                         {
-                            Commands.ClearRow(ConstProgram.TaskName, commandLine.nextTextOut);
+                            Commands.ClearRow(Const.TaskName, commandLine.nextTextOut);
                         }
                         else if (commandLine.SearchOption("task", "all"))
                         {
-                            Commands.ClearAllFile(ConstProgram.TaskName);
+                            Commands.ClearAllFile(Const.TaskName);
                         }
                         else if (commandLine.SearchOption("profile"))
                         {
-                            Commands.ClearRow(ConstProgram.ProfileName, commandLine.nextTextOut);
+                            Commands.ClearRow(Const.ProfileName, commandLine.nextTextOut);
                         }
                         else if (commandLine.SearchOption("profile", "all"))
                         {
-                            Commands.ClearAllFile(ConstProgram.ProfileName);
+                            Commands.ClearAllFile(Const.ProfileName);
                         }
                         else if (commandLine.SearchOption("console"))
                         {
@@ -162,15 +158,15 @@ namespace Task
                         }
                         else if (commandLine.SearchOption("task"))
                         {
-                            Commands.EditRow(ConstProgram.TaskName, commandLine.nextTextOut);
+                            Commands.EditRow(Const.TaskName, commandLine.nextTextOut);
                         }
                         else if (commandLine.SearchOption("task", "index"))
                         {
-                            Commands.FixingIndexing(ConstProgram.TaskName);
+                            Commands.FixingIndexing(Const.TaskName);
                         }
                         else if (commandLine.SearchOption("task", "bool"))
                         {
-                            Commands.EditBoolRow(ConstProgram.TaskName, commandLine.nextTextOut);
+                            Commands.EditBoolRow(Const.TaskName, commandLine.nextTextOut);
                         }
                         else if (commandLine.SearchOption("bool"))
                         {

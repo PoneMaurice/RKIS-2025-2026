@@ -105,12 +105,12 @@ namespace Task
                 {
                     string? line;
                     int counter = 0;
-                    string[] titleRow = (reader.ReadLine() ?? "").Split(ConstProgram.SeparRows);
+                    string[] titleRow = (reader.ReadLine() ?? "").Split(Const.SeparRows);
                     if (titleRow.Length > positionInRow)
                     {
                         while ((line = reader.ReadLine()) != null)
                         {
-                            string[] pathLine = line.Split(ConstProgram.SeparRows);
+                            string[] pathLine = line.Split(Const.SeparRows);
                             if (counter < count && pathLine[positionInRow] == dataFile)
                             {
                                 searchLine.Add(line);
@@ -210,7 +210,7 @@ namespace Task
             {
                 try
                 {
-                    OpenFile tempFile = new(nameFile+ ConstProgram.PrefIndex + ConstProgram.PrefTemporaryFile);
+                    OpenFile tempFile = new(nameFile+ Const.PrefIndex + Const.PrefTemporaryFile);
                     using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
                     {
                         string? line;
@@ -219,7 +219,7 @@ namespace Task
                         tempFile.WriteFile(titleRow, false);
                         while ((line = reader.ReadLine()) != null)
                         {
-                            List<string> partLine = line.Split(ConstProgram.SeparRows).ToList();
+                            List<string> partLine = line.Split(Const.SeparRows).ToList();
                             partLine[0] = numLine.ToString();
                             FormatterRows newLine = new FormatterRows(nameFile, FormatterRows.TypeEnum.old);
                             newLine.AddInRow(partLine.ToArray());
@@ -289,17 +289,17 @@ namespace Task
             {
                 try
                 {
-                    OpenFile tempFile = new(nameFile + ConstProgram.PrefTemporaryFile);
+                    OpenFile tempFile = new(nameFile + Const.PrefTemporaryFile);
                     using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
                     {
                         string? line;
                         string titleRow = reader.ReadLine() ?? "";
-                        if (indexColumn < titleRow.Split(ConstProgram.SeparRows).Length)
+                        if (indexColumn < titleRow.Split(Const.SeparRows).Length)
                         {
                             tempFile.WriteFile(titleRow, false);
                             while ((line = reader.ReadLine()) != null)
                             {
-                                List<string> partLine = line.Split(ConstProgram.SeparRows).ToList();
+                                List<string> partLine = line.Split(Const.SeparRows).ToList();
                                 if ((counter < numberOfIterations || maxCounter) && partLine[indexColumn] == requiredData)
                                 {
                                     partLine[indexColumnWrite] = modifiedData;
@@ -339,17 +339,17 @@ namespace Task
             {
                 try
                 {
-                    OpenFile tempFile = new(nameFile + ConstProgram.PrefTemporaryFile);
+                    OpenFile tempFile = new(nameFile + Const.PrefTemporaryFile);
                     using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
                     {
                         string? line;
                         string titleRow = reader.ReadLine() ?? "";
-                        if (indexColumn < titleRow.Split(ConstProgram.SeparRows).Length)
+                        if (indexColumn < titleRow.Split(Const.SeparRows).Length)
                         {
                             tempFile.WriteFile(titleRow, false);
                             while ((line = reader.ReadLine()) != null)
                             {
-                                List<string> partLine = line.Split(ConstProgram.SeparRows).ToList();
+                                List<string> partLine = line.Split(Const.SeparRows).ToList();
                                 if (counter < numberOfIterations && partLine[indexColumn] == requiredData)
                                 {
                                     ++counter;
@@ -387,7 +387,7 @@ namespace Task
             {
                 configFile = File.ReadAllText(pathToConfig).Split("\n");
             }
-            else configFile = ConstProgram.StringArrayNull;
+            else configFile = Const.StringArrayNull;
         }
     }
 }
