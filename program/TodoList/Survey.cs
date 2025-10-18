@@ -3,7 +3,6 @@ using System.Runtime;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json.Nodes;
-
 namespace Task
 {
     public class Survey
@@ -47,7 +46,6 @@ namespace Task
                     }
                     else {Commands.AddUserData(commandLine.nextTextOut);}
                     break;
-
                 case "profile":
                     if (commandLine.optionsOut.Length > 0)
                     {
@@ -70,7 +68,6 @@ namespace Task
                     }
                     else {Console.WriteLine(Commands.SearchActiveProfile());}
                     break;
-
                 case "print":
                     if (commandLine.optionsOut.Length > 0)
                     {
@@ -97,7 +94,6 @@ namespace Task
                     }
                     else { Commands.PrintData(commandLine.nextTextOut); }
                     break;
-
                 case "search":
                     if (commandLine.optionsOut.Length > 0)
                     {
@@ -121,13 +117,12 @@ namespace Task
                     }
                     else {Commands.SearchPartData(commandLine.nextTextOut);}
                     break;
-
                 case "clear":
                     if (commandLine.optionsOut.Length > 0)
                     {
                         if (commandLine.SearchOption("help"))
                         {
-                            WriteToConsole.RainbowText("Эта функция ещё в разработке", ConsoleColor.Magenta); ///////////////////////////////////////////////////////////
+                            Commands.ClearHelp();
                         }
                         else if (commandLine.SearchOption("task"))
                         {
@@ -158,13 +153,12 @@ namespace Task
                     }
                     else { Commands.ClearRow(commandLine.nextTextOut); }
                     break;
-
                 case "edit":
                     if (commandLine.optionsOut.Length > 0)
                     {
                         if (commandLine.SearchOption("help"))
                         {
-                            WriteToConsole.RainbowText("Эта функция ещё в разработке", ConsoleColor.Magenta); ///////////////////////////////////////////////////////////
+                            Commands.EditHelp();
                         }
                         else if (commandLine.SearchOption("task"))
                         {
@@ -189,12 +183,10 @@ namespace Task
                         else { Commands.EditRow(commandLine.nextTextOut); }
                     }
                     else { Commands.EditRow(commandLine.nextTextOut); }
-                    break;
-                
+                    break; 
                 case "help":
                     Commands.Help();
                     break;
-
                 case "exit":
                     Environment.Exit(0);
                     break;

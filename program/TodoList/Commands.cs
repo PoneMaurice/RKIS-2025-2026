@@ -2,7 +2,6 @@
 using System.Net;
 using System.Security.AccessControl;
 using System.Text;
-
 namespace Task
 {
     public class Commands
@@ -49,10 +48,8 @@ namespace Task
         public static void AddConfUserData(string fileName = "")
         {
             Input.IfNull("Введите название для файла с данными: ", ref fileName);
-
             fileName = fileName + ConstProgram.PrefConfigFile;
             OpenFile file = new(fileName);
-
             string fullPathConfig = file.CreatePath();
             bool askFile = true;
             string searchLine1 = "";
@@ -66,7 +63,6 @@ namespace Task
             if (askFile)
             {
                 FormatterRows titleRow = new(fileName, FormatterRows.TypeEnum.title), dataTypeRow = new(fileName, FormatterRows.TypeEnum.dataType);
-
                 while (true)
                 {
                     string intermediateResultString =
@@ -81,19 +77,15 @@ namespace Task
                     }
                     else titleRow.AddInRow(intermediateResultString);
                 }
-
                 string[] titleRowArray = titleRow.Row.ToString().Split(ConstProgram.SeparRows);
-
                 foreach (string title in titleRowArray)
                 {
-                    if (title == ConstProgram.TitleNumbingObject || 
+                    if (title == ConstProgram.TitleNumbingObject ||
                     title == ConstProgram.TitleBoolObject) continue;
                     else dataTypeRow.AddInRow(Input.DataType($"Введите тип данных для строки {title}: "));
                 }
-
                 file.TitleRowWriter(titleRow.Row.ToString());
                 Console.WriteLine($"{titleRow.Row}\n{dataTypeRow.Row}");
-
                 string lastTitleRow = file.GetLineFilePositionRow(0);
                 string lastDataTypeRow = file.GetLineFilePositionRow(1);
                 bool askTitle = true;
@@ -117,10 +109,8 @@ namespace Task
         public static void AddUserData(string fileName = "")
         {
             Input.IfNull("Введите название для файла с данными: ", ref fileName);
-
             OpenFile fileConf = new(fileName + ConstProgram.PrefConfigFile);
             OpenFile file = new(fileName);
-
             string fullPathConfig = fileConf.CreatePathToConfig();
             if (File.Exists(fullPathConfig))
             {
@@ -128,9 +118,7 @@ namespace Task
                 string dataTypeRow = fileConf.GetLineFilePositionRow(1);
                 string[] titleRowArray = titleRow.Split(ConstProgram.SeparRows);
                 string[] dataTypeRowArray = dataTypeRow.Split(ConstProgram.SeparRows);
-
                 string row = Input.RowOnTitleAndConfig(titleRowArray, dataTypeRowArray, fileName);
-
                 file.TitleRowWriter(titleRow);
                 string testTitleRow = file.GetLineFilePositionRow(0);
                 if (testTitleRow != titleRow)
@@ -139,7 +127,6 @@ namespace Task
             }
             else Console.WriteLine($"Сначала создайте конфигурацию или проверьте правильность написания названия => '{fileName}'");
         }
-
         public static void ClearAllFile(string fileName = "")
         {
             Input.IfNull("Введите название файла: ", ref fileName);
@@ -175,7 +162,6 @@ namespace Task
         public static void ClearRow(string fileName, string requiredData = "")
         {
             Input.IfNull("Введите название файла: ", ref fileName);
-
             OpenFile file = new(fileName);
             if (File.Exists(file.fullPath))
             {
@@ -187,7 +173,6 @@ namespace Task
         public static void EditRow(string fileName, string requiredData = "")
         {
             Input.IfNull("Введите название файла: ", ref fileName);
-
             OpenFile file = new(fileName);
             if (File.Exists(file.fullPath))
             {
@@ -200,7 +185,6 @@ namespace Task
         public static void EditBoolRow(string fileName, string requiredData = "")
         {
             Input.IfNull("Введите название файла: ", ref fileName);
-
             OpenFile file = new(fileName);
             if (File.Exists(file.fullPath))
             {
@@ -213,9 +197,7 @@ namespace Task
         public static void SearchPartData(string fileName = "", string text = "")
         {
             Input.IfNull("Ведите название файла: ", ref fileName);
-
             OpenFile file = new(fileName);
-
             if (File.Exists(file.fullPath))
             {
                 Input.IfNull("Поиск: ", ref text);
@@ -226,9 +208,7 @@ namespace Task
         public static void PrintData(string fileName = "")
         {
             Input.IfNull("Ведите название файла: ", ref fileName);
-
             OpenFile file = new(fileName);
-
             try
             {
                 using (StreamReader reader = new StreamReader(file.fullPath, Encoding.UTF8))
@@ -276,7 +256,6 @@ namespace Task
         public static void UseActiveProfile()
         {
             OpenFile profile = new(ConstProgram.ProfileName);
-
             if (File.Exists(profile.fullPath))
             {
                 profile.EditingRow(true.ToString(), false.ToString(), 1, -1);
@@ -318,48 +297,91 @@ namespace Task
         {
             /*спрашивает и выводит текст субтитров созданный 
             методом CompText*/
-            System.Console.WriteLine("За работу ответственны:");
-            System.Console.WriteLine("\tШевченко Э. - README, исходный код;");
-            System.Console.WriteLine("\tТитов М. - github, некоторый аспекты исходного кода, help команды;");
+            WriteToConsole.Text(
+                "За работу ответственны:",
+                "\tШевченко Э. - README, исходный код;",
+                "\tТитов М. - github, некоторый аспекты исходного кода, help команды;"
+            );
         }
         public static void ProfileHelp()
         {
-            Console.WriteLine("Команда для работы с профилями;");
-            Console.WriteLine("При простом вызове, выводится первый добавленный пользователь: profile;");
-            Console.WriteLine("При использовании как аргумент с командой add - добавляется новый пользователь: add profile;");
+            WriteToConsole.Text(
+                "- `profile --help` — помощь",
+                "- `profile --add` — добавить профиль",
+                "- `profile --change` — сменить активный профиль",
+                "- `profile --index` — переиндексация профилей",
+                "- `profile` — показать активный профиль"
+            );
         }
         public static void Help()
         {
-            Console.WriteLine("Данная программа позволяет пользователю создавать свой список заданий и контролировать их выполнение");
-            Console.WriteLine("help - Выводит помощь по программе и её командам например: add help");
-            Console.WriteLine("profile - Команда для работы с профилями");
-            Console.WriteLine("add - Добавляет запись по базовой конфигурации: add task;");
-            Console.WriteLine("Добавляет файл конфигурации: add config <File>;");
-            Console.WriteLine("Добавляет запись по заранее созданной конфигурации: add <File>;");
-            Console.WriteLine("clear - очищает выбранный файл");
-            Console.WriteLine("search - Ищет все идентичные строчки в файле");
-            Console.WriteLine("exit - Выход из программы либо из текущего действия");
-            Console.WriteLine("print - Выводит всё содержимое файла");
+            WriteToConsole.Text(
+                "- `add` — добавление данных, задач или профилей",
+                "- `profile` — работа с профилями",
+                "- `print` — вывод информации",
+                "- `search` — поиск по данным",
+                "- `clear` — очистка данных",
+                "- `edit` — редактирование данных",
+                "- `help` — выводит общую справку по всем командам",
+                "- `exit` — завершает выполнение программы"
+            );
         }
         public static void AddHelp()
         {
-            Console.WriteLine("add - Добавляет записи(задания);");
-            Console.WriteLine("Добавляет запись по базовой конфигурации: add task;");
-            Console.WriteLine("Добавляет файл конфигурации: add config <File>;");
-            Console.WriteLine("Добавляет запись по заранее созданной конфигурации: add <File>;");
-            Console.WriteLine("Создаёт новый профиль: add profile;");
-            Console.WriteLine("При добавлении print в конце команды, выводится добавленный текст");
+            WriteToConsole.Text(
+                "- `add --help` — помощь по добавлению",
+                "- `add --task` — добавить новую задачу",
+                "- `add --multi --task` — добавить несколько задач сразу",
+                "- `add --task --print` — добавить задачу и сразу вывести её",
+                "- `add --config <имя>` — добавить конфигурацию",
+                "- `add --profile` — добавить профиль",
+                "- `add <текст>` — добавить пользовательские данные"
+            );
         }
         public static void PrintHelp()
         {
-            Console.WriteLine("print - Команда позволяющая получить содержимое файла;");
-            Console.WriteLine("Примеры: print task; print <File>;");
-            Console.WriteLine("Также может использоваться как аргумент в командах add task print/add <File> print,");
-            Console.WriteLine("после создания записи её содержимое будет выведено в консоль;");
+            WriteToConsole.Text(
+                "- `print --help` — помощь",
+                "- `print --task` — вывести все задачи",
+                "- `print --config <имя>` — вывести конфигурацию",
+                "- `print --profile` — вывести профили",
+                "- `print --captions` — вывести заголовки",
+                "- `print <имя>` — вывести данные по имени"
+            );
         }
         public static void SearchHelp()
         {
-            Console.WriteLine("search - Ищет все идентичные строчки в файле;");
+            WriteToConsole.Text(
+                "- `search --help` — помощь",
+                "- `search --task <текст>` — поиск по задачам",
+                "- `search --profile <текст>` — поиск по профилям",
+                "- `search --numbering` — (в разработке)",
+                "- `search <текст>` — общий поиск"
+            );
+        }
+        public static void ClearHelp()
+        {
+            WriteToConsole.Text(
+                "- `clear --help` — помощь",
+                "- `clear --task <имя>` — удалить задачу",
+                "- `clear --task --all` — очистить все задачи",
+                "- `clear --profile <имя>` — удалить профиль",
+                "- `clear --profile --all` — очистить все профили",
+                "- `clear --console` — очистить консоль",
+                "- `clear --all <текст>` — очистить все пользовательские данные"
+            );
+        }
+        public static void EditHelp()
+        {
+            WriteToConsole.Text(
+               "- `edit --help` — помощь",
+                "- `edit --task <имя>` — изменить задачу",
+                "- `edit --task --index` — переиндексация задач",
+                "- `edit --task --bool` — изменить главное логическое поле задачи",
+                "- `edit --bool` — изменить главное логическое поле в данных",
+                "- `edit --index` — переиндексация",
+                "- `edit <имя>` — редактировать по имени"
+            );
         }
     }
 }

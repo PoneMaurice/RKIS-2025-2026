@@ -1,5 +1,4 @@
 ﻿// This is the main file, it contains cruical components of the program - PoneMaurice
-
 namespace Task
 {
     public static class TaskExtensions

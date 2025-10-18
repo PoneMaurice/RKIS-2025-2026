@@ -1,10 +1,8 @@
 // This file contains row and date formatting - PoneMaurice
-
 using System.Collections;
 using System.Data;
 using System.Globalization;
 using System.Text;
-
 namespace Task
 {
     public class FormatterRows
@@ -12,7 +10,6 @@ namespace Task
         public StringBuilder Row = new();
         int Num;
         TypeEnum type;
-
         public enum TypeEnum
         {
             title,
@@ -46,7 +43,6 @@ namespace Task
             type = typeOut;
             Row.Append(string.Join("|", GetFirstObject()));
         }
-
         public void AddInRow(string pathRow)
         {
             /*Форматирует массив данных под будущую таблицу csv*/

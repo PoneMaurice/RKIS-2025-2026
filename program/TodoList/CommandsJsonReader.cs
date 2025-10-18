@@ -2,7 +2,6 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.Json;
-
 namespace Task
 {
     class CommandsJson
@@ -20,7 +19,6 @@ namespace Task
         public string? Long { get; set; } = null;
         public string? Short { get; set; } = null;
     }
-
     public class SearchCommandOnJson
     {
         static CommandsJson? openJsonFile = JsonSerializer.Deserialize<CommandsJson?>
@@ -114,7 +112,6 @@ namespace Task
                                         textLine.Append(pathText);
                                     }
                                     else { textLine.Append(" " + pathText); }
-
                                 }
                             }
                         }
@@ -126,7 +123,6 @@ namespace Task
                     optionsOut = optionsLine.ToString().Split("|");
                 }
                 nextTextOut = textLine.ToString();
-
                 // System.Console.WriteLine("com: " + commandOut); //test
                 // System.Console.WriteLine("opt:"); //test
                 // if (optionsOut != null) //test

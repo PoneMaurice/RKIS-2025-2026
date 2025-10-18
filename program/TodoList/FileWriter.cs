@@ -21,7 +21,6 @@ namespace Task
             string dataPath = "/.config/RKIS-TodoList/"; // Расположение файла для UNIX и MacOSX
             string winDataPath = "\\RKIS-todoList\\"; // Расположение файла для Win32NT
             string fullPath;
-
             string? homePath = (Environment.OSVersion.Platform == PlatformID.Unix || // Если платформа UNIX или MacOSX, то homePath = $HOME
                    Environment.OSVersion.Platform == PlatformID.MacOSX)
                    ? Environment.GetEnvironmentVariable("HOME")
@@ -85,12 +84,10 @@ namespace Task
             аргумент "noRewrite" равен true, а иначе файл будет перезаписан*/
             try
             {
-
                 using (System.IO.StreamWriter sw = new System.IO.StreamWriter(fullPath, noRewrite, Encoding.UTF8))
                 {
                     sw.WriteLine(dataFile);
                 }
-
             }
             catch (Exception)
             {
@@ -109,13 +106,11 @@ namespace Task
                     string? line;
                     int counter = 0;
                     string[] titleRow = (reader.ReadLine() ?? "").Split(ConstProgram.SeparRows);
-
                     if (titleRow.Length > positionInRow)
                     {
                         while ((line = reader.ReadLine()) != null)
                         {
                             string[] pathLine = line.Split(ConstProgram.SeparRows);
-
                             if (counter < count && pathLine[positionInRow] == dataFile)
                             {
                                 searchLine.Add(line);
@@ -209,7 +204,6 @@ namespace Task
             }
             return numLine;
         }
-
         public string ReIndexFile(bool Message = false)
         {
             if (File.Exists(fullPath))
@@ -319,7 +313,6 @@ namespace Task
                             WriteToConsole.RainbowText($"Было перезаписано '{counter}' строк", ConsoleColor.Green);
                         }
                         else { WriteToConsole.RainbowText($"Index слишком большой максимальное значение.", ConsoleColor.Red); }
-
                     }
                     using (StreamReader reader = new StreamReader(tempFile.fullPath, Encoding.UTF8))
                     {
@@ -357,7 +350,6 @@ namespace Task
                             while ((line = reader.ReadLine()) != null)
                             {
                                 List<string> partLine = line.Split(ConstProgram.SeparRows).ToList();
-
                                 if (counter < numberOfIterations && partLine[indexColumn] == requiredData)
                                 {
                                     ++counter;

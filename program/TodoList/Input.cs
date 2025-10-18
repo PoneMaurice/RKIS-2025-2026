@@ -1,21 +1,16 @@
 using System.Text;
-
 namespace Task
 {
     static class Input
     {
         public static string DataType(string text)
         {
-
             /*Выводит на экран текст и запрашивает у пользователя 
             ввести тип данных и вводит его в бесконечный цикл 
             вводимая пользователем строка проверяеться на наличие 
             такого типа и если он есть возвращает его сокращение*/
-
-
             while (true)
             {
-
                 string input = String(text);
                 string res = SearchDataTypeOnJson.ConvertingInputValues(input);
                 if (res.Length != 0)
@@ -133,7 +128,6 @@ namespace Task
                 }
                 WriteToConsole.RainbowText($"'{dateString}' не может быть преобразовано,", ConsoleColor.Red);
                 WriteToConsole.RainbowText($"пожалуйста повторите попытку опираясь на приведенный пример.", ConsoleColor.Red);
-
             }
         }
         public static string ManualTime()
@@ -168,7 +162,6 @@ namespace Task
             TimeOnly hourAndMinute = new(hour, minute);
             return hourAndMinute.ToShortTimeString();
         }
-
         public static string DateAndTime()
         {
             /*Запрашивает всю дату в двух вариантах опросом и 
@@ -283,7 +276,6 @@ namespace Task
                     case "b":
                         row.AddInRow(Input.Bool($"введите {titleRowArray[i]} (bool): ").ToString());
                         break;
-
                 }
             }
             return row.Row.ToString();
@@ -306,6 +298,13 @@ namespace Task
             Console.ForegroundColor = colorText;
             Console.WriteLine(textError);
             Console.ResetColor();
+        }
+        public static void Text(params string[] text)
+        {
+            foreach (string textItem in text)
+            {
+                System.Console.WriteLine(textItem);
+            }
         }
     }
 }
