@@ -8,7 +8,7 @@ namespace Task
 {
     public class Survey
     {
-        public SearchCommandOnJson? commandLineGlobal;
+        public static SearchCommandOnJson? commandLineGlobal;
         public void GlobalCommand(string Text)
         {
             string ask = Input.String(Text);

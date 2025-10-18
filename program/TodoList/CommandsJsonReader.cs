@@ -127,16 +127,16 @@ namespace Task
                 }
                 nextTextOut = textLine.ToString();
 
-                // System.Console.WriteLine("com: " + commandOut); //test
-                // System.Console.WriteLine("opt:"); //test
-                // if (optionsOut != null) //test
-                // { //test
-                //     foreach (var option in optionsOut) //test
-                //     { //test
-                //         System.Console.WriteLine("\t" + option); //test
-                //     } //test
-                // } //test
-                // System.Console.WriteLine("text: " + nextTextOut); //test
+                System.Console.WriteLine("com: " + commandOut); //test
+                System.Console.WriteLine("opt:"); //test
+                if (optionsOut != null) //test
+                { //test
+                    foreach (var option in optionsOut) //test
+                    { //test
+                        System.Console.WriteLine("\t" + option); //test
+                    } //test
+                } //test
+                System.Console.WriteLine("text: " + nextTextOut); //test
             }
         }
         public bool SearchOption(params string[] options)

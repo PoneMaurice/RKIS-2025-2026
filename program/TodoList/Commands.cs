@@ -192,7 +192,7 @@ namespace Task
             {
                 Input.IfNull("Поиск: ", ref requiredData);
                 string modifiedData = Input.Bool($"Введите на что {requiredData} поменять(true/false): ").ToString();
-                file.EditingRow(requiredData, modifiedData, WriteColumn(file), indexColumnWrite:1); // 1 в indexColumnWrite это bool строка таска
+                file.EditingRow(requiredData, modifiedData, WriteColumn(file), indexColumnWrite: 1); // 1 в indexColumnWrite это bool строка таска
             }
             else { WriteToConsole.RainbowText("Такого файла не существует: ", ConsoleColor.Yellow); }
         }
@@ -269,11 +269,32 @@ namespace Task
                 string requiredData = "";
                 Input.IfNull("Поиск: ", ref requiredData);
                 string modifiedData = true.ToString();
-                profile.EditingRow(requiredData, modifiedData, WriteColumn(profile), indexColumnWrite:1); // 1 в indexColumnWrite это bool строка таска
+                profile.EditingRow(requiredData, modifiedData, WriteColumn(profile), indexColumnWrite: 1); // 1 в indexColumnWrite это bool строка таска
             }
             else { AddFirstProfile(); }
         }
-
+        public static void AddLog()
+        {
+            try
+            {
+                if (Survey.commandLineGlobal != null)
+                {
+                    OpenFile file = new(ConstProgram.LogName);
+                    string titleRow = string.Join("|", ConstProgram.LogTitle);
+                    string row = string.Join("|", [SearchActiveProfile().Split(ConstProgram.SeparRows)[2],
+                    Input.NowDateTime(), Survey.commandLineGlobal.commandOut,
+                    string.Join(",", Survey.commandLineGlobal.optionsOut),
+                    Survey.commandLineGlobal.nextTextOut]);
+                    file.TitleRowWriter(titleRow);
+                    file.WriteFile(row);
+                    WriteToConsole.RainbowText("Задание успешно записано", ConsoleColor.Green);
+                }
+            }
+            catch (Exception)
+            {
+                WriteToConsole.RainbowText("Произошла ошибка при записи файла", ConsoleColor.Red);
+            }
+        }
         public static void FixingIndexing(string fileName)
         {
             Input.IfNull("Введите название файла: ", ref fileName);

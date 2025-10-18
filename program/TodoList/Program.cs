@@ -16,6 +16,7 @@ namespace Task
                     Commands.AddFirstProfile();
                 }
                 survey.GlobalCommand("-- ");
+                Commands.AddLog();
                 ++cycle;
             }
             while (true);

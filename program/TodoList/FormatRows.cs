@@ -20,40 +20,42 @@ namespace Task
             dataType,
             old
         }
-        public string GetFirstObject()
+        public string[] GetFirstObject()
         {
+            string[] res = new string[0];
             switch (type)
             {
                 case TypeEnum.row:
-                    return Num.ToString() + ConstProgram.SeparRows + ConstProgram.RowBoolDefault + ConstProgram.SeparRows;
+                    res = [Num.ToString(), ConstProgram.RowBoolDefault];
+                    break;
                 case TypeEnum.title:
-                    return ConstProgram.TitleNumbingObject + ConstProgram.SeparRows + ConstProgram.TitleBoolObject + ConstProgram.SeparRows;
+                    res = [ConstProgram.TitleNumbingObject, ConstProgram.TitleBoolObject];
+                    break;
                 case TypeEnum.dataType:
-                    return ConstProgram.DataTypeNumbingObject + ConstProgram.SeparRows + ConstProgram.DataTypeBoolObject + ConstProgram.SeparRows;
+                    res = [ConstProgram.DataTypeNumbingObject, ConstProgram.DataTypeBoolObject];
+                    break;
                 case TypeEnum.old:
-                    return "";
+                    break;
             }
-            return Num.ToString();
+            return res;
         }
         public FormatterRows(string nameFile, TypeEnum typeOut = TypeEnum.row)
         {
             OpenFile file = new(nameFile);
             Num = file.GetLengthFile();
             type = typeOut;
+            Row.Append(string.Join("|", GetFirstObject()));
         }
 
         public void AddInRow(string pathRow)
         {
             /*Форматирует массив данных под будущую таблицу csv*/
-            if (Row.ToString().Length == 0) Row.Append(GetFirstObject() + pathRow);
+            if (Row.ToString().Length == 0) Row.Append(pathRow);
             else Row.Append(ConstProgram.SeparRows + pathRow);
         }
         public void AddInRow(string[] row)
         {
-            foreach (string path in row)
-            {
-                AddInRow(path);
-            }
+            AddInRow(string.Join(ConstProgram.SeparRows, row));
         }
         public int GetLengthRow()
         {
@@ -72,6 +74,7 @@ namespace Task
         public const string RowBoolDefault = "False";
         public const string PrefConfigFile = "_conf";
         public const string PrefTemporaryFile = "_temp";
+        public const string PrefIndex = "_index";
         public readonly static string[] StringArrayNull = new string[0];
         public const string TaskName = "Tasks";
         public const string ProfileName = "Profiles";
@@ -79,6 +82,9 @@ namespace Task
         public static readonly string[] TaskTypeData = { "s", "s", "ndt", "dt" };
         public static readonly string[] ProfileTitle = { "name", "DOB", "nowDateAndTime" };
         public static readonly string[] ProfileDataType = { "s", "d", "ndt" };
-        public static readonly string[] AdminProfile = { "guest", "None", Input.NowDateTime()};
+        public static readonly string[] AdminProfile = { "guest", "None", Input.NowDateTime() };
+        public const string LogName = "log";
+        public static readonly string[] LogTitle = { "ActiveProfile", "DateAndTime", "Command", "Options", "TextCommand" };
+        public static readonly string[] LogDataType = { "s", "ndt", "s", "s", "s" };
     }
 }

@@ -216,7 +216,7 @@ namespace Task
             {
                 try
                 {
-                    OpenFile tempFile = new(nameFile + ConstProgram.PrefTemporaryFile);
+                    OpenFile tempFile = new(nameFile+ ConstProgram.PrefIndex + ConstProgram.PrefTemporaryFile);
                     using (StreamReader reader = new StreamReader(fullPath, Encoding.UTF8))
                     {
                         string? line;
@@ -364,7 +364,6 @@ namespace Task
                                 }
                                 else { tempFile.WriteFile(line); }
                             }
-                            ReIndexFile();
                             WriteToConsole.RainbowText($"Было перезаписано '{counter}' строк", ConsoleColor.Green);
                         }
                         else { WriteToConsole.RainbowText($"Index слишком большой максимальное значение.", ConsoleColor.Red); }
@@ -379,10 +378,12 @@ namespace Task
                         }
                     }
                     File.Delete(tempFile.fullPath);
+                    ReIndexFile();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     WriteToConsole.RainbowText("не найдено, что именно я тоже не знаю", ConsoleColor.Red);
+                    System.Console.WriteLine(ex);
                 }
             }
             else { WriteToConsole.RainbowText($"Файл под названием {nameFile}, не найден.", ConsoleColor.Red); }
