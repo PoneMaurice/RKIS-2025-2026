@@ -154,7 +154,7 @@ namespace Task
         }
         public static string PointByPointDate()
         {
-            int year = PositiveInteger("Введите год: ");
+            int year = IntegerWithMinMax("Введите год: ", 1, 9999);
             int month = IntegerWithMinMax("Введите месяц: ", 1, 12);
             int day = IntegerWithMinMax("Введите день: ", 1,
                 DateTime.DaysInMonth(year, month));
@@ -176,7 +176,7 @@ namespace Task
             а так же если он не выберет какой-то из вариантов 
             ввода даты то программа автоматически введет "NULL"*/
             System.Console.WriteLine("---Ввод даты и времени---");
-            string modeDate = String($"Выберете метод ввода даты: (Ручной('M'), Попунктный('P')): ");
+            string modeDate = String($"Выберете метод ввода даты: (Ручной('M'), Попунктный('P')): ").ToLower();
             string dateAndTime = "";
             if (modeDate == "m")
             {
@@ -196,7 +196,7 @@ namespace Task
             а так же если он не выберет какой-то из вариантов 
             ввода даты то программа автоматически введет "NULL"*/
             System.Console.WriteLine("---Ввод даты---");
-            string modeDate = String($"Выберете метод ввода даты: (Ручной('M'), Попунктный('P')): ");
+            string modeDate = String($"Выберете метод ввода даты: (Ручной('M'), Попунктный('P')): ").ToLower();
             string dateAndTime = "";
             if (modeDate == "m")
             {
@@ -281,7 +281,7 @@ namespace Task
                         row.AddInRow(Input.NowDateTime());
                         break;
                     case "b":
-                        row.AddInRow(Input.Bool($"введите {titleRowArray[i]} (string): ").ToString());
+                        row.AddInRow(Input.Bool($"введите {titleRowArray[i]} (bool): ").ToString());
                         break;
 
                 }

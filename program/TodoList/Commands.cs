@@ -13,6 +13,19 @@ namespace Task
             и записывает их в файл tasks.csv с нужным форматированием*/
             OpenFile.AddRowInFile(ConstProgram.TaskName, ConstProgram.TaskTitle, ConstProgram.TaskTypeData);
         }
+        public static void MultiAddTask()
+        {
+            int num = 0;
+            while (true)
+            {
+                OpenFile.AddRowInFile(ConstProgram.TaskName, ConstProgram.TaskTitle, ConstProgram.TaskTypeData);
+                num++;
+                if (!Input.Bool($"{num} задание добавлено, желаете продолжить(y/N)?: "))
+                {
+                    break;
+                }
+            }
+        }
         public static void AddTaskAndPrint()
         {
             /*программа запрашивает у пользователя все необходимые ей данные
@@ -73,7 +86,8 @@ namespace Task
 
                 foreach (string title in titleRowArray)
                 {
-                    if (title == ConstProgram.TitleNumbingObject) continue;
+                    if (title == ConstProgram.TitleNumbingObject || 
+                    title == ConstProgram.TitleBoolObject) continue;
                     else dataTypeRow.AddInRow(Input.DataType($"Введите тип данных для строки {title}: "));
                 }
 
@@ -205,7 +219,7 @@ namespace Task
             if (File.Exists(file.fullPath))
             {
                 Input.IfNull("Поиск: ", ref text);
-                Console.WriteLine(file.GetLineFileDataOnPositionInRow(text, WriteColumn(file)));
+                Console.WriteLine(string.Join("\n", file.GetLineFileDataOnPositionInRow(text, WriteColumn(file))));
             }
             else WriteToConsole.RainbowText(fileName + ": такого файла не существует.", ConsoleColor.Red);
         }
@@ -287,7 +301,6 @@ namespace Task
                     Survey.commandLineGlobal.nextTextOut]);
                     file.TitleRowWriter(titleRow);
                     file.WriteFile(row);
-                    WriteToConsole.RainbowText("Задание успешно записано", ConsoleColor.Green);
                 }
             }
             catch (Exception)

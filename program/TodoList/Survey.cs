@@ -27,6 +27,10 @@ namespace Task
                         {
                             Commands.AddTask();
                         }
+                        else if (commandLine.SearchOption("multi", "task"))
+                        {
+                            Commands.MultiAddTask();
+                        }
                         else if (commandLine.SearchOption("task", "print"))
                         {
                             Commands.AddTaskAndPrint();

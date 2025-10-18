@@ -27,6 +27,11 @@
                     "Name": "print",
                     "Long": "--print",
                     "Short": "-P"
+                },
+                {
+                    "Name": "multi",
+                    "Long": "--multi",
+                    "Short": "-m"
                 }
             ]
         },

@@ -109,7 +109,7 @@ namespace Task
                     string? line;
                     int counter = 0;
                     string[] titleRow = (reader.ReadLine() ?? "").Split(ConstProgram.SeparRows);
-                    
+
                     if (titleRow.Length > positionInRow)
                     {
                         while ((line = reader.ReadLine()) != null)
