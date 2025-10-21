@@ -77,9 +77,15 @@
                     "Name": "profile",
                     "Long": "--profile",
                     "Short": "-p"
-                },{
+                },
+                {
                     "Name": "captions",
                     "Long": "--captions"
+                },
+                {
+                    "Name": "log",
+                    "Long": "--log",
+                    "Short": "-l"
                 }
             ]
         },

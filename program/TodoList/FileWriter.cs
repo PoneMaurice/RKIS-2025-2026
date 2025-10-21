@@ -242,7 +242,7 @@ public class OpenFile
 		else { WriteToConsole.RainbowText($"Файл под названием {nameFile}, не найден.", ConsoleColor.Red); }
 		return "";
 	}
-	public static void AddRowInFile(string nameFile, string[] titleRowArray, string[] dataTypeRowArray)
+	public static void AddRowInFile(string nameFile, string[] titleRowArray, string[] dataTypeRowArray, bool message = true)
 	{
 		try
 		{
@@ -252,7 +252,7 @@ public class OpenFile
 			titleRow.AddInRow(titleRowArray);
 			file.TitleRowWriter(titleRow.Row.ToString());
 			file.WriteFile(row);
-			WriteToConsole.RainbowText("Задание успешно записано", ConsoleColor.Green);
+			if (message) { WriteToConsole.RainbowText("Задание успешно записано", ConsoleColor.Green); }
 		}
 		catch (Exception)
 		{

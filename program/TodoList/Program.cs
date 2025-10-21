@@ -1,4 +1,5 @@
 ﻿// This is the main file, it contains cruical components of the program - PoneMaurice
+
 namespace Task;
 
 public static class TaskExtensions
@@ -14,7 +15,7 @@ public static class TaskExtensions
 			{
 				Commands.AddFirstProfile();
 			}
-			survey.GlobalCommand("-- ");
+			survey.GlobalCommand(Const.PrintInTerminal);
 			Commands.AddLog();
 			++cycle;
 		}

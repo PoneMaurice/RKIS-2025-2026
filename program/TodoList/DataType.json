@@ -8,6 +8,40 @@
             ]
         },
         {
+            "Name": "ls",
+            "SpellingOptions": [
+                "ls",
+                "longstring"
+            ]
+        },
+        {
+            "Name": "prof",
+            "SpellingOptions": [
+                "prof",
+                "profile"
+            ]
+        },
+        {
+            "Name": "command",
+            "SpellingOptions": [
+                "command",
+                "commandline"
+            ]
+        },
+        {
+            "Name": "option",
+            "SpellingOptions": [
+                "option",
+                "optionline"
+            ]
+        },
+        {
+            "Name": "textline",
+            "SpellingOptions": [
+                "textline"
+            ]
+        },
+        {
             "Name": "i",
             "SpellingOptions": [
                 "i",

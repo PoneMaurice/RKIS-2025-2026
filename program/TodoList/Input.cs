@@ -1,4 +1,5 @@
 using System.Text;
+using Spectre.Console;
 namespace Task;
 
 internal static class Input
@@ -20,7 +21,22 @@ internal static class Input
 			WriteToConsole.RainbowText("Вы ввели неподдерживаемый тип данных", ConsoleColor.Red);
 		}
 	}
-	public static string String(string text)
+	public static string LongString(string text)
+	{
+		List<string> stringOutList = new();
+		Console.WriteLine(text);
+		while (true)
+		{
+			string input = String(Const.PrintInTerminal, false);
+			if (input != "\\end")
+			{
+				stringOutList.Add(input);
+			}
+			else { break; }
+		}
+		return string.Join(" ", stringOutList.ToArray());;
+    }
+	public static string String(string text, bool notNull = true)
 	{
 		/*выводит текст пользователю и запрашивает 
             ввести строковые данные, они проверяются на
@@ -32,11 +48,15 @@ internal static class Input
 		{
 			Console.Write(text);
 			input.Append((Console.ReadLine() ?? "").Trim());
-			if (input.ToString().Length != 0)
+			if (notNull)
 			{
-				return input.ToString();
+				if (input.ToString().Length != 0)
+				{
+					return input.ToString();
+				}
+				WriteToConsole.RainbowText("Строка не должна быть пустой", ConsoleColor.Red);
 			}
-			WriteToConsole.RainbowText("Строка не должна быть пустой", ConsoleColor.Red);
+			else { return input.ToString(); }
 		}
 	}
 	public static int IntegerWithMinMax(string text, int min, int max)
@@ -246,6 +266,9 @@ internal static class Input
 				case "s":
 					row.AddInRow(Input.String($"введите {titleRowArray[i]} (string): "));
 					break;
+				case "ls":
+					row.AddInRow(Input.LongString($"введите {titleRowArray[i]} (long string): "));
+					break;
 				case "i":
 					row.AddInRow(Input.Integer($"введите {titleRowArray[i]} (int): ").ToString());
 					break;
@@ -276,19 +299,43 @@ internal static class Input
 				case "b":
 					row.AddInRow(Input.Bool($"введите {titleRowArray[i]} (bool): ").ToString());
 					break;
+				case "prof":
+					row.AddInRow(Commands.SearchActiveProfile().Split(Const.SeparRows)[2]);
+					break;
+				case "command":
+					if (Survey.commandLineGlobal != null)
+					{
+						row.AddInRow(Survey.commandLineGlobal.commandOut);
+					}
+					else { row.AddInRow(""); }
+					break;
+				case "option":
+					if (Survey.commandLineGlobal != null)
+					{
+						row.AddInRow(string.Join(",", Survey.commandLineGlobal.optionsOut));
+					}
+					else { row.AddInRow(""); }
+					break;
+				case "textline":
+					if (Survey.commandLineGlobal != null)
+					{
+						row.AddInRow(Survey.commandLineGlobal.nextTextOut);
+					}
+					else { row.AddInRow(""); }
+					break;
 			}
 		}
 		return row.Row.ToString();
 	}
 	public static bool Bool(string text)
 	{
-		string input = String(text).ToLower();
-		if (input == "t" || input == "true" ||
-			input == "y" || input == "yes")
-		{
-			return true;
-		}
-		else return false;
+		var confirmation = AnsiConsole.Prompt(
+			new TextPrompt<bool>(text)
+			.AddChoice(true)
+			.AddChoice(false)
+			.DefaultValue(false)
+			.WithConverter(choice => choice ? "y" : "n"));
+		return confirmation;
 	}
 }
 public class WriteToConsole

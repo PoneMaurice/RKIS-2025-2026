@@ -72,11 +72,12 @@ public static class Const
 	public const string TaskName = "Tasks";
 	public const string ProfileName = "Profiles";
 	public static readonly string[] TaskTitle = { "nameTask", "description", "nowDateAndTime", "deadLine" };
-	public static readonly string[] TaskTypeData = { "s", "s", "ndt", "dt" };
+	public static readonly string[] TaskTypeData = { "s", "ls", "ndt", "dt" };
 	public static readonly string[] ProfileTitle = { "name", "DOB", "nowDateAndTime" };
 	public static readonly string[] ProfileDataType = { "s", "d", "ndt" };
 	public static readonly string[] AdminProfile = { "guest", "None", Input.NowDateTime() };
 	public const string LogName = "log";
 	public static readonly string[] LogTitle = { "ActiveProfile", "DateAndTime", "Command", "Options", "TextCommand" };
-	public static readonly string[] LogDataType = { "s", "ndt", "s", "s", "s" };
+	public static readonly string[] LogDataType = { "prof", "ndt", "command", "option", "textline" };
+	public const string PrintInTerminal = "-- ";
 }

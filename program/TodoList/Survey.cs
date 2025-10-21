@@ -58,7 +58,10 @@ public class Survey
 						Commands.FixingIndexing(Const.ProfileName);
 					}
 				}
-				else { Console.WriteLine(Commands.SearchActiveProfile()); }
+				else {
+					OpenFile file = new(Const.ProfileName);
+					Commands.Print(Commands.SearchActiveProfile(), file.GetLineFilePositionRow(0)); 
+					}
 				break;
 			case "print":
 				if (commandLine.optionsOut.Length > 0)
@@ -69,23 +72,27 @@ public class Survey
 					}
 					else if (commandLine.SearchOption("task"))
 					{
-						Commands.PrintData(Const.TaskName);
+						Commands.PrintAll(Const.TaskName);
 					}
 					else if (commandLine.SearchOption("config"))
 					{
-						Commands.PrintData(commandLine.nextTextOut + Const.PrefConfigFile);
+						Commands.PrintAll(commandLine.nextTextOut + Const.PrefConfigFile);
 					}
 					else if (commandLine.SearchOption("profile"))
 					{
-						Commands.PrintData(Const.ProfileName);
+						Commands.PrintAll(Const.ProfileName);
+					}
+					else if (commandLine.SearchOption("log"))
+					{
+						Commands.PrintAll(Const.LogName);
 					}
 					else if (commandLine.SearchOption("captions"))
 					{
 						Commands.WriteCaption();
 					}
-					else { Commands.PrintData(commandLine.nextTextOut); }
+					else { Commands.PrintAll(commandLine.nextTextOut); }
 				}
-				else { Commands.PrintData(commandLine.nextTextOut); }
+				else { Commands.PrintAll(commandLine.nextTextOut); }
 				break;
 			case "search":
 				if (commandLine.optionsOut.Length > 0)
