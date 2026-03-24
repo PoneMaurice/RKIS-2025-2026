@@ -1,4 +1,4 @@
-﻿namespace ConsoleApp;
+﻿namespace InfrastructureTests;
 
 public class UnitTest1
 {

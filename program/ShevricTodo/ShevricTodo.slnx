@@ -3,9 +3,8 @@
   <Project Path="../App/Domain/Domain.csproj" />
   <Project Path="../App/Infrastructure/Infrastructure.csproj" />
   <!-- <Project Path="../App/ConsoleApp/ConsoleApp.csproj" /> -->
-  <Project Path="../Tests/Application_Tests/Application_Tests.csproj" />
-  <!-- <Project Path="../Tests/ConsoleApp_Tests/ConsoleApp_Tests.csproj" /> -->
-  <Project Path="../Tests/Domain_Tests/Domain_Tests.csproj" />
-  <Project Path="../Tests/Infrastructure_Tests/Infrastructure_Tests.csproj" />
+  <Project Path="../Tests/ApplicationTests/ApplicationTests.csproj" />
+  <Project Path="../Tests/DomainTests/DomainTests.csproj" />
+  <Project Path="../Tests/InfrastructureTests/InfrastructureTests.csproj" />
   <Project Path="ShevricTodo.csproj" />
 </Solution>
