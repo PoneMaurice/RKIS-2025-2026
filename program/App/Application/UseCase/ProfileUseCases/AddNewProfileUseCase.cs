@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Application.Interfaces.Command;
 using Application.Interfaces.Repository;
 using Domain.Entities.ProfileEntity;
+using Domain.Interfaces;
 
 namespace Application.UseCase.ProfileUseCases;
 
@@ -13,18 +14,21 @@ public class AddNewProfileUseCase : ICommandWithUndo
 	private readonly ProfileDto.ProfileCreateDto _profileCreate;
 	private readonly Profile _newProfile;
 	private readonly IUnitOfWork _unitOfWork;
+	private readonly IClock _clock;
 	public AddNewProfileUseCase(
+		IClock clock,
 		IProfileRepository repository,
 		IPasswordHasher hashed,
 		ProfileDto.ProfileCreateDto profileCreate,
 		IUnitOfWork unitOfWork
 		)
 	{
+		_clock = clock;
 		_unitOfWork = unitOfWork;
 		_repo = repository;
 		_hashed = hashed;
 		_profileCreate = profileCreate;
-		_newProfile = _profileCreate.FromCreateDto(passwordHashed: _hashed);
+		_newProfile = _profileCreate.FromCreateDto(passwordHashed: _hashed, clock: clock);
 	}
 	public async Task Execute()
 	{

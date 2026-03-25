@@ -1,18 +1,29 @@
 using Domain.Entities.TaskEntity;
+using Domain.Interfaces;
+using Moq;
 
 namespace DomainTests;
 
 public class TodoTaskTests
 {
+    private readonly Mock<IClock> _clock;
+    public TodoTaskTests()
+    {
+        _clock = new();
+        _clock.Setup(c => c.Now())
+            .Returns(new DateTimeOffset(new(1999, 9, 9), new(9, 9), new(9, 9, 0)));
+    }
     [Fact]
     public void New_InvalidProfileId_ThrowsArgumentException()
     {
         Guid empty = Guid.Empty;
         Guid @default = default;
         Assert.Throws<ArgumentException>(() => new TodoTask(
+            clock: _clock.Object,
             profileId: empty,
             name: "test"));
         Assert.Throws<ArgumentException>(() => new TodoTask(
+            clock: _clock.Object,
             profileId: @default,
             name: "test"));
     }
@@ -20,6 +31,7 @@ public class TodoTaskTests
     public void UpdateName_InvalidNameLength_ThrowsArgumentException()
     {
         TodoTask testObject = new(
+            clock: _clock.Object,
             profileId: Guid.NewGuid(),
             name: "test");
         string newName = new(new Char[256]);
@@ -29,6 +41,7 @@ public class TodoTaskTests
     public void UpdateName_ValidNameLength_NewName()
     {
         TodoTask testObject = new(
+            clock: _clock.Object,
             profileId: Guid.NewGuid(),
             name: "test");
         string newName = "newNameTestObject";
@@ -39,6 +52,7 @@ public class TodoTaskTests
     public void UpdateDescription_InvalidDescriptionLength_ThrowsArgumentException()
     {
         TodoTask testObject = new(
+            clock: _clock.Object,
             profileId: Guid.NewGuid(),
             name: "test",
             description: "descriptionTestObject");
@@ -49,6 +63,7 @@ public class TodoTaskTests
     public void UpdateDescription_ValidDescriptionLength_NewDescription()
     {
         TodoTask testObject = new(
+            clock: _clock.Object,
             profileId: Guid.NewGuid(),
             name: "test",
             description: "descriptionTestObject");
@@ -59,21 +74,25 @@ public class TodoTaskTests
     [Fact]
     public void UpdateDeadline_InvalidDateOfDeadline_ThrowsArgumentException()
     {
+        var clock = _clock.Object;
         TodoTask testObject = new(
+            clock: clock,
             profileId: Guid.NewGuid(),
             name: "test",
-            deadline: DateTime.Now.AddDays(2));
-        DateTime newDeadline = DateTime.Now.AddDays(-2);
+            deadline: clock.Now().AddDays(2));
+        var newDeadline = clock.Now().AddDays(-2);
         Assert.Throws<ArgumentException>(() => testObject.UpdateDeadline(newDeadline));
     }
     [Fact]
     public void UpdateDeadline_ValidDateOfDeadline_NewDeadline()
     {
+        var clock = _clock.Object;
         TodoTask testObject = new(
+            clock: clock,
             profileId: Guid.NewGuid(),
             name: "test",
-            deadline: DateTime.Now.AddDays(1));
-        DateTime newDeadline = DateTime.Now.AddDays(3);
+            deadline: clock.Now().AddDays(1));
+        var newDeadline = clock.Now().AddDays(3);
         testObject.UpdateDeadline(newDeadline);
         Assert.Equal(testObject.Deadline, newDeadline);
     }
@@ -81,6 +100,7 @@ public class TodoTaskTests
     public void UpdateState_ValidState_NewState()
     {
         TodoTask testObject = new(
+            clock: _clock.Object,
             profileId: Guid.NewGuid(),
             name: "test",
             state: TaskState.Uncertain);
@@ -92,6 +112,7 @@ public class TodoTaskTests
     public void UpdatePriority_ValidPriority_NewPriority()
     {
         TodoTask testObject = new(
+            clock: _clock.Object,
             profileId: Guid.NewGuid(),
             name: "test",
             priority: TaskPriority.Low);

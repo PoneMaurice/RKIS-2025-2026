@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using Application.Interfaces;
 using Domain.Entities.ProfileEntity;
+using Domain.Interfaces;
 namespace Application.Dto;
 
 public static class ProfileDto
@@ -15,8 +16,8 @@ public static class ProfileDto
 		ProfileId: profile.ProfileId,
 		FirstName: profile.FirstName,
 		LastName: profile.LastName,
-		DateOfBirth: profile.DateOfBirth,
-		CreatedAt: profile.CreatedAt
+		DateOfBirth: profile.DateOfBirth.DateTime,
+		CreatedAt: profile.CreatedAt.DateTime
 	);
 	public record ProfileShortDto(
 		Guid ProfileId,
@@ -36,7 +37,7 @@ public static class ProfileDto
 		ProfileId: profile.ProfileId,
 		FirstName: profile.FirstName,
 		LastName: profile.LastName,
-		DateOfBirth: profile.DateOfBirth
+		DateOfBirth: profile.DateOfBirth.DateTime
 	);
 	public static Profile FromUpdateDto(this ProfileUpdateDto profileUpdateDto) =>
 		Profile.CreateUpdateObj(
@@ -52,16 +53,17 @@ public static class ProfileDto
 	public static ProfileCreateDto ToCreateDto(this Profile profile) => new(
 		FirstName: profile.FirstName,
 		LastName: profile.LastName,
-		DateOfBirth: profile.DateOfBirth,
+		DateOfBirth: profile.DateOfBirth.DateTime,
 		Password: profile.PasswordHash
 	);
 	public static Profile FromCreateDto(
 		this ProfileCreateDto profileCreateDto,
-		IPasswordHasher passwordHashed) => new(
-		firstName: profileCreateDto.FirstName,
-		lastName: profileCreateDto.LastName,
-		dateOfBirth: profileCreateDto.DateOfBirth,
-		passwordHash: passwordHashed.HashedAsync(
+		IPasswordHasher passwordHashed, IClock clock) => new(
+			clock: clock,
+			firstName: profileCreateDto.FirstName,
+			lastName: profileCreateDto.LastName,
+			dateOfBirth: profileCreateDto.DateOfBirth,
+			passwordHash: passwordHashed.HashedAsync(
 			password: profileCreateDto.Password).Result
 		);
 

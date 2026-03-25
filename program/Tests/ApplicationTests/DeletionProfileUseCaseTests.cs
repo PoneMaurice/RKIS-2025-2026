@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Application.Interfaces.Repository;
 using Application.UseCase.ProfileUseCases;
 using Domain.Entities.ProfileEntity;
+using Domain.Interfaces;
 using Moq;
 
 namespace ApplicationTests;
@@ -11,11 +12,15 @@ public class DeletionProfileUseCaseTests
     private readonly Mock<IProfileRepository> _mockRepository;
     private readonly Mock<IPasswordHasher> _mockHasher;
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
+    private readonly Mock<IClock> _clock;
     public DeletionProfileUseCaseTests()
     {
+        _clock = new();
         _mockRepository = new();
         _mockHasher = new();
         _mockUnitOfWork = new();
+        _clock.Setup(c => c.Now())
+            .Returns(new DateTimeOffset(new(1999, 9, 9), new(9, 9), new(9, 9, 0)));
     }
     [Fact]
     public async Task Execute_EnteringAnIncorrectPassword_ErrorDeletionProfile()
@@ -26,9 +31,10 @@ public class DeletionProfileUseCaseTests
 
         _mockRepository.Setup(r => r.GetByIdAsync(profile))
             .ReturnsAsync(new Profile(
+                clock: _clock.Object,
                 firstName: "testFirstName",
                 lastName: "testLastName",
-                dateOfBirth: new(1999, 03, 20),
+                dateOfBirth: _clock.Object.Now().AddYears(-19),
                 passwordHash: passwordHash
             ));
 
@@ -64,9 +70,10 @@ public class DeletionProfileUseCaseTests
 
         _mockRepository.Setup(r => r.GetByIdAsync(profile))
             .ReturnsAsync(new Profile(
+                clock: _clock.Object,
                 firstName: "testFirstName",
                 lastName: "testLastName",
-                dateOfBirth: new(1999, 03, 20),
+                dateOfBirth: _clock.Object.Now().AddYears(-19),
                 passwordHash: passwordHash
             ));
 

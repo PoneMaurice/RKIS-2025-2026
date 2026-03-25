@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using Application.Interfaces;
 using Domain.Entities.TaskEntity;
+using Domain.Interfaces;
 
 namespace Application.Dto;
 
@@ -22,8 +23,8 @@ public static class TodoTaskDto
 			NamePriority: todoTask.Priority.Name,
 			Name: todoTask.Name,
 			Description: todoTask.Description,
-			CreatedAt: todoTask.CreatedAt,
-			Deadline: todoTask.Deadline
+			CreatedAt: todoTask.CreatedAt.DateTime,
+			Deadline: todoTask.Deadline?.DateTime
 		);
 	public record TodoTaskShortDto(
 		Guid TaskId,
@@ -32,7 +33,7 @@ public static class TodoTaskDto
 	public static TodoTaskShortDto ToShortDto(this TodoTask todoTask) => new(
 			TaskId: todoTask.TaskId,
 			Name: todoTask.Name,
-			Deadline: todoTask.Deadline
+			Deadline: todoTask.Deadline?.DateTime
 		);
 	public record TodoTaskUpdateDto(
 		Guid TaskId,
@@ -47,7 +48,7 @@ public static class TodoTaskDto
 			Priority: todoTask.Priority,
 			Name: todoTask.Name,
 			Description: todoTask.Description,
-			Deadline: todoTask.Deadline
+			Deadline: todoTask.Deadline?.DateTime
 		);
 	public static TodoTask FromUpdateDto(
 		this TodoTaskUpdateDto todoTaskUpdateDto) => TodoTask.CreateUpdateObj(
@@ -71,14 +72,15 @@ public static class TodoTaskDto
 			UserContext: userContext,
 			Name: todoTask.Name,
 			Description: todoTask.Description,
-			Deadline: todoTask.Deadline
+			Deadline: todoTask.Deadline?.DateTime
 		);
 	public static TodoTask FromCreateDto(
 		this TodoTaskCreateDto todoTaskCreateDto,
-		IUserContext userContext)
+		IUserContext userContext, IClock clock)
 	{
 		Guid profileId = userContext.UserId ?? throw new Exception(message: "You need to log in first.");
 		return new(
+			clock: clock,
 			profileId: profileId,
 			name: todoTaskCreateDto.Name,
 			description: todoTaskCreateDto.Description,

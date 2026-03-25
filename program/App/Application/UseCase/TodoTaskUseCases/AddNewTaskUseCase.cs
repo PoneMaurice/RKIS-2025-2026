@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Application.Interfaces.Command;
 using Application.Interfaces.Repository;
 using Domain.Entities.TaskEntity;
+using Domain.Interfaces;
 
 namespace Application.UseCase.TodoTaskUseCases;
 
@@ -13,18 +14,21 @@ public class AddNewTaskUseCase : ICommandWithUndo
 	private readonly TodoTaskDto.TodoTaskCreateDto _taskCreate;
 	private readonly TodoTask _newTodoTask;
 	private readonly IUnitOfWork _unitOfWork;
+	private readonly IClock _clock;
 	public AddNewTaskUseCase(
+		IClock clock,
 		IUnitOfWork unitOfWork,
 		ITodoTaskRepository repository,
 		IUserContext userContext,
 		TodoTaskDto.TodoTaskCreateDto taskCreate
 	)
 	{
+		_clock = clock;
 		_unitOfWork = unitOfWork;
 		_repo = repository;
 		_userContext = userContext;
 		_taskCreate = taskCreate;
-		_newTodoTask = _taskCreate.FromCreateDto(userContext: _userContext);
+		_newTodoTask = _taskCreate.FromCreateDto(userContext: _userContext, clock: clock);
 	}
 	public async Task Execute()
 	{

@@ -1,9 +1,12 @@
+using Domain.Interfaces;
+
 namespace Domain.Entities.TaskEntity;
 
 public class TodoTask
 {
 	private const int MaxNameLength = 255;
 	private const int MaxDescriptionLength = 1000;
+	private readonly IClock _clock;
 	public Guid TaskId { get; private set; }
 	public TaskState State { get; private set; }
 	public TaskPriority Priority { get; private set; }
@@ -44,12 +47,12 @@ public class TodoTask
 			field = value;
 		}
 	}
-	public DateTime CreatedAt { get; private set; }
-	public DateTime? Deadline
+	public DateTimeOffset CreatedAt { get; private set; }
+	public DateTimeOffset? Deadline
 	{
 		get; private set
 		{
-			if (value < DateTime.UtcNow)
+			if (value < _clock.Now())
 			{
 				throw new ArgumentException("Deadline cannot be in the past.", nameof(value));
 			}
@@ -57,13 +60,15 @@ public class TodoTask
 		}
 	}
 	public TodoTask(
+		IClock clock,
 		Guid profileId,
 		string name,
 		string? description = null,
-		DateTime? deadline = null,
+		DateTimeOffset? deadline = null,
 		TaskState? state = null,
 		TaskPriority? priority = null)
 	{
+		_clock = clock;
 		state ??= TaskState.Uncertain;
 		priority ??= TaskPriority.Medium;
 		TaskId = Guid.NewGuid();
@@ -72,7 +77,7 @@ public class TodoTask
 		ProfileId = profileId;
 		Name = name;
 		Description = description;
-		CreatedAt = DateTime.UtcNow;
+		CreatedAt = _clock.Now();
 		Deadline = deadline;
 	}
 #pragma warning disable CS8618, CS9264 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.
@@ -85,8 +90,8 @@ public class TodoTask
 		Guid profileId,
 		string name,
 		string? description,
-		DateTime createdAt,
-		DateTime? deadline) => new()
+		DateTimeOffset createdAt,
+		DateTimeOffset? deadline) => new()
 		{
 			TaskId = taskId,
 			State = TaskState.ListState.GetById(stateId),
@@ -103,7 +108,7 @@ public class TodoTask
 		TaskPriority priority,
 		string name,
 		string? description,
-		DateTime? deadline
+		DateTimeOffset? deadline
 	) => new()
 	{
 		TaskId = taskId,
@@ -121,7 +126,7 @@ public class TodoTask
 	{
 		Description = description;
 	}
-	public void UpdateDeadline(DateTime? deadline)
+	public void UpdateDeadline(DateTimeOffset? deadline)
 	{
 		Deadline = deadline;
 	}
