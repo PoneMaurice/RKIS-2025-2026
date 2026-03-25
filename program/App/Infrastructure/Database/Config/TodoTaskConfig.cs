@@ -53,7 +53,5 @@ public class TodoTaskConfig : IEntityTypeConfiguration<TodoTask>
 
         builder.Property(t => t.Deadline)
             .HasColumnName("deadline");
-
-        
     }
 }

@@ -6,25 +6,25 @@ using Moq;
 
 namespace ApplicationTests;
 
-public class ChangeProfileUseCaseTests
+public class DeletionProfileUseCaseTests
 {
     private readonly Mock<IProfileRepository> _mockRepository;
     private readonly Mock<IPasswordHasher> _mockHasher;
-    private readonly Mock<IUserContext> _mockUserContext;
-    public ChangeProfileUseCaseTests()
+    private readonly Mock<IUnitOfWork> _mockUnitOfWork;
+    public DeletionProfileUseCaseTests()
     {
         _mockRepository = new();
         _mockHasher = new();
-        _mockUserContext = new();
+        _mockUnitOfWork = new();
     }
     [Fact]
-    public async Task Execute_EnteringAnIncorrectPassword_ErrorChangingProfile()
+    public async Task Execute_EnteringAnIncorrectPassword_ErrorDeletionProfile()
     {
         string passwordHash = "Hash";
         string password = "incorrectPassword";
-        Guid newProfile = Guid.NewGuid();
+        Guid profile = Guid.NewGuid();
 
-        _mockRepository.Setup(r => r.GetByIdAsync(newProfile))
+        _mockRepository.Setup(r => r.GetByIdAsync(profile))
             .ReturnsAsync(new Profile(
                 firstName: "testFirstName",
                 lastName: "testLastName",
@@ -35,35 +35,34 @@ public class ChangeProfileUseCaseTests
         _mockHasher.Setup(h => h.VerifyAsync(password, passwordHash))
             .ReturnsAsync(false);
 
-        _mockUserContext.Setup(u => u.Set(It.IsAny<Guid>()));
-
         var repository = _mockRepository.Object;
         var hasher = _mockHasher.Object;
-        var userContext = _mockUserContext.Object;
+        var userContext = _mockUnitOfWork.Object;
 
         try
         {
-            ChangeProfileUseCase useCase = new(
+            DeletionProfileUseCase useCase = new(
             repository: repository,
+            unitOfWork: userContext,
+            idProfile: profile,
             hasher: hasher,
-            userContext: userContext,
-            newProfile: newProfile,
             password: password);
 
             await Assert.ThrowsAsync<Exception>(() => useCase.Execute());
         }
         catch { }
 
-        _mockUserContext.Verify(u => u.Set(It.IsAny<Guid>()), Times.Never);
+        _mockRepository.Verify(u => u.DeleteAsync(It.IsAny<Guid>()), Times.Never);
+        _mockUnitOfWork.Verify(u => u.SaveChangesAsync(), Times.Never);
     }
     [Fact]
-    public async Task Execute_EnteringAnCorrectPassword_ChangingProfile()
+    public async Task Execute_EnteringAnCorrectPassword_DeletionProfile()
     {
         string passwordHash = "Hash";
         string password = "correctPassword";
-        Guid newProfile = Guid.NewGuid();
+        Guid profile = Guid.NewGuid();
 
-        _mockRepository.Setup(r => r.GetByIdAsync(newProfile))
+        _mockRepository.Setup(r => r.GetByIdAsync(profile))
             .ReturnsAsync(new Profile(
                 firstName: "testFirstName",
                 lastName: "testLastName",
@@ -71,28 +70,30 @@ public class ChangeProfileUseCaseTests
                 passwordHash: passwordHash
             ));
 
+        _mockRepository.Setup(r => r.DeleteAsync(It.IsAny<Guid>()))
+            .Returns(Task.CompletedTask);
+
         _mockHasher.Setup(h => h.VerifyAsync(password, passwordHash))
             .ReturnsAsync(true);
 
-        _mockUserContext.Setup(u => u.Set(It.IsAny<Guid>()));
-
         var repository = _mockRepository.Object;
         var hasher = _mockHasher.Object;
-        var userContext = _mockUserContext.Object;
+        var userContext = _mockUnitOfWork.Object;
 
         try
         {
-            ChangeProfileUseCase useCase = new(
+            DeletionProfileUseCase useCase = new(
             repository: repository,
+            unitOfWork: userContext,
+            idProfile: profile,
             hasher: hasher,
-            userContext: userContext,
-            newProfile: newProfile,
             password: password);
 
             await useCase.Execute();
         }
         catch { }
 
-        _mockUserContext.Verify(u => u.Set(It.IsAny<Guid>()), Times.Once);
+        _mockRepository.Verify(r => r.DeleteAsync(It.IsAny<Guid>()), Times.Once);
+        _mockUnitOfWork.Verify(u => u.SaveChangesAsync(), Times.Once);
     }
 }

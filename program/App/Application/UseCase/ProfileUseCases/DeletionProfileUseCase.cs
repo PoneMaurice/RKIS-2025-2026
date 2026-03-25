@@ -8,7 +8,7 @@ namespace Application.UseCase.ProfileUseCases;
 public class DeletionProfileUseCase : ICommandWithUndo
 {
 	private readonly IProfileRepository _repo;
-	private readonly IPasswordHasher _hashed;
+	private readonly IPasswordHasher _hasher;
 	private readonly Guid _idProfile;
 	private readonly Profile _deletionProfile;
 	private readonly bool _verifyPassword;
@@ -16,18 +16,18 @@ public class DeletionProfileUseCase : ICommandWithUndo
 	public DeletionProfileUseCase(
 		IUnitOfWork unitOfWork,
 		IProfileRepository repository,
-		IPasswordHasher hashed,
+		IPasswordHasher hasher,
 		Guid idProfile,
 		string password
 		)
 	{
 		_unitOfWork = unitOfWork;
 		_repo = repository;
-		_hashed = hashed;
+		_hasher = hasher;
 		_idProfile = idProfile;
 		_deletionProfile = _repo.GetByIdAsync(_idProfile).Result
 			?? throw new Exception("This profile does not exist.");
-		_verifyPassword = _hashed.VerifyAsync(
+		_verifyPassword = _hasher.VerifyAsync(
 			password: password,
 			hashedPassword: _deletionProfile.PasswordHash).Result;
 	}
