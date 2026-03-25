@@ -1,16 +1,18 @@
+using Domain.Entities.Abstract;
+
 namespace Domain.Entities.TaskEntity;
 
-public class TaskPriority
+public class TaskPriority : StatusObjectAbstract<TaskPriority>
 {
 	public int Level { get; }
-	public string Name { get; }
 	private TaskPriority(
 		int level,
-		string name
-	)
+		string name) : base(
+			id: level,
+			name: name
+		)
 	{
 		Level = level;
-		Name = name;
 	}
 	public static readonly TaskPriority Low = new(level: 1, name: "Low");
 	public static readonly TaskPriority Medium = new(level: 2, name: "Medium");
@@ -37,10 +39,5 @@ public class TaskPriority
 			_ when this == Critical => High,
 			_ => this
 		};
-	}
-	public static class ListPriority
-	{
-		private readonly static TaskPriority[] taskPriorities = [Low, Medium, High, Critical];
-		public static TaskPriority GetByLevel(int level) => taskPriorities.FirstOrDefault(p => p.Level == level, Medium);
 	}
 }

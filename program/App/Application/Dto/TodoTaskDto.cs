@@ -111,7 +111,7 @@ public static class TodoTaskDto
 	{
 		Expression<Func<TodoTask, bool>> criteria = t => t.ProfileId == searchDto.UserContext.UserId &&
 			(!searchDto.TaskId.HasValue || t.TaskId == searchDto.TaskId.Value) &&
-			(!searchDto.StateId.HasValue || t.State.StateId == searchDto.StateId.Value) &&
+			(!searchDto.StateId.HasValue || t.State.Id == searchDto.StateId.Value) &&
 			(!searchDto.PriorityLevelFrom.HasValue || t.Priority.Level >= searchDto.PriorityLevelFrom.Value) &&
 			(!searchDto.PriorityLevelTo.HasValue || t.Priority.Level <= searchDto.PriorityLevelTo.Value) &&
 			(string.IsNullOrWhiteSpace(searchDto.Name) || t.Name.Contains(searchDto.Name)) &&

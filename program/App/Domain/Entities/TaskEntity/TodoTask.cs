@@ -94,8 +94,8 @@ public class TodoTask
 		DateTimeOffset? deadline) => new()
 		{
 			TaskId = taskId,
-			State = TaskState.ListState.GetById(stateId),
-			Priority = TaskPriority.ListPriority.GetByLevel(priorityLevel),
+			State = (TaskState)TaskState.FromId((byte)stateId),
+			Priority = (TaskPriority)TaskPriority.FromId((byte)priorityLevel),
 			ProfileId = profileId,
 			Name = name,
 			Description = description,

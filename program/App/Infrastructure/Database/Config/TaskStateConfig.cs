@@ -10,9 +10,9 @@ public class TaskStateConfig : IEntityTypeConfiguration<TaskState>
 	{
 		builder.ToTable("task_states");
 
-        builder.HasKey(s => s.StateId);
+        builder.HasKey(s => s.Id);
 
-        builder.Property(s => s.StateId)
+        builder.Property(s => s.Id)
             .HasColumnName("state_id")
             .IsRequired();
 
