@@ -11,7 +11,7 @@ public class CompletionIndex
 	public static readonly short _defaultCompletionIndex =
 		Division(dividend: Sum(_maxCompletionIndex, _minCompletionIndex),
 				 divider: 2);
-	private CompletionIndex(short completion)
+	public CompletionIndex(short completion)
 	{
 		Completion = CheckCompletionWithException(completion);
 	}

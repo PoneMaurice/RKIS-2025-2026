@@ -19,5 +19,14 @@ public class TaskPriorityConfig : IEntityTypeConfiguration<TaskPriority>
         builder.Property(p => p.Name)
             .HasColumnName("name")
             .IsRequired();
+
+        builder.Ignore(s => s.Id);
+
+        builder.HasIndex(s => s.Level)
+            .IsUnique();
+        builder.HasIndex(s => s.Name)
+            .IsUnique();
+
+        builder.HasData(TaskPriority.All);
 	}
 }

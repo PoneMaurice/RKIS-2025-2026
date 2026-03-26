@@ -23,8 +23,17 @@ public class TaskStateConfig : IEntityTypeConfiguration<TaskState>
         builder.Property(s => s.Description)
             .HasColumnName("description");
 
-        builder.Property(s => s.CompletionIndex.Completion)
+        builder.Property(s => s.Completion)
             .HasColumnName("completion")
             .IsRequired();
+
+        builder.Ignore(s => s.CompletionIndex);
+
+        builder.HasIndex(s => s.Id)
+            .IsUnique();
+        builder.HasIndex(s => s.Name);
+        builder.HasIndex(s => s.Completion);
+
+        builder.HasData(TaskState.All);
 	}
 }

@@ -8,7 +8,9 @@ public class TodoTask
 	private const int MaxDescriptionLength = 1000;
 	private readonly IClock _clock;
 	public Guid TaskId { get; private set; }
+	public byte StateId { get; private set; }
 	public TaskState State { get; private set; }
+	public byte PriorityLevel { get; private set; }
 	public TaskPriority Priority { get; private set; }
 	public Guid ProfileId
 	{
@@ -73,7 +75,9 @@ public class TodoTask
 		priority ??= TaskPriority.Medium;
 		TaskId = Guid.NewGuid();
 		State = state;
+		StateId = state.Id;
 		Priority = priority;
+		PriorityLevel = (byte)priority.Level;
 		ProfileId = profileId;
 		Name = name;
 		Description = description;
@@ -83,25 +87,6 @@ public class TodoTask
 #pragma warning disable CS8618, CS9264 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.
 	private TodoTask() { }
 #pragma warning restore CS8618, CS9264 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.
-	public static TodoTask Restore(
-		Guid taskId,
-		int stateId,
-		int priorityLevel,
-		Guid profileId,
-		string name,
-		string? description,
-		DateTimeOffset createdAt,
-		DateTimeOffset? deadline) => new()
-		{
-			TaskId = taskId,
-			State = (TaskState)TaskState.FromId((byte)stateId),
-			Priority = (TaskPriority)TaskPriority.FromId((byte)priorityLevel),
-			ProfileId = profileId,
-			Name = name,
-			Description = description,
-			CreatedAt = createdAt,
-			Deadline = deadline
-		};
 	public static TodoTask CreateUpdateObj(
 		Guid taskId,
 		TaskState state,

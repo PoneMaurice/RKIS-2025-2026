@@ -93,21 +93,6 @@ public class Profile
 #pragma warning disable CS9264, CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.
 	private Profile() { }
 #pragma warning restore CS9264, CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Рассмотрите возможность добавления модификатора "required" или объявления значения, допускающего значение NULL.
-	public static Profile Restore(
-		Guid profileId,
-		string firstName,
-		string lastName,
-		DateTimeOffset dateOfBirth,
-		DateTimeOffset createdAt,
-		string passwordHash) => new()
-		{
-			ProfileId = profileId,
-			FirstName = firstName,
-			LastName = lastName,
-			CreatedAt = createdAt,
-			DateOfBirth = dateOfBirth,
-			PasswordHash = passwordHash
-		};
 	public static Profile CreateUpdateObj(
 		Guid profileId,
 		string firstName,

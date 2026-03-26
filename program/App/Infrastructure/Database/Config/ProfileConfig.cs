@@ -6,9 +6,9 @@ namespace Infrastructure.Database.Config;
 
 public class ProfileConfig : IEntityTypeConfiguration<Profile>
 {
-	public void Configure(EntityTypeBuilder<Profile> builder)
-	{
-		builder.HasKey(p => p.ProfileId);
+    public void Configure(EntityTypeBuilder<Profile> builder)
+    {
+        builder.HasKey(p => p.ProfileId);
 
         builder.Property(p => p.ProfileId)
             .HasColumnName("profile_id")
@@ -33,5 +33,10 @@ public class ProfileConfig : IEntityTypeConfiguration<Profile>
         builder.Property(p => p.PasswordHash)
             .HasColumnName("password_hash")
             .IsRequired();
-	}
+
+        builder.HasIndex(p => p.ProfileId)
+            .IsUnique();
+        builder.HasIndex(p => new { p.FirstName, p.LastName });
+        builder.HasIndex(p => p.CreatedAt);
+    }
 }

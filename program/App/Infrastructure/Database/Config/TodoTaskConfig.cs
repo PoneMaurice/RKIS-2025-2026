@@ -16,7 +16,7 @@ public class TodoTaskConfig : IEntityTypeConfiguration<TodoTask>
             .HasColumnName("task_id")
             .IsRequired();
 
-        builder.Property(t => t.State.CompletionIndex)
+        builder.Property(t => t.StateId)
             .HasColumnName("state_id")
             .IsRequired();
 
@@ -25,7 +25,7 @@ public class TodoTaskConfig : IEntityTypeConfiguration<TodoTask>
             .HasForeignKey("state_id")
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.Property(t => t.Priority.Level)
+        builder.Property(t => t.PriorityLevel)
             .HasColumnName("priority_level")
             .IsRequired();
 
@@ -53,5 +53,14 @@ public class TodoTaskConfig : IEntityTypeConfiguration<TodoTask>
 
         builder.Property(t => t.Deadline)
             .HasColumnName("deadline");
+
+        builder.Ignore(t => t.Priority);
+        builder.Ignore(t => t.State);
+
+        builder.HasIndex(t => t.TaskId)
+            .IsUnique();
+        builder.HasIndex(t => t.ProfileId);
+        builder.HasIndex(t => t.CreatedAt);
+        builder.HasIndex(t => t.Deadline);
     }
 }

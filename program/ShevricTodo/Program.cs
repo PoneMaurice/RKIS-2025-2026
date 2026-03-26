@@ -13,19 +13,19 @@ public static class Program
 	/// <summary>
 	/// Контекст базы данных задач.
 	/// </summary>
-	private static readonly TodoContext _context = new();
+	// private static readonly TodoContext _context = new();
 	/// <summary>
 	/// Репозиторий профилей пользователей.
 	/// </summary>
-	private static readonly EfProfileRepository _profileRepository = new(context: _context);
+	// private static readonly EfProfileRepository _profileRepository = new(context: _context);
 	/// <summary>
 	/// Репозиторий задач.
 	/// </summary>
-	private static readonly EfTodoTaskRepository _todoTaskRepository = new(context: _context);
+	// private static readonly EfTodoTaskRepository _todoTaskRepository = new(context: _context);
 	/// <summary>
 	/// Инициализация базы данных.
 	/// </summary>
-	private static readonly DatabaseInitialization _databaseInitialization = new(context: _context);
+	// private static readonly DatabaseInitialization _databaseInitialization = new(context: _context);
 	/// <summary>
 	/// Хеширование паролей.
 	/// </summary>
